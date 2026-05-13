@@ -1,0 +1,6 @@
+/vendor/
+/.env
+/.idea/
+/node_modules/
+Thumbs.db
+*.log

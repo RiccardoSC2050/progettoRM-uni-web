@@ -1,0 +1,158 @@
+:root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --accent: #0f766e;
+    --accent-strong: #115e59;
+    --border: #dbe2ea;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.container {
+    width: min(1100px, calc(100% - 2rem));
+    margin: 0 auto;
+}
+
+.site-header,
+.site-footer {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.site-footer {
+    border-top: 1px solid var(--border);
+    border-bottom: 0;
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+}
+
+.site-header .container,
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.site-header .container {
+    padding: 1rem 0;
+}
+
+.site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.brand {
+    font-weight: 700;
+}
+
+.hero,
+.form-card,
+.data-table,
+.card-link {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.hero,
+.form-card {
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.card-link {
+    padding: 1.25rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card-link:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    overflow: hidden;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+}
+
+.form-card form,
+.actions form {
+    display: grid;
+    gap: 1rem;
+}
+
+label {
+    display: grid;
+    gap: 0.4rem;
+}
+
+input,
+button,
+.button {
+    font: inherit;
+}
+
+input {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    background: #fff;
+}
+
+button,
+.button {
+    border: 0;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+}
+
+button:hover,
+.button:hover {
+    background: var(--accent-strong);
+}
+
+pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--muted);
+}
