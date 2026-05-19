@@ -1,0 +1,558 @@
+:root {
+  /* =========================
+     COLORI PRINCIPALI
+     ========================= */
+
+  --color-primary: #9b6f91;
+  --color-primary-light: #c8a6bf;
+  --color-primary-lighter: #eadce7;
+  --color-primary-dark: #6f4a68;
+  --color-primary-darker: #463040;
+
+  --color-secondary: #2f2f35;
+  --color-secondary-light: #4a4a52;
+  --color-secondary-dark: #1d1d22;
+
+  --color-accent: #b88aa9;
+  --color-accent-light: #dec5d7;
+  --color-accent-dark: #845d79;
+
+  /* =========================
+     COLORI NEUTRI
+     ========================= */
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f5f5f6;
+  --color-gray-200: #e6e6e9;
+  --color-gray-300: #d1d1d6;
+  --color-gray-400: #a9a9b2;
+  --color-gray-500: #7d7d87;
+  --color-gray-600: #5f5f69;
+  --color-gray-700: #44444d;
+  --color-gray-800: #2c2c33;
+  --color-gray-900: #18181c;
+
+  /* =========================
+     COLORI DI STATO
+     ========================= */
+
+  --color-success: #2e7d55;
+  --color-success-light: #dff3e8;
+  --color-success-dark: #1f5c3d;
+
+  --color-error: #b23b3b;
+  --color-error-light: #f8dddd;
+  --color-error-dark: #842828;
+
+  --color-warning: #b7791f;
+  --color-warning-light: #fff1d6;
+  --color-warning-dark: #7c4f12;
+
+  --color-info: #2f6f9f;
+  --color-info-light: #dcecf7;
+  --color-info-dark: #1f4e73;
+
+  /* =========================
+     COLORI SEMANTICI UI
+     ========================= */
+
+  --color-body-bg: var(--color-gray-100);
+  --color-surface: var(--color-white);
+  --color-surface-alt: var(--color-gray-50);
+
+  --color-header-bg: var(--color-primary-dark);
+  --color-header-text: var(--color-white);
+
+  --color-nav-bg: var(--color-secondary-dark);
+  --color-nav-text: var(--color-gray-100);
+  --color-nav-hover-bg: var(--color-primary-dark);
+  --color-nav-active-bg: var(--color-primary);
+  --color-nav-active-text: var(--color-white);
+
+  --color-footer-bg: var(--color-secondary-dark);
+  --color-footer-text: var(--color-gray-200);
+
+  --color-border: var(--color-gray-200);
+  --color-border-dark: var(--color-gray-300);
+
+  --color-text: var(--color-gray-900);
+  --color-text-muted: var(--color-gray-600);
+  --color-text-light: var(--color-gray-100);
+
+  --color-link: var(--color-primary-dark);
+  --color-link-hover: var(--color-primary);
+
+  /* =========================
+     FONT
+     ========================= */
+
+  --font-family-base: "Inter", Arial, Helvetica, sans-serif;
+  --font-family-heading: "Rubik", Arial, Helvetica, sans-serif;
+  --font-family-accent: "Nunito", Arial, Helvetica, sans-serif;
+  --font-family-display: "Montserrat", Arial, Helvetica, sans-serif;
+  --font-family-condensed: "Oswald", Arial, Helvetica, sans-serif;
+  --font-family-mono: "Courier New", Courier, monospace;
+
+  --font-size-xs: clamp(0.7rem, 0.68rem + 0.1vw, 0.75rem);
+  --font-size-sm: clamp(0.8rem, 0.76rem + 0.18vw, 0.875rem);
+  --font-size-base: clamp(0.95rem, 0.88rem + 0.3vw, 1rem);
+  --font-size-md: clamp(1rem, 0.92rem + 0.45vw, 1.125rem);
+  --font-size-lg: clamp(1.1rem, 1rem + 0.65vw, 1.25rem);
+  --font-size-xl: clamp(1.25rem, 1.05rem + 1vw, 1.5rem);
+  --font-size-2xl: clamp(1.55rem, 1.2rem + 1.8vw, 2rem);
+  --font-size-3xl: clamp(2rem, 1.45rem + 2.7vw, 2.5rem);
+  --font-size-4xl: clamp(2.35rem, 1.65rem + 3.5vw, 3rem);
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extra-bold: 800;
+
+  --line-height-tight: 1.1;
+  --line-height-heading: 1.25;
+  --line-height-base: 1.6;
+  --line-height-loose: 1.8;
+
+  --letter-spacing-tight: -0.03em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.04em;
+
+  /* =========================
+     SPAZIATURE RESPONSIVE
+     ========================= */
+
+  --space-0: 0;
+  --space-xxs: clamp(0.2rem, 0.18rem + 0.1vw, 0.25rem);
+  --space-xs: clamp(0.4rem, 0.34rem + 0.3vw, 0.5rem);
+  --space-sm: clamp(0.55rem, 0.45rem + 0.5vw, 0.75rem);
+  --space-md: clamp(0.8rem, 0.65rem + 0.75vw, 1rem);
+  --space-lg: clamp(1rem, 0.75rem + 1.25vw, 1.5rem);
+  --space-xl: clamp(1.35rem, 0.95rem + 2vw, 2rem);
+  --space-2xl: clamp(2rem, 1.35rem + 3vw, 3rem);
+  --space-3xl: clamp(2.75rem, 1.85rem + 4.2vw, 4rem);
+  --space-4xl: clamp(4rem, 2.5rem + 7vw, 6rem);
+
+  /* =========================
+     PADDING COMPONENTI RESPONSIVE
+     ========================= */
+
+  --padding-page: clamp(1rem, 0.6rem + 2vw, 2rem);
+  --padding-section: clamp(1rem, 0.6rem + 2vw, 2rem);
+  --padding-card: clamp(1rem, 0.7rem + 1.4vw, 1.5rem);
+  --padding-table-cell: clamp(0.6rem, 0.45rem + 0.4vw, 0.85rem)
+    clamp(0.7rem, 0.5rem + 0.8vw, 1rem);
+  --padding-button: clamp(0.6rem, 0.5rem + 0.35vw, 0.75rem)
+    clamp(0.9rem, 0.7rem + 0.9vw, 1.25rem);
+  --padding-input: clamp(0.6rem, 0.5rem + 0.35vw, 0.75rem)
+    clamp(0.8rem, 0.65rem + 0.7vw, 1rem);
+  --padding-header: clamp(0.75rem, 0.5rem + 1vw, 1rem)
+    clamp(1rem, 0.5rem + 2.5vw, 2rem);
+  --padding-footer: clamp(1rem, 0.7rem + 1vw, 1.25rem)
+    clamp(1rem, 0.5rem + 2.5vw, 2rem);
+  --padding-nav-item: clamp(0.65rem, 0.5rem + 0.5vw, 0.85rem)
+    clamp(0.75rem, 0.55rem + 0.9vw, 1rem);
+
+  /* =========================
+     MARGINI RESPONSIVE
+     ========================= */
+
+  --margin-section: clamp(1rem, 0.6rem + 2vw, 2rem);
+  --margin-title: clamp(0.75rem, 0.5rem + 1vw, 1rem);
+  --margin-card: clamp(1rem, 0.7rem + 1.4vw, 1.5rem);
+  --margin-form-group: clamp(0.75rem, 0.5rem + 1vw, 1rem);
+
+  /* =========================
+     BORDER RADIUS
+     ========================= */
+
+  --radius-none: 0;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* =========================
+     BORDI
+     ========================= */
+
+  --border-width-thin: 1px;
+  --border-width-md: 2px;
+  --border-width-lg: 4px;
+
+  --border-default: 1px solid var(--color-border);
+  --border-dark: 1px solid var(--color-border-dark);
+  --border-primary: 1px solid var(--color-primary);
+
+  /* =========================
+     OMBRE
+     ========================= */
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.14);
+  --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.18);
+
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-md);
+  --shadow-button: var(--shadow-xs);
+  --shadow-modal: var(--shadow-xl);
+
+  /* =========================
+     LAYOUT RESPONSIVE
+     ========================= */
+
+  --container-xs: 480px;
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1200px;
+  --container-2xl: 1600px;
+
+  --container-width: min(1400px, 95%);
+
+  --header-height: clamp(60px, 8vw, 72px);
+  --footer-height: auto;
+
+  --sidebar-width: clamp(220px, 18vw, 260px);
+  --sidebar-collapsed-width: clamp(64px, 7vw, 80px);
+
+  --main-min-height: calc(100vh - var(--header-height));
+
+  --content-max-width: 1200px;
+
+  /* =========================
+     GRID RESPONSIVE
+     ========================= */
+
+  --grid-gap-xs: var(--space-xs);
+  --grid-gap-sm: var(--space-sm);
+  --grid-gap-md: var(--space-md);
+  --grid-gap-lg: var(--space-lg);
+  --grid-gap-xl: var(--space-xl);
+
+  --grid-card-min-width: clamp(220px, 35vw, 260px);
+  --grid-table-min-width: clamp(650px, 80vw, 900px);
+
+  /* =========================
+     FORM RESPONSIVE
+     ========================= */
+
+  --input-height: clamp(40px, 5vw, 44px);
+  --input-bg: var(--color-white);
+  --input-text: var(--color-text);
+  --input-placeholder: var(--color-gray-400);
+  --input-border: var(--color-border-dark);
+  --input-border-focus: var(--color-primary);
+  --input-radius: var(--radius-md);
+  --input-font-size: var(--font-size-base);
+
+  --label-color: var(--color-text);
+  --label-font-size: var(--font-size-sm);
+  --label-font-weight: var(--font-weight-semibold);
+
+  --form-gap: var(--space-md);
+
+  /* =========================
+     BOTTONI RESPONSIVE
+     ========================= */
+
+  --button-height: clamp(40px, 5vw, 44px);
+  --button-radius: var(--radius-md);
+  --button-font-size: var(--font-size-base);
+  --button-font-weight: var(--font-weight-semibold);
+
+  --button-primary-bg: var(--color-primary);
+  --button-primary-text: var(--color-white);
+  --button-primary-hover-bg: var(--color-primary-dark);
+
+  --button-secondary-bg: var(--color-secondary);
+  --button-secondary-text: var(--color-white);
+  --button-secondary-hover-bg: var(--color-secondary-dark);
+
+  --button-danger-bg: var(--color-error);
+  --button-danger-text: var(--color-white);
+  --button-danger-hover-bg: var(--color-error-dark);
+
+  --button-success-bg: var(--color-success);
+  --button-success-text: var(--color-white);
+  --button-success-hover-bg: var(--color-success-dark);
+
+  /* =========================
+     CARD RESPONSIVE
+     ========================= */
+
+  --card-bg: var(--color-white);
+  --card-border: var(--border-default);
+  --card-radius: var(--radius-lg);
+  --card-padding: var(--padding-card);
+  --card-shadow: var(--shadow-card);
+  --card-shadow-hover: var(--shadow-card-hover);
+
+  --card-title-size: var(--font-size-lg);
+  --card-title-color: var(--color-text);
+  --card-text-color: var(--color-text-muted);
+
+  /* =========================
+     TABELLE RESPONSIVE
+     ========================= */
+
+  --table-bg: var(--color-white);
+  --table-border: var(--color-border);
+  --table-header-bg: var(--color-primary-dark);
+  --table-header-text: var(--color-white);
+  --table-row-bg: var(--color-white);
+  --table-row-alt-bg: var(--color-gray-50);
+  --table-row-hover-bg: var(--color-primary-lighter);
+  --table-text: var(--color-text);
+  --table-font-size: var(--font-size-sm);
+  --table-radius: var(--radius-md);
+  --table-min-width: clamp(700px, 85vw, 1000px);
+
+  /* =========================
+     BADGE / LABEL RESPONSIVE
+     ========================= */
+
+  --badge-radius: var(--radius-pill);
+  --badge-padding: clamp(0.2rem, 0.15rem + 0.2vw, 0.25rem)
+    clamp(0.5rem, 0.4rem + 0.5vw, 0.65rem);
+  --badge-font-size: var(--font-size-xs);
+  --badge-font-weight: var(--font-weight-semibold);
+
+  --badge-active-bg: var(--color-success-light);
+  --badge-active-text: var(--color-success-dark);
+
+  --badge-inactive-bg: var(--color-gray-200);
+  --badge-inactive-text: var(--color-gray-700);
+
+  --badge-warning-bg: var(--color-warning-light);
+  --badge-warning-text: var(--color-warning-dark);
+
+  --badge-error-bg: var(--color-error-light);
+  --badge-error-text: var(--color-error-dark);
+
+  /* =========================
+     MESSAGGI / ALERT INLINE RESPONSIVE
+     ========================= */
+
+  --message-padding: var(--space-md);
+  --message-radius: var(--radius-md);
+  --message-font-size: var(--font-size-sm);
+
+  --message-success-bg: var(--color-success-light);
+  --message-success-text: var(--color-success-dark);
+  --message-success-border: 1px solid var(--color-success);
+
+  --message-error-bg: var(--color-error-light);
+  --message-error-text: var(--color-error-dark);
+  --message-error-border: 1px solid var(--color-error);
+
+  --message-warning-bg: var(--color-warning-light);
+  --message-warning-text: var(--color-warning-dark);
+  --message-warning-border: 1px solid var(--color-warning);
+
+  --message-info-bg: var(--color-info-light);
+  --message-info-text: var(--color-info-dark);
+  --message-info-border: 1px solid var(--color-info);
+
+  /* =========================
+     MODAL RESPONSIVE
+     ========================= */
+
+  --modal-bg: var(--color-white);
+  --modal-overlay-bg: rgba(0, 0, 0, 0.55);
+  --modal-radius: var(--radius-xl);
+  --modal-padding: clamp(1rem, 0.7rem + 2vw, 2rem);
+  --modal-width: min(600px, 92vw);
+  --modal-shadow: var(--shadow-modal);
+
+  /* =========================
+     Z-INDEX
+     ========================= */
+
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-header: 500;
+  --z-sidebar: 600;
+  --z-overlay: 900;
+  --z-modal: 1000;
+  --z-toast: 1100;
+
+  /* =========================
+     TRANSIZIONI
+     ========================= */
+
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  --transition-color:
+    color var(--transition-fast), background-color var(--transition-fast),
+    border-color var(--transition-fast);
+
+  --transition-transform: transform var(--transition-base);
+  --transition-shadow: box-shadow var(--transition-base);
+
+  /* =========================
+     BREAKPOINT RESPONSIVE
+     ========================= */
+
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1400px;
+
+  /* =========================
+     DIMENSIONI ICONICHE RESPONSIVE
+     ========================= */
+
+  --icon-xs: clamp(12px, 2vw, 14px);
+  --icon-sm: clamp(16px, 2.5vw, 18px);
+  --icon-md: clamp(20px, 3vw, 24px);
+  --icon-lg: clamp(28px, 4vw, 32px);
+  --icon-xl: clamp(40px, 6vw, 48px);
+
+  /* =========================
+     IMMAGINI RESPONSIVE
+     ========================= */
+
+  --logo-width: clamp(120px, 18vw, 160px);
+  --logo-height: auto;
+
+  --avatar-size-sm: clamp(28px, 5vw, 32px);
+  --avatar-size-md: clamp(40px, 6vw, 48px);
+  --avatar-size-lg: clamp(56px, 8vw, 72px);
+
+  --image-radius: var(--radius-lg);
+
+  /* =========================
+     PAGINAZIONE RESPONSIVE
+     ========================= */
+
+  --pagination-gap: var(--space-xs);
+  --pagination-button-size: clamp(34px, 5vw, 38px);
+  --pagination-bg: var(--color-white);
+  --pagination-text: var(--color-text);
+  --pagination-border: var(--color-border);
+  --pagination-active-bg: var(--color-primary);
+  --pagination-active-text: var(--color-white);
+
+  /* =========================
+     FILTRI DI RICERCA RESPONSIVE
+     ========================= */
+
+  --filter-bg: var(--color-white);
+  --filter-border: var(--border-default);
+  --filter-radius: var(--radius-lg);
+  --filter-padding: clamp(1rem, 0.7rem + 1.4vw, 1.5rem);
+  --filter-gap: var(--space-md);
+
+  /* =========================
+     HEADER
+     ========================= */
+
+  --header-bg: var(--color-header-bg);
+  --header-text: var(--color-header-text);
+  --header-padding: var(--padding-header);
+  --header-shadow: var(--shadow-sm);
+
+  /* =========================
+     NAVIGAZIONE
+     ========================= */
+
+  --nav-bg: var(--color-nav-bg);
+  --nav-text: var(--color-nav-text);
+  --nav-hover-bg: var(--color-nav-hover-bg);
+  --nav-active-bg: var(--color-nav-active-bg);
+  --nav-active-text: var(--color-nav-active-text);
+  --nav-item-radius: var(--radius-md);
+  --nav-item-padding: var(--padding-nav-item);
+
+  /* =========================
+     FOOTER
+     ========================= */
+
+  --footer-bg: var(--color-footer-bg);
+  --footer-text: var(--color-footer-text);
+  --footer-padding: var(--padding-footer);
+  --footer-font-size: var(--font-size-sm);
+
+  /* =========================
+     CRUD / AZIONI
+     ========================= */
+
+  --action-gap: var(--space-xs);
+
+  --edit-color: var(--color-info);
+  --edit-bg: var(--color-info-light);
+
+  --delete-color: var(--color-error);
+  --delete-bg: var(--color-error-light);
+
+  --create-color: var(--color-success);
+  --create-bg: var(--color-success-light);
+
+  /* =========================
+     STATISTICHE DASHBOARD RESPONSIVE
+     ========================= */
+
+  --stat-card-bg: var(--color-white);
+  --stat-card-radius: var(--radius-lg);
+  --stat-card-padding: clamp(1rem, 0.7rem + 1.4vw, 1.5rem);
+  --stat-card-shadow: var(--shadow-sm);
+
+  --stat-number-size: var(--font-size-3xl);
+  --stat-number-weight: var(--font-weight-bold);
+  --stat-label-size: var(--font-size-sm);
+  --stat-label-color: var(--color-text-muted);
+
+  /* =========================
+     ACCESSIBILITÀ / FOCUS
+     ========================= */
+
+  --focus-outline: 3px solid var(--color-primary-light);
+  --focus-outline-offset: 2px;
+
+  /* =========================
+     WIDTH UTILI
+     ========================= */
+
+  --width-full: 100%;
+  --width-half: 50%;
+  --width-third: 33.333%;
+  --width-quarter: 25%;
+
+  /* =========================
+     HEIGHT UTILI
+     ========================= */
+
+  --height-full: 100%;
+  --height-screen: 100vh;
+
+  /* =========================
+     OPACITY
+     ========================= */
+
+  --opacity-disabled: 0.55;
+  --opacity-muted: 0.75;
+  --opacity-overlay: 0.55;
+
+  /* =========================
+     CURSOR
+     ========================= */
+
+  --cursor-clickable: pointer;
+  --cursor-disabled: not-allowed;
+}
