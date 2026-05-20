@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    <h1>Contratti telefonici</h1>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Data attivazione</th>
+          <th>Tipo</th>
+          <th>Minuti residui</th>
+          <th>Credito residuo</th>
+        </tr>
+      </thead>
+
+      <tbody id="contratti-body"></tbody>
+    </table>
+
+    <script>
+      fetch("../api/get-contratti.php")
+        .then((response) => response.json())
+
+        .then((contratti) => {
+          const tbody = document.getElementById("contratti-body");
+
+          contratti.forEach((contratto) => {
+            const riga = document.createElement("tr");
+
+            riga.innerHTML = `
+            <td>${contratto.numero}</td>
+            <td>${contratto.dataAttivazione}</td>
+            <td>${contratto.tipo}</td>
+            <td>${contratto.minutiResidui ?? "-"}</td>
+            <td>${contratto.creditoResiduo ?? "-"}</td>
+          `;
+
+            tbody.appendChild(riga);
+          });
+        })
+
+        .catch((error) => {
+          console.error(error);
+        });
+    </script>
+  </body>
+</html>
