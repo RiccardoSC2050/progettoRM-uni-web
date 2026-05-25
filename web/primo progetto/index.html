@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
 
-    <link rel="stylesheet" href="front-end/css/main.css" />
+    <link rel="stylesheet" href="front-end/css/import-css.css" />
     <link rel="icon" href="front-end/image/logo.png" />
 
     <title>RK/MK</title>
@@ -28,61 +28,109 @@
     </header>
 
     <main>
-      <div>
-        <!-- divisore di nav e dettagli -->
-        <div>
-          <!-- navigazione -->
-          <div>
-            <h1>Navigazione</h1>
-            <nav>
-              <ul>
-                <li><a href="dashboard.html">Dashboard </a></li>
-                <li><a href="#">Contratti </a></li>
-                <li><a href="#">SIM attive </a></li>
-                <li><a href="#">SIM disattive </a></li>
-                <li><a href="#"> SIM non attive </a></li>
-                <li><a href="#">Telefonate </a></li>
-                <li><a href="#">CRUD SIM </a></li>
+      <section class="dashboard-section">
+        <div class="dashboard-container">
+          <!-- divisore di nav e dettagli -->
+          <div class="dashboard-top">
+            <!-- navigazione -->
+            <aside class="dashboard-nav-card">
+              <h2>Navigazione</h2>
+
+              <nav class="dashboard-nav">
+                <ul>
+                  <li><a href="dashboard.html">Dashboard</a></li>
+                  <li><a href="#">Contratti</a></li>
+                  <li><a href="#">SIM attive</a></li>
+                  <li><a href="#">SIM disattive</a></li>
+                  <li><a href="#">SIM non attive</a></li>
+                  <li><a href="#">Telefonate</a></li>
+                  <li><a href="#">CRUD SIM</a></li>
+                </ul>
+              </nav>
+            </aside>
+
+            <!-- dettagli -->
+            <section class="dashboard-details-card">
+              <h2>Titolo pagina</h2>
+
+              <div class="dashboard-table-wrapper">
+                <table></table>
+              </div>
+
+              <p class="dashboard-details-label">Dettagli:</p>
+
+              <ul class="dashboard-details-list">
+                <li>Dettaglio 1</li>
+                <li>Dettaglio 2</li>
+                <li>Dettaglio 3</li>
               </ul>
-            </nav>
+
+              <button class="dashboard-btn dashboard-btn-primary">
+                Azione
+              </button>
+            </section>
           </div>
 
-          <!-- dettagli -->
-          <div>
-            <h1>Titolo pagina</h1>
-            <table></table>
-            <p>dettagli:</p>
-            <ul>
-              <li>dettaglio1</li>
-              <li>dettaglio2</li>
-              <li>dettaglio3</li>
-            </ul>
-            <button>azione</button>
-          </div>
-        </div>
+          <!-- filtri e azioni -->
+          <section class="dashboard-filter-card">
+            <form class="dashboard-filter-form">
+              <div class="dashboard-filter-fields">
+                <div class="dashboard-field">
+                  <label for="filtro-testo">Ricerca</label>
+                  <input id="filtro-testo" type="text" placeholder="Cerca..." />
+                </div>
 
-        <div>
-          <nav>
-            <ul>
-              <li>input</li>
-              <li>select</li>
-              <li>date</li>
-            </ul>
-          </nav>
+                <div class="dashboard-field">
+                  <label for="filtro-tipo">Tipo</label>
+                  <select id="filtro-tipo">
+                    <option value="">Tutti</option>
+                    <option value="ricarica">Ricarica</option>
+                    <option value="consumo">Consumo</option>
+                  </select>
+                </div>
 
-          <button>ricerca/applica</button>
-          <button>reset</button>
+                <div class="dashboard-field">
+                  <label for="filtro-data">Data</label>
+                  <input id="filtro-data" type="date" />
+                </div>
+              </div>
+
+              <div class="dashboard-filter-actions">
+                <button
+                  class="dashboard-btn dashboard-btn-primary"
+                  type="submit"
+                >
+                  Ricerca/Applica
+                </button>
+
+                <button
+                  class="dashboard-btn dashboard-btn-secondary"
+                  type="reset"
+                >
+                  Reset
+                </button>
+              </div>
+            </form>
+          </section>
         </div>
-      </div>
+      </section>
     </main>
 
-    <footer>
-      <p>
-        Progetto universitario realizzato per il corso di Programmazione Web.
-        L’applicazione simula la gestione di contratti telefonici, SIM e
-        telefonate tramite dati sintetici, utilizzati esclusivamente per
-        finalità didattiche.
-      </p>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <p class="footer-title">RK/MK · Progetto universitario</p>
+
+        <p class="footer-text">
+          Applicazione didattica per la gestione di contratti telefonici, SIM e
+          telefonate. I dati utilizzati sono sintetici e hanno esclusivamente
+          finalità formative.
+        </p>
+
+        <p class="footer-meta">
+          Corso di Programmazione Web · Ambiente di sviluppo: HTML, CSS, PHP e
+          MySQL
+        </p>
+      </div>
     </footer>
   </body>
 </html>
