@@ -22,7 +22,9 @@
             </div>
           </div>
           <!--sezione titolo progetto-->
-          <div class="project-title"><h1>ProgettoRKMK</h1></div>
+          <div class="project-title">
+            <h1>ProgettoRKMK</h1>
+          </div>
         </div>
       </div>
     </header>
@@ -38,37 +40,16 @@
 
               <nav class="dashboard-nav">
                 <ul>
-                  <li><a href="dashboard.html">Dashboard</a></li>
-                  <li><a href="#">Contratti</a></li>
-                  <li><a href="#">SIM attive</a></li>
-                  <li><a href="#">SIM disattive</a></li>
-                  <li><a href="#">SIM non attive</a></li>
-                  <li><a href="#">Telefonate</a></li>
-                  <li><a href="#">CRUD SIM</a></li>
+                  <li><a href="#/dashboard">Dashboard</a></li>
+                  <li><a href="#/contratti">Contratti</a></li>
+                  <li><a href="#/sim">Gestione SIM</a></li>
+                  <li><a href="#/telefonate">Telefonate</a></li>
                 </ul>
               </nav>
             </aside>
 
             <!-- dettagli -->
-            <section class="dashboard-details-card">
-              <h2>Titolo pagina</h2>
-
-              <div class="dashboard-table-wrapper">
-                <table></table>
-              </div>
-
-              <p class="dashboard-details-label">Dettagli:</p>
-
-              <ul class="dashboard-details-list">
-                <li>Dettaglio 1</li>
-                <li>Dettaglio 2</li>
-                <li>Dettaglio 3</li>
-              </ul>
-
-              <button class="dashboard-btn dashboard-btn-primary">
-                Azione
-              </button>
-            </section>
+            <section id="app-content" class="dashboard-details-card"></section>
           </div>
 
           <!-- filtri e azioni -->
@@ -132,5 +113,6 @@
         </p>
       </div>
     </footer>
+    <script type="module" src="front-end/js/main.js"></script>
   </body>
 </html>

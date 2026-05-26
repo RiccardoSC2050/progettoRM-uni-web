@@ -3,12 +3,3 @@ header {
   background-color: var(--color-header-bg);
   color: var(--color-header-text);
 }
-footer {
-  background-color: aquamarine;
-}
-main {
-  background-color: blueviolet;
-}
-body {
-  background-color: black;
-}
