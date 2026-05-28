@@ -42,8 +42,8 @@ export async function renderContractsPreview(container, filters = {}) {
             ? `
               ${renderContractsTable(contratti)}
 
-              <div class="contracts-preview-actions">
-                <a class="contracts-detail-link" href="#/contratti-dettaglio">
+              <div class="contracts-preview-actions page-preview-actions">
+                <a class="contracts-detail-link page-preview-link" href="#/contratti-dettaglio">
                   Approfondisci contratti
                 </a>
               </div>

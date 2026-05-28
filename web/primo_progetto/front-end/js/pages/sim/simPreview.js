@@ -36,8 +36,8 @@ export async function renderSimPreview(container) {
         ${renderSimSummary(summary)}
         ${renderSimForm(null, "create")}
 
-        <div class="sim-preview-actions">
-          <a class="sim-detail-link" href="#/sim-dettaglio">Approfondisci gestione SIM</a>
+        <div class="sim-preview-actions page-preview-actions">
+          <a class="sim-detail-link page-preview-link" href="#/sim-dettaglio">Approfondisci gestione SIM</a>
         </div>
       </section>
     `;

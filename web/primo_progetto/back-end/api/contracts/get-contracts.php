@@ -110,16 +110,14 @@ $sql = "
         ct.creditoResiduo,
         sa.codice AS codiceSIM,
         sa.tipoSIM,
-        COALESCE(tel.numeroTelefonate, 0) AS numeroTelefonate
+        (
+            SELECT COUNT(*)
+            FROM Telefonata tel
+            WHERE tel.effettuataDa = ct.numero
+        ) AS numeroTelefonate
     FROM ContrattoTelefonico ct
     LEFT JOIN SIMAttiva sa
         ON sa.associataA = ct.numero
-    LEFT JOIN (
-        SELECT effettuataDa, COUNT(*) AS numeroTelefonate
-        FROM Telefonata
-        GROUP BY effettuataDa
-    ) tel
-        ON tel.effettuataDa = ct.numero
     $whereSql
     ORDER BY $orderColumn $directionSql, ct.numero ASC
     LIMIT ? OFFSET ?

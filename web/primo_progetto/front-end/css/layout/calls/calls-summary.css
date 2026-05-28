@@ -1,0 +1,31 @@
+.calls-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-sm);
+}
+
+.calls-summary-card {
+  padding: var(--stat-card-padding);
+  border: var(--card-border);
+  border-radius: var(--stat-card-radius);
+  background: var(--stat-card-bg);
+  box-shadow: var(--stat-card-shadow);
+}
+
+.calls-summary-card strong {
+  display: block;
+  color: var(--color-primary-dark);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--stat-number-weight);
+  line-height: var(--line-height-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+.calls-summary-card span {
+  display: block;
+  margin-top: var(--space-xxs);
+  color: var(--stat-label-color);
+  font-size: var(--stat-label-size);
+  font-weight: var(--font-weight-semibold);
+}

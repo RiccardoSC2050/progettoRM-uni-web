@@ -1,9 +1,4 @@
-import { renderDashboard } from "./pages/dashboard.js?v=rmk-calls-pagination-v1";
-import { renderContractsPreview } from "./pages/contracts/contractsPreview.js?v=rmk-calls-pagination-v1";
-import { renderContractsList } from "./pages/contracts/contractsList.js?v=rmk-calls-pagination-v1";
-import { renderContractDetail } from "./pages/contracts/contractDetail.js?v=rmk-calls-pagination-v1";
-import { renderSimPreview } from "./pages/sim/simPreview.js?v=rmk-sim-responsive-v2";
-import { renderSimList } from "./pages/sim/simList.js?v=rmk-sim-responsive-v2";
+const VERSION = "rmk-lazy-loading-v1";
 
 const appContent = document.querySelector("#app-content");
 const dashboardTop = document.querySelector(".dashboard-top");
@@ -52,23 +47,55 @@ function renderDefaultNavigation() {
   `;
 }
 
-function renderBackNavigation() {
+function getBackRoute(path) {
+  const backRoutes = {
+    "#/contratti-dettaglio": "#/contratti",
+    "#/contratto": "#/contratti",
+    "#/sim-dettaglio": "#/sim",
+    "#/telefonate-dettaglio": "#/telefonate"
+  };
+
+  return backRoutes[path] || "#/dashboard";
+}
+
+function getBackLabel(path) {
+  const labels = {
+    "#/contratti-dettaglio": "← Torna a contratti",
+    "#/contratto": "← Torna a contratti",
+    "#/sim-dettaglio": "← Torna a gestione SIM",
+    "#/telefonate-dettaglio": "← Torna a telefonate"
+  };
+
+  return labels[path] || "← Torna alla home";
+}
+
+function renderBackNavigation(path) {
   if (!navCard) {
     return;
   }
 
   navCard.classList.add("dashboard-nav-card-back");
   navCard.innerHTML = `
-    <a class="dashboard-back-link" href="#/dashboard">← Torna alla home</a>
+    <a class="dashboard-back-link" href="${getBackRoute(path)}">${getBackLabel(path)}</a>
   `;
 }
 
 function setLayout(path) {
   const isDashboard = path === "#/dashboard";
-  const isDetailPage = path === "#/contratti-dettaglio" || path === "#/contratto" || path === "#/sim-dettaglio";
+  const isDetailPage =
+    path === "#/contratti-dettaglio" ||
+    path === "#/contratto" ||
+    path === "#/sim-dettaglio" ||
+    path === "#/telefonate-dettaglio";
 
   if (filterCard) {
-    filterCard.hidden = isDashboard || path === "#/contratto" || path === "#/sim" || path === "#/sim-dettaglio";
+    filterCard.hidden =
+      isDashboard ||
+      path === "#/contratto" ||
+      path === "#/sim" ||
+      path === "#/sim-dettaglio" ||
+      path === "#/telefonate" ||
+      path === "#/telefonate-dettaglio";
   }
 
   if (dashboardTop) {
@@ -76,7 +103,7 @@ function setLayout(path) {
   }
 
   if (isDetailPage) {
-    renderBackNavigation();
+    renderBackNavigation(path);
     return;
   }
 
@@ -95,56 +122,88 @@ function setContractsDetailPage(page, sort = "dataAttivazione", direction = "des
   window.location.hash = nextHash;
 }
 
-function router() {
+function showLoading(title) {
+  appContent.innerHTML = `
+    <h2>${title}</h2>
+    <p>Caricamento...</p>
+  `;
+}
+
+async function router() {
   const { path, params } = getRouteData();
 
   setLayout(path);
 
-  if (path === "#/dashboard") {
-    renderDashboard(appContent);
-    return;
-  }
+  try {
+    if (path === "#/dashboard") {
+      showLoading("Dashboard");
+      const { renderDashboard } = await import(`./pages/dashboard.js?v=${VERSION}`);
+      renderDashboard(appContent);
+      return;
+    }
 
-  if (path === "#/contratti") {
-    renderContractsPreview(appContent, getFilters());
-    return;
-  }
+    if (path === "#/contratti") {
+      showLoading("Contratti");
+      const { renderContractsPreview } = await import(`./pages/contracts/contractsPreview.js?v=${VERSION}`);
+      renderContractsPreview(appContent, getFilters());
+      return;
+    }
 
-  if (path === "#/contratti-dettaglio") {
-    renderContractsList(
-      appContent,
-      getFilters(),
-      params.get("page"),
-      params.get("sort") || "dataAttivazione",
-      params.get("direction") || "desc"
-    );
-    return;
-  }
+    if (path === "#/contratti-dettaglio") {
+      showLoading("Contratti");
+      const { renderContractsList } = await import(`./pages/contracts/contractsList.js?v=${VERSION}`);
+      renderContractsList(
+        appContent,
+        getFilters(),
+        params.get("page"),
+        params.get("sort") || "dataAttivazione",
+        params.get("direction") || "desc"
+      );
+      return;
+    }
 
-  if (path === "#/contratto") {
-    renderContractDetail(appContent, params.get("numero"));
-    return;
-  }
+    if (path === "#/contratto") {
+      showLoading("Dettaglio contratto");
+      const { renderContractDetail } = await import(`./pages/contracts/contractDetail.js?v=${VERSION}`);
+      renderContractDetail(appContent, params.get("numero"));
+      return;
+    }
 
-  if (path === "#/sim") {
-    renderSimPreview(appContent);
-    return;
-  }
+    if (path === "#/sim") {
+      showLoading("Gestione SIM");
+      const { renderSimPreview } = await import(`./pages/sim/simPreview.js?v=${VERSION}`);
+      renderSimPreview(appContent);
+      return;
+    }
 
-  if (path === "#/sim-dettaglio") {
-    renderSimList(appContent, params);
-    return;
-  }
+    if (path === "#/sim-dettaglio") {
+      showLoading("Gestione SIM");
+      const { renderSimList } = await import(`./pages/sim/simList.js?v=${VERSION}`);
+      renderSimList(appContent, params);
+      return;
+    }
 
-  if (path === "#/telefonate") {
+    if (path === "#/telefonate") {
+      showLoading("Telefonate");
+      const { renderCallsPreview } = await import(`./pages/calls/callsPreview.js?v=${VERSION}`);
+      renderCallsPreview(appContent, params);
+      return;
+    }
+
+    if (path === "#/telefonate-dettaglio") {
+      showLoading("Telefonate");
+      const { renderCallsList } = await import(`./pages/calls/callsList.js?v=${VERSION}`);
+      renderCallsList(appContent, params);
+      return;
+    }
+
+    window.location.hash = "#/dashboard";
+  } catch (error) {
     appContent.innerHTML = `
-      <h2>Telefonate</h2>
-      <p>Sezione in fase di sviluppo.</p>
+      <h2>Errore</h2>
+      <p>Errore nel caricamento della sezione richiesta.</p>
     `;
-    return;
   }
-
-  window.location.hash = "#/dashboard";
 }
 
 if (filterForm) {

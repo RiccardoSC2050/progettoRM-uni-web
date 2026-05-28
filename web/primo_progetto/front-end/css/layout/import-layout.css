@@ -12,4 +12,10 @@
 @import url(sim/sim-forms.css?v=rmk-sim-responsive-v2);
 @import url(sim/sim-table.css?v=rmk-sim-responsive-v2);
 @import url(sim/sim-modal.css?v=rmk-sim-responsive-v2);
+@import url(calls/calls-shared.css?v=rmk-telefonate-v1);
+@import url(calls/calls-summary.css?v=rmk-telefonate-v1);
+@import url(calls/calls-chart.css?v=rmk-telefonate-v1);
+@import url(calls/calls-filter.css?v=rmk-telefonate-v1);
+@import url(calls/calls-table.css?v=rmk-telefonate-v1);
+@import url(preview-actions.css?v=rmk-lazy-loading-v1);
 @import url(footer-layout.css?v=rmk-calls-pagination-v1);

@@ -1,0 +1,67 @@
+.calls-filter-form {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.calls-filter-fields {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  gap: var(--space-sm);
+}
+
+.calls-field {
+  display: grid;
+  gap: var(--space-xxs);
+}
+
+.calls-field label {
+  color: var(--label-color);
+  font-size: var(--label-font-size);
+  font-weight: var(--label-font-weight);
+}
+
+.calls-field input {
+  min-height: var(--input-height);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--padding-input);
+  border: 1px solid var(--input-border);
+  border-radius: var(--input-radius);
+  background: var(--input-bg);
+  color: var(--input-text);
+  font-family: var(--font-family-base);
+  font-size: var(--input-font-size);
+}
+
+.calls-field input:focus,
+.calls-year-form select:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+  border-color: var(--input-border-focus);
+}
+
+.calls-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+@media (max-width: 1050px) {
+  .calls-filter-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .calls-filter-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .calls-filter-actions {
+    flex-direction: column;
+  }
+
+  .calls-filter-actions .calls-btn {
+    width: 100%;
+  }
+}
