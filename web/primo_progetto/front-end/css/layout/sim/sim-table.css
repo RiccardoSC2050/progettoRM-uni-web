@@ -1,0 +1,213 @@
+.sim-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.sim-table {
+  width: 100%;
+  min-width: var(--sim-table-min-width);
+  border-collapse: separate;
+  border-spacing: 0 var(--space-sm);
+  font-size: var(--table-font-size);
+}
+
+.sim-table th,
+.sim-table td {
+  padding: var(--padding-table-cell);
+  vertical-align: middle;
+}
+
+.sim-table th {
+  color: var(--color-text-muted);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.sim-table td {
+  background: var(--table-row-alt-bg);
+  border-block: var(--border-default);
+}
+
+.sim-table td:first-child {
+  border-left: var(--border-default);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.sim-table td:last-child {
+  border-right: var(--border-default);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.sim-cell-code {
+  width: 18%;
+  text-align: left;
+}
+
+.sim-cell-type {
+  width: 14%;
+  text-align: center;
+}
+
+.sim-cell-contract {
+  width: 20%;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.sim-cell-date {
+  width: 16%;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.sim-cell-actions {
+  width: 16%;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.sim-table-btn {
+  min-width: var(--sim-table-action-min-width);
+  min-height: clamp(34px, 4vw, 38px);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.sim-table-btn + .sim-table-btn {
+  margin-left: var(--space-xs);
+}
+
+.sim-table-btn-edit {
+  background: var(--sim-edit-bg);
+  color: var(--sim-edit-text);
+}
+
+.sim-table-btn-delete {
+  background: var(--sim-delete-bg);
+  color: var(--sim-delete-text);
+}
+
+.sim-pagination {
+  margin-top: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.sim-page-btn {
+  width: var(--pagination-button-size);
+  height: var(--pagination-button-size);
+  border: 1px solid var(--pagination-border);
+  border-radius: var(--radius-circle);
+  background: var(--pagination-bg);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  cursor: var(--cursor-clickable);
+}
+
+.sim-page-btn:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: var(--cursor-disabled);
+}
+
+.sim-pagination span {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+@media (max-width: 760px) {
+  .sim-table-wrapper {
+    overflow-x: visible;
+  }
+
+  .sim-table {
+    min-width: 0;
+    border-spacing: 0;
+  }
+
+  .sim-table thead {
+    display: none;
+  }
+
+  .sim-table,
+  .sim-table tbody,
+  .sim-table tr,
+  .sim-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .sim-table tr {
+    margin-bottom: var(--space-md);
+    padding: var(--space-sm);
+    border: var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--table-row-alt-bg);
+    box-sizing: border-box;
+  }
+
+  .sim-table td {
+    min-height: 42px;
+    padding: var(--space-xs) 0;
+    display: grid;
+    grid-template-columns: var(--sim-table-mobile-label-width) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-sm);
+    border: 0;
+    background: transparent;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .sim-table td::before {
+    content: attr(data-label);
+    color: var(--color-text-muted);
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .sim-table td:first-child,
+  .sim-table td:last-child {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .sim-cell-actions {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+    text-align: left;
+  }
+
+  .sim-cell-actions::before {
+    display: none;
+  }
+
+  .sim-table-btn {
+    width: 100%;
+  }
+
+  .sim-table-btn + .sim-table-btn {
+    margin-left: 0;
+    margin-top: var(--space-xs);
+  }
+}
+
+@media (max-width: 420px) {
+  .sim-table td {
+    grid-template-columns: 1fr;
+    gap: var(--space-xxs);
+  }
+
+  .sim-pagination {
+    gap: var(--space-sm);
+  }
+}

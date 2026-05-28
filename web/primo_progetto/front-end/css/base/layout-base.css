@@ -1,5 +1,4 @@
-@import url(../variables/import-variables.css);
-header {
+body > header {
   background-color: var(--color-header-bg);
   color: var(--color-header-text);
 }

@@ -1,1 +1,2 @@
-@import url(layout-base.css);
+@import url(../variables/import-variables.css?v=rmk-dashboard-chart-v4);
+@import url(layout-base.css?v=rmk-dashboard-chart-v4);

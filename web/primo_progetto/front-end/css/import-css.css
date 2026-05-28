@@ -1,2 +1,3 @@
-@import url(base/import-base.css);
-@import url(layout/import-layout.css);
+@import url(variables/import-variables.css?v=rmk-calls-pagination-v1);
+@import url(base/import-base.css?v=rmk-calls-pagination-v1);
+@import url(layout/import-layout.css?v=rmk-calls-pagination-v1);
