@@ -1,7 +1,8 @@
-import { getCallsSummary } from "../../api/callsApi.js?v=rmk-contracts-mobile-fix-v1";
-import { renderCallsChart, renderCallsYearSelector } from "./callsChart.js?v=rmk-contracts-mobile-fix-v1";
-import { renderCallsSummary } from "./callsSummary.js?v=rmk-contracts-mobile-fix-v1";
-import { renderCallsTable } from "./callsTable.js?v=rmk-contracts-mobile-fix-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
+import { getCallsSummary } from "../../api/callsApi.js?v=rmk-architecture-v1";
+import { renderCallsChart, renderCallsYearSelector } from "./callsChart.js?v=rmk-architecture-v1";
+import { renderCallsSummary } from "./callsSummary.js?v=rmk-architecture-v1";
+import { renderCallsTable } from "./callsTable.js?v=rmk-architecture-v1";
 
 function setCallsYearInUrl(year) {
   const params = new URLSearchParams();
@@ -27,7 +28,7 @@ export async function renderCallsPreview(container, params = new URLSearchParams
     if (!result.success) {
       container.innerHTML = `
         <h2>Telefonate</h2>
-        <p>Errore: ${result.message}</p>
+        <p>Errore: ${escapeHtml(result.message)}</p>
       `;
       return;
     }
@@ -96,7 +97,7 @@ function bindYearSelector(container) {
       const result = await getCallsSummary({ year, mode: "chart" });
 
       if (!result.success) {
-        chartSlot.innerHTML = `<p class="calls-empty">Errore: ${result.message}</p>`;
+        chartSlot.innerHTML = `<p class="calls-empty">Errore: ${escapeHtml(result.message)}</p>`;
         return;
       }
 

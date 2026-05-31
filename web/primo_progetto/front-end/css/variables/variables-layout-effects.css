@@ -1,0 +1,104 @@
+:root {
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.14);
+  --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.18);
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-md);
+  --shadow-button: var(--shadow-xs);
+  --shadow-modal: var(--shadow-xl);
+
+  --container-xs: 480px;
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1200px;
+  --container-2xl: 1600px;
+  --container-width: min(1400px, 95%);
+  --header-height: clamp(60px, 8vw, 72px);
+  --footer-height: auto;
+  --sidebar-width: clamp(220px, 18vw, 260px);
+  --sidebar-collapsed-width: clamp(64px, 7vw, 80px);
+  --main-min-height: calc(100vh - var(--header-height));
+  --content-max-width: 1440px;
+  --site-max-width: 1440px;
+
+  --grid-gap-xs: var(--space-xs);
+  --grid-gap-sm: var(--space-sm);
+  --grid-gap-md: var(--space-md);
+  --grid-gap-lg: var(--space-lg);
+  --grid-gap-xl: var(--space-xl);
+  --grid-card-min-width: clamp(220px, 35vw, 260px);
+  --grid-table-min-width: clamp(650px, 80vw, 900px);
+
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-header: 500;
+  --z-sidebar: 600;
+  --z-overlay: 900;
+  --z-modal: 1000;
+  --z-toast: 1100;
+
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  --transition-color:
+    color var(--transition-fast), background-color var(--transition-fast),
+    border-color var(--transition-fast);
+  --transition-transform: transform var(--transition-base);
+  --transition-shadow: box-shadow var(--transition-base);
+
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1200px;
+  --breakpoint-2xl: 1400px;
+
+  --icon-xs: clamp(12px, 2vw, 14px);
+  --icon-sm: clamp(16px, 2.5vw, 18px);
+  --icon-md: clamp(20px, 3vw, 24px);
+  --icon-lg: clamp(28px, 4vw, 32px);
+  --icon-xl: clamp(40px, 6vw, 48px);
+
+  --logo-width: clamp(120px, 18vw, 160px);
+  --logo-height: auto;
+  --avatar-size-sm: clamp(28px, 5vw, 32px);
+  --avatar-size-md: clamp(40px, 6vw, 48px);
+  --avatar-size-lg: clamp(56px, 8vw, 72px);
+  --image-radius: var(--radius-lg);
+
+  --pagination-gap: var(--space-xs);
+  --pagination-button-size: clamp(34px, 5vw, 38px);
+  --pagination-bg: var(--color-white);
+  --pagination-text: var(--color-text);
+  --pagination-border: var(--color-border);
+  --pagination-active-bg: var(--color-primary);
+  --pagination-active-text: var(--color-white);
+
+  --filter-bg: var(--color-white);
+  --filter-border: var(--border-default);
+  --filter-radius: var(--radius-lg);
+  --filter-padding: clamp(1rem, 0.7rem + 1.4vw, 1.5rem);
+  --filter-gap: var(--space-md);
+
+  --focus-outline: 3px solid var(--color-primary-light);
+  --focus-outline-offset: 2px;
+
+  --width-full: 100%;
+  --width-half: 50%;
+  --width-third: 33.333%;
+  --width-quarter: 25%;
+
+  --height-full: 100%;
+  --height-screen: 100vh;
+
+  --opacity-disabled: 0.55;
+  --opacity-muted: 0.75;
+  --opacity-overlay: 0.55;
+
+  --cursor-clickable: pointer;
+  --cursor-disabled: not-allowed;
+}

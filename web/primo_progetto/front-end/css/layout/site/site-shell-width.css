@@ -1,0 +1,25 @@
+.header-container,
+.dashboard-container,
+.footer-container {
+  width: min(100%, var(--site-max-width));
+  max-width: var(--site-max-width);
+  margin-inline: auto;
+}
+
+.dashboard-container,
+.header-container,
+.footer-container {
+  min-width: 0;
+}
+
+.dashboard-section {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .header-container,
+  .dashboard-container,
+  .footer-container {
+    max-width: 100%;
+  }
+}

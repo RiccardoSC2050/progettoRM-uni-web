@@ -3,7 +3,7 @@ import {
   formatCurrency,
   formatNumber,
   getMonthLabel
-} from "./callsFormatters.js?v=rmk-contracts-mobile-fix-v1";
+} from "./callsFormatters.js?v=rmk-architecture-v1";
 
 export function renderCallsYearSelector(years = [], selectedYear) {
   return `

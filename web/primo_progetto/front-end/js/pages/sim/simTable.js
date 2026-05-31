@@ -1,4 +1,4 @@
-import { escapeHtml, formatDate } from "./simFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { escapeHtml, formatDate } from "./simFormatters.js?v=rmk-architecture-v1";
 
 function simPayload(sim) {
   return escapeHtml(JSON.stringify(sim));

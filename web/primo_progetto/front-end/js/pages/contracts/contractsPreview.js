@@ -1,7 +1,8 @@
-import { getContracts } from "../../api/contractsApi.js?v=rmk-contracts-mobile-fix-v1";
-import { formatNumber } from "./contractsFormatters.js?v=rmk-contracts-mobile-fix-v1";
-import { renderContractsTable } from "./contractsTable.js?v=rmk-contracts-mobile-fix-v1";
-import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-contracts-mobile-fix-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
+import { getContracts } from "../../api/contractsApi.js?v=rmk-architecture-v1";
+import { formatNumber } from "./contractsFormatters.js?v=rmk-architecture-v1";
+import { renderContractsTable } from "./contractsTable.js?v=rmk-architecture-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-architecture-v1";
 
 export async function renderContractsPreview(container, filters = {}) {
   container.innerHTML = `
@@ -19,7 +20,7 @@ export async function renderContractsPreview(container, filters = {}) {
     if (!result.success) {
       container.innerHTML = `
         <h2>Contratti</h2>
-        <p>Errore: ${result.message}</p>
+        <p>Errore: ${escapeHtml(result.message)}</p>
       `;
       return;
     }

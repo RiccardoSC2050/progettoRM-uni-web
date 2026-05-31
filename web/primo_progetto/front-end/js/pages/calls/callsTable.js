@@ -1,10 +1,11 @@
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
 import {
   formatCurrency,
   formatDate,
   formatDuration,
   formatNumber,
   formatTime
-} from "./callsFormatters.js?v=rmk-contracts-mobile-fix-v1";
+} from "./callsFormatters.js?v=rmk-architecture-v1";
 
 function renderRows(calls) {
   return calls
@@ -12,7 +13,7 @@ function renderRows(calls) {
       <tr>
         <td class="calls-cell-id" data-label="ID"><strong>${formatNumber(call.id)}</strong></td>
         <td class="calls-cell-contract" data-label="Contratto">
-          <a href="#/contratto?numero=${encodeURIComponent(call.effettuataDa)}">${call.effettuataDa}</a>
+          <a href="#/contratto?numero=${encodeURIComponent(call.effettuataDa)}">${escapeHtml(call.effettuataDa)}</a>
         </td>
         <td class="calls-cell-date" data-label="Data">${formatDate(call.data)}</td>
         <td class="calls-cell-time" data-label="Ora">${formatTime(call.ora)}</td>

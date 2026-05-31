@@ -1,8 +1,9 @@
-import { getCalls } from "../../api/callsApi.js?v=rmk-contracts-mobile-fix-v1";
-import { formatCurrency, formatNumber } from "./callsFormatters.js?v=rmk-contracts-mobile-fix-v1";
-import { getCallsFiltersFromForm, renderCallsFilter } from "./callsFilter.js?v=rmk-contracts-mobile-fix-v1";
-import { renderCallsTable } from "./callsTable.js?v=rmk-contracts-mobile-fix-v1";
-import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-contracts-mobile-fix-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
+import { getCalls } from "../../api/callsApi.js?v=rmk-architecture-v1";
+import { formatCurrency, formatNumber } from "./callsFormatters.js?v=rmk-architecture-v1";
+import { getCallsFiltersFromForm, renderCallsFilter } from "./callsFilter.js?v=rmk-architecture-v1";
+import { renderCallsTable } from "./callsTable.js?v=rmk-architecture-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-architecture-v1";
 
 const DESKTOP_PAGE_SIZE = 15;
 const MOBILE_PAGE_SIZE = 3;
@@ -62,7 +63,7 @@ export async function renderCallsList(container, params = new URLSearchParams())
     if (!result.success) {
       container.innerHTML = `
         <h2>Telefonate</h2>
-        <p>Errore: ${result.message}</p>
+        <p>Errore: ${escapeHtml(result.message)}</p>
       `;
       return;
     }

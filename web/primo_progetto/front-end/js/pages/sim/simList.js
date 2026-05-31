@@ -1,153 +1,125 @@
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
 import {
   createSimDisattiva,
   deleteSimDisattiva,
   getSimDisattive,
   updateSimDisattiva
-} from "../../api/simDisattiveApi.js?v=rmk-contracts-mobile-fix-v1";
-import { formatNumber } from "./simFormatters.js?v=rmk-contracts-mobile-fix-v1";
-import { getSimFiltersFromForm, renderSimFilter } from "./simFilter.js?v=rmk-contracts-mobile-fix-v1";
-import { getSimFormData, renderSimForm } from "./simForm.js?v=rmk-contracts-mobile-fix-v1";
-import { renderDeleteModal, renderEditModal } from "./simModal.js?v=rmk-contracts-mobile-fix-v1";
-import { renderSimSummary } from "./simSummary.js?v=rmk-contracts-mobile-fix-v1";
-import { renderSimTable } from "./simTable.js?v=rmk-contracts-mobile-fix-v1";
-import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-contracts-mobile-fix-v1";
-
-const DESKTOP_PAGE_SIZE = 15;
-const MOBILE_PAGE_SIZE = 3;
-
-function getRangeStart(page, total, count, pageSize) {
-  if (total === 0 || count === 0) {
-    return 0;
-  }
-
-  return (page - 1) * pageSize + 1;
-}
-
-function getRangeEnd(page, total, count, pageSize) {
-  if (total === 0 || count === 0) {
-    return 0;
-  }
-
-  return Math.min(page * pageSize, total);
-}
-
-function setSimPage(page, filters = {}) {
-  const params = new URLSearchParams({ page });
-
-  Object.entries(filters).forEach(([key, value]) => {
-    if (value) {
-      params.set(key, value);
-    }
-  });
-
-  window.location.hash = `#/sim-dettaglio?${params.toString()}`;
-}
+} from "../../api/simDisattiveApi.js?v=rmk-architecture-v1";
+import { getSimFiltersFromForm } from "./simFilter.js?v=rmk-architecture-v1";
+import { getSimFormData } from "./simForm.js?v=rmk-architecture-v1";
+import { renderDeleteModal, renderEditModal } from "./simModal.js?v=rmk-architecture-v1";
+import { getContractOptions } from "./simOptions.js?v=rmk-architecture-v1";
+import { getSimPageSize, getSimRouteState, setSimPage } from "./simListState.js?v=rmk-architecture-v1";
+import { renderSimListError, renderSimListLoading, renderSimListPage } from "./simListView.js?v=rmk-architecture-v1";
+import {
+  bindSimFormAssistance,
+  getUserFriendlySimError,
+  showSimFormMessage,
+  validateSimFormBeforeSubmit
+} from "./simValidation.js?v=rmk-architecture-v1";
 
 export async function renderSimList(container, params = new URLSearchParams()) {
-  const currentPage = Math.max(1, Number(params.get("page")) || 1);
-  const filters = {
-    q: params.get("q") || "",
-    tipoSIM: params.get("tipoSIM") || "",
-    dataDisattivazione: params.get("dataDisattivazione") || ""
-  };
-  const pageSize = getResponsivePageSize(DESKTOP_PAGE_SIZE, MOBILE_PAGE_SIZE);
+  const { currentPage, filters } = getSimRouteState(params);
+  const pageSize = getSimPageSize();
   const offset = (currentPage - 1) * pageSize;
+  let contractOptions = [];
 
-  container.innerHTML = `
-    <h2>Gestione SIM</h2>
-    <p>Caricamento SIM disattive...</p>
-  `;
+  container.innerHTML = renderSimListLoading();
 
   async function load() {
-    const result = await getSimDisattive({
-      ...filters,
-      limit: pageSize,
-      offset
-    });
+    const [result, loadedContracts] = await Promise.all([
+      getSimDisattive({
+        ...filters,
+        limit: pageSize,
+        offset
+      }),
+      getContractOptions()
+    ]);
+
+    contractOptions = loadedContracts;
 
     if (!result.success) {
-      container.innerHTML = `
-        <h2>Gestione SIM</h2>
-        <p>Errore: ${result.message}</p>
-      `;
+      container.innerHTML = renderSimListError(`Errore: ${escapeHtml(result.message)}`);
       return;
     }
 
-    const { totale, sim, hasNext, hasPrevious, summary } = result.data;
-    const start = getRangeStart(currentPage, totale, sim.length, pageSize);
-    const end = getRangeEnd(currentPage, totale, sim.length, pageSize);
-
-    container.innerHTML = `
-      <section class="sim-page sim-list-page">
-        <header class="sim-page-header">
-          <div>
-            <h2>Gestione SIM disattive</h2>
-            <p>Pagina dedicata al CRUD della tabella SIMDisattiva.</p>
-          </div>
-
-          <strong>${formatNumber(start)}-${formatNumber(end)} / ${formatNumber(totale)}</strong>
-        </header>
-
-        ${renderSimSummary(summary)}
-        ${renderSimForm(null, "create")}
-        ${renderSimFilter(filters)}
-
-        <section class="sim-table-card">
-          <div class="sim-section-heading">
-            <h3>SIM disattive registrate</h3>
-            <p>Modifica o elimina la riga interessata.</p>
-          </div>
-
-          ${sim.length > 0 ? renderSimTable(sim) : `<p class="sim-empty">Nessuna SIM trovata.</p>`}
-
-          <nav class="sim-pagination" aria-label="Paginazione SIM">
-            <button class="sim-page-btn" type="button" data-page="${currentPage - 1}" ${!hasPrevious ? "disabled" : ""}>‹</button>
-            <span>Pagina ${formatNumber(currentPage)}</span>
-            <button class="sim-page-btn" type="button" data-page="${currentPage + 1}" ${!hasNext ? "disabled" : ""}>›</button>
-          </nav>
-        </section>
-      </section>
-    `;
+    container.innerHTML = renderSimListPage({
+      currentPage,
+      filters,
+      pageSize,
+      contractOptions,
+      result
+    });
 
     bindEvents();
   }
 
   function bindEvents() {
+    bindCreateForm();
+    bindFilterForm();
+    bindPagination();
+    bindRowActions();
+  }
+
+  function bindCreateForm() {
     const createForm = container.querySelector(".sim-form[data-mode='create']");
+
+    if (!createForm) {
+      return;
+    }
+
+    bindSimFormAssistance(createForm, { contractOptions });
+
+    createForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!validateSimFormBeforeSubmit(createForm)) {
+        return;
+      }
+
+      const button = createForm.querySelector("[type='submit']");
+      button.disabled = true;
+
+      try {
+        const result = await createSimDisattiva(getSimFormData(createForm));
+
+        if (result.success) {
+          showSimFormMessage(createForm, "info", result.message);
+          window.setTimeout(() => setSimPage(1, filters), 500);
+          return;
+        }
+
+        showSimFormMessage(createForm, "error", result.message);
+      } catch (error) {
+        showSimFormMessage(
+          createForm,
+          "error",
+          getUserFriendlySimError(error, "Errore nella creazione della SIM. Controlla codice, contratto e date.")
+        );
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  function bindFilterForm() {
     const filterForm = container.querySelector(".sim-filter-form");
 
-    if (createForm) {
-      createForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const button = createForm.querySelector("[type='submit']");
-        button.disabled = true;
-
-        try {
-          const result = await createSimDisattiva(getSimFormData(createForm));
-          alert(result.message);
-
-          if (result.success) {
-            setSimPage(1, filters);
-          }
-        } catch (error) {
-          alert("Errore nella creazione della SIM.");
-        } finally {
-          button.disabled = false;
-        }
-      });
+    if (!filterForm) {
+      return;
     }
 
-    if (filterForm) {
-      filterForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        setSimPage(1, getSimFiltersFromForm(filterForm));
-      });
+    filterForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      setSimPage(1, getSimFiltersFromForm(filterForm));
+    });
 
-      filterForm.addEventListener("reset", () => {
-        window.setTimeout(() => setSimPage(1), 0);
-      });
-    }
+    filterForm.addEventListener("reset", () => {
+      window.setTimeout(() => setSimPage(1), 0);
+    });
+  }
 
+  function bindPagination() {
     container.querySelectorAll(".sim-page-btn").forEach((button) => {
       button.addEventListener("click", () => {
         const page = Number(button.dataset.page);
@@ -157,10 +129,12 @@ export async function renderSimList(container, params = new URLSearchParams()) {
         }
       });
     });
+  }
 
+  function bindRowActions() {
     container.querySelectorAll("[data-edit]").forEach((button) => {
       button.addEventListener("click", () => {
-        openModal(renderEditModal(JSON.parse(button.dataset.edit)));
+        openModal(renderEditModal(JSON.parse(button.dataset.edit), { contractOptions }));
       });
     });
 
@@ -202,31 +176,60 @@ export async function renderSimList(container, params = new URLSearchParams()) {
       }
     });
 
+    bindEditForm(modal, closeModal, load);
+    bindDeleteConfirm(modal, closeModal, load);
+  }
+
+  function bindEditForm(modal, closeModal, reload) {
     const editForm = modal.querySelector(".sim-form[data-mode='edit']");
 
-    if (editForm) {
-      editForm.addEventListener("reset", (event) => {
-        event.preventDefault();
-        closeModal();
-      });
-
-      editForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-
-        try {
-          const result = await updateSimDisattiva(getSimFormData(editForm));
-          alert(result.message);
-
-          if (result.success) {
-            closeModal();
-            await load();
-          }
-        } catch (error) {
-          alert("Errore nella modifica della SIM.");
-        }
-      });
+    if (!editForm) {
+      return;
     }
 
+    bindSimFormAssistance(editForm, { contractOptions });
+
+    editForm.addEventListener("reset", (event) => {
+      event.preventDefault();
+      closeModal();
+    });
+
+    editForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!validateSimFormBeforeSubmit(editForm)) {
+        return;
+      }
+
+      const button = editForm.querySelector("[type='submit']");
+      button.disabled = true;
+
+      try {
+        const result = await updateSimDisattiva(getSimFormData(editForm));
+
+        if (result.success) {
+          showSimFormMessage(editForm, "info", result.message);
+          window.setTimeout(async () => {
+            closeModal();
+            await reload();
+          }, 600);
+          return;
+        }
+
+        showSimFormMessage(editForm, "error", result.message);
+      } catch (error) {
+        showSimFormMessage(
+          editForm,
+          "error",
+          getUserFriendlySimError(error, "Errore nella modifica della SIM. Controlla codice, contratto e date.")
+        );
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  function bindDeleteConfirm(modal, closeModal, reload) {
     modal.querySelector("[data-confirm-delete]")?.addEventListener("click", async (event) => {
       try {
         const result = await deleteSimDisattiva(event.currentTarget.dataset.confirmDelete);
@@ -234,7 +237,7 @@ export async function renderSimList(container, params = new URLSearchParams()) {
 
         if (result.success) {
           closeModal();
-          await load();
+          await reload();
         }
       } catch (error) {
         alert("Errore nell'eliminazione della SIM.");
@@ -245,9 +248,6 @@ export async function renderSimList(container, params = new URLSearchParams()) {
   try {
     await load();
   } catch (error) {
-    container.innerHTML = `
-      <h2>Gestione SIM</h2>
-      <p>Errore nel caricamento della pagina SIM.</p>
-    `;
+    container.innerHTML = renderSimListError();
   }
 }

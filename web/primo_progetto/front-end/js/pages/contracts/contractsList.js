@@ -1,9 +1,10 @@
-import { getContracts } from "../../api/contractsApi.js?v=rmk-contracts-mobile-fix-v1";
-import { formatNumber } from "./contractsFormatters.js?v=rmk-contracts-mobile-fix-v1";
-import { renderContractsTable } from "./contractsTable.js?v=rmk-contracts-mobile-fix-v1";
-import { renderContractsSummary } from "./contractsSummary.js?v=rmk-contracts-mobile-fix-v1";
-import { renderContractsSort } from "./contractsSort.js?v=rmk-contracts-mobile-fix-v1";
-import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-contracts-mobile-fix-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
+import { getContracts } from "../../api/contractsApi.js?v=rmk-architecture-v1";
+import { formatNumber } from "./contractsFormatters.js?v=rmk-architecture-v1";
+import { renderContractsTable } from "./contractsTable.js?v=rmk-architecture-v1";
+import { renderContractsSummary } from "./contractsSummary.js?v=rmk-architecture-v1";
+import { renderContractsSort } from "./contractsSort.js?v=rmk-architecture-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-architecture-v1";
 
 const DESKTOP_PAGE_SIZE = 15;
 const MOBILE_PAGE_SIZE = 3;
@@ -51,7 +52,7 @@ export async function renderContractsList(container, filters = {}, page = 1, sor
     if (!result.success) {
       container.innerHTML = `
         <h2>Contratti</h2>
-        <p>Errore: ${result.message}</p>
+        <p>Errore: ${escapeHtml(result.message)}</p>
       `;
       return;
     }

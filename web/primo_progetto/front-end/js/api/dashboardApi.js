@@ -1,17 +1,6 @@
-export async function getDashboardSummary() {
-  const response = await fetch("back-end/api/dashboard/get-summary.php", {
-    cache: "no-store"
-  });
+import { API_ENDPOINTS } from "./endpoints.js?v=rmk-architecture-v1";
+import { getJson } from "./httpClient.js?v=rmk-architecture-v1";
 
-  const text = await response.text();
-
-  if (!response.ok) {
-    throw new Error(`Errore HTTP ${response.status}: ${text}`);
-  }
-
-  try {
-    return JSON.parse(text);
-  } catch (error) {
-    throw new Error(`Risposta PHP non valida: ${text}`);
-  }
+export function getDashboardSummary() {
+  return getJson(API_ENDPOINTS.dashboard.summary);
 }

@@ -1,4 +1,4 @@
-import { escapeHtml } from "./simFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { escapeHtml } from "./simFormatters.js?v=rmk-architecture-v1";
 
 const TYPES = ["standard", "microSIM", "nanoSIM", "eSIM"];
 
@@ -8,12 +8,39 @@ function renderTypeOptions(selected = "standard") {
   `).join("");
 }
 
-export function renderSimForm(sim = null, mode = "create") {
+function renderContractSuggestions(id, contractOptions = []) {
+  const options = contractOptions
+    .filter(Boolean)
+    .map((numero) => `<option value="${escapeHtml(numero)}"></option>`)
+    .join("");
+
+  return `<datalist id="${id}">${options}</datalist>`;
+}
+
+function renderStatusField(mode) {
+  if (mode !== "edit") {
+    return `<input type="hidden" name="statoFinale" value="disattiva" />`;
+  }
+
+  return `
+    <div class="sim-field sim-status-field">
+      <label for="${mode}-stato">Stato finale</label>
+      <select id="${mode}-stato" name="statoFinale" required>
+        <option value="disattiva" selected>Disattivata</option>
+        <option value="attiva">Attiva / riattiva</option>
+      </select>
+      <small class="sim-field-help">Se scegli Attiva, la SIM viene spostata in SIMAttiva.</small>
+    </div>
+  `;
+}
+
+export function renderSimForm(sim = null, mode = "create", options = {}) {
   const isEdit = mode === "edit";
-  const title = isEdit ? "Modifica SIM disattiva" : "Nuova SIM disattiva";
+  const title = isEdit ? "Modifica SIM" : "Nuova SIM disattiva";
   const description = isEdit
-    ? "Aggiorna i dati della SIM selezionata o annulla la modifica."
-    : "Registra una nuova SIM disattivata mantenendo il collegamento al contratto precedente.";
+    ? "Aggiorna la SIM selezionata oppure riattivala spostandola tra le SIM attive."
+    : "Registra una nuova SIM disattivata mantenendo il collegamento a un contratto esistente.";
+  const contractListId = `${mode}-contratti-suggeriti`;
 
   return `
     <section class="sim-form-card">
@@ -28,7 +55,8 @@ export function renderSimForm(sim = null, mode = "create") {
         <div class="sim-form-fields">
           <div class="sim-field">
             <label for="${mode}-codice">Codice SIM</label>
-            <input id="${mode}-codice" name="codice" type="text" placeholder="SIM00000000" value="${escapeHtml(sim?.codice || "")}" required />
+            <input id="${mode}-codice" name="codice" type="text" placeholder="SIM260001" minlength="3" maxlength="30" value="${escapeHtml(sim?.codice || "")}" required />
+            <small class="sim-field-help">Lettere, numeri, trattino o underscore. Esempio: SIM260001.</small>
           </div>
 
           <div class="sim-field">
@@ -36,22 +64,35 @@ export function renderSimForm(sim = null, mode = "create") {
             <select id="${mode}-tipo" name="tipoSIM" required>
               ${renderTypeOptions(sim?.tipoSIM || "standard")}
             </select>
+            <small class="sim-field-help">Scegli il formato fisico o digitale della SIM.</small>
           </div>
 
           <div class="sim-field">
-            <label for="${mode}-contratto">Contratto precedente</label>
-            <input id="${mode}-contratto" name="eraAssociataA" type="text" placeholder="+39320000000" value="${escapeHtml(sim?.eraAssociataA || "")}" required />
+            <label for="${mode}-contratto">Contratto</label>
+            <input id="${mode}-contratto" name="eraAssociataA" type="text" inputmode="tel" autocomplete="off" list="${contractListId}" placeholder="+39320000000" value="${escapeHtml(sim?.eraAssociataA || "")}" required />
+            ${renderContractSuggestions(contractListId, options.contractOptions || [])}
+            <small class="sim-field-help">Deve esistere in ContrattoTelefonico. Puoi usare un numero suggerito.</small>
           </div>
 
           <div class="sim-field">
             <label for="${mode}-attivazione">Data attivazione</label>
             <input id="${mode}-attivazione" name="dataAttivazione" type="date" value="${escapeHtml(sim?.dataAttivazione || "")}" required />
+            <small class="sim-field-help">Data in cui la SIM era stata attivata.</small>
           </div>
 
           <div class="sim-field">
             <label for="${mode}-disattivazione">Data disattivazione</label>
             <input id="${mode}-disattivazione" name="dataDisattivazione" type="date" value="${escapeHtml(sim?.dataDisattivazione || "")}" required />
+            <small class="sim-field-help">Deve essere uguale o successiva alla data di attivazione.</small>
           </div>
+
+          ${renderStatusField(mode)}
+        </div>
+
+        <div class="sim-form-assistance">
+          <p><strong>Controllo dati:</strong> il codice deve essere nuovo, il contratto deve esistere e le date devono essere coerenti.</p>
+          <div class="sim-form-examples" data-sim-examples></div>
+          <div class="sim-form-message" data-sim-form-message data-visible="false"></div>
         </div>
 
         <div class="sim-form-actions">
@@ -69,14 +110,15 @@ export function renderSimForm(sim = null, mode = "create") {
 }
 
 export function getSimFormData(form) {
-  const formData = new FormData(form);
+  const elementValue = (name) => form.elements[name]?.value?.trim() || "";
 
   return {
-    codiceOriginale: formData.get("codiceOriginale") || "",
-    codice: formData.get("codice")?.trim() || "",
-    tipoSIM: formData.get("tipoSIM") || "",
-    eraAssociataA: formData.get("eraAssociataA")?.trim() || "",
-    dataAttivazione: formData.get("dataAttivazione") || "",
-    dataDisattivazione: formData.get("dataDisattivazione") || ""
+    codiceOriginale: elementValue("codiceOriginale"),
+    codice: elementValue("codice"),
+    tipoSIM: elementValue("tipoSIM"),
+    eraAssociataA: elementValue("eraAssociataA"),
+    dataAttivazione: elementValue("dataAttivazione"),
+    dataDisattivazione: elementValue("dataDisattivazione"),
+    statoFinale: elementValue("statoFinale") || "disattiva"
   };
 }

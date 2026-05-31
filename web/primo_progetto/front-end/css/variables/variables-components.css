@@ -1,0 +1,125 @@
+:root {
+  --input-height: clamp(40px, 5vw, 44px);
+  --input-bg: var(--color-white);
+  --input-text: var(--color-text);
+  --input-placeholder: var(--color-gray-400);
+  --input-border: var(--color-border-dark);
+  --input-border-focus: var(--color-primary);
+  --input-radius: var(--radius-md);
+  --input-font-size: var(--font-size-base);
+  --label-color: var(--color-text);
+  --label-font-size: var(--font-size-sm);
+  --label-font-weight: var(--font-weight-semibold);
+  --form-gap: var(--space-md);
+
+  --button-height: clamp(40px, 5vw, 44px);
+  --button-radius: var(--radius-md);
+  --button-font-size: var(--font-size-base);
+  --button-font-weight: var(--font-weight-semibold);
+  --button-primary-bg: var(--color-primary);
+  --button-primary-text: var(--color-white);
+  --button-primary-hover-bg: var(--color-primary-dark);
+  --button-secondary-bg: var(--color-secondary);
+  --button-secondary-text: var(--color-white);
+  --button-secondary-hover-bg: var(--color-secondary-dark);
+  --button-danger-bg: var(--color-error);
+  --button-danger-text: var(--color-white);
+  --button-danger-hover-bg: var(--color-error-dark);
+  --button-success-bg: var(--color-success);
+  --button-success-text: var(--color-white);
+  --button-success-hover-bg: var(--color-success-dark);
+
+  --card-bg: var(--color-white);
+  --card-border: var(--border-default);
+  --card-radius: var(--radius-lg);
+  --card-padding: var(--padding-card);
+  --card-shadow: var(--shadow-card);
+  --card-shadow-hover: var(--shadow-card-hover);
+  --card-title-size: var(--font-size-lg);
+  --card-title-color: var(--color-text);
+  --card-text-color: var(--color-text-muted);
+
+  --table-bg: var(--color-white);
+  --table-border: var(--color-border);
+  --table-header-bg: var(--color-primary-dark);
+  --table-header-text: var(--color-white);
+  --table-row-bg: var(--color-white);
+  --table-row-alt-bg: var(--color-gray-50);
+  --table-row-hover-bg: var(--color-primary-lighter);
+  --table-text: var(--color-text);
+  --table-font-size: var(--font-size-sm);
+  --table-radius: var(--radius-md);
+  --table-min-width: clamp(700px, 85vw, 1000px);
+
+  --badge-radius: var(--radius-pill);
+  --badge-padding: clamp(0.2rem, 0.15rem + 0.2vw, 0.25rem)
+    clamp(0.5rem, 0.4rem + 0.5vw, 0.65rem);
+  --badge-font-size: var(--font-size-xs);
+  --badge-font-weight: var(--font-weight-semibold);
+  --badge-active-bg: var(--color-success-light);
+  --badge-active-text: var(--color-success-dark);
+  --badge-inactive-bg: var(--color-gray-200);
+  --badge-inactive-text: var(--color-gray-700);
+  --badge-warning-bg: var(--color-warning-light);
+  --badge-warning-text: var(--color-warning-dark);
+  --badge-error-bg: var(--color-error-light);
+  --badge-error-text: var(--color-error-dark);
+
+  --message-padding: var(--space-md);
+  --message-radius: var(--radius-md);
+  --message-font-size: var(--font-size-sm);
+  --message-success-bg: var(--color-success-light);
+  --message-success-text: var(--color-success-dark);
+  --message-success-border: 1px solid var(--color-success);
+  --message-error-bg: var(--color-error-light);
+  --message-error-text: var(--color-error-dark);
+  --message-error-border: 1px solid var(--color-error);
+  --message-warning-bg: var(--color-warning-light);
+  --message-warning-text: var(--color-warning-dark);
+  --message-warning-border: 1px solid var(--color-warning);
+  --message-info-bg: var(--color-info-light);
+  --message-info-text: var(--color-info-dark);
+  --message-info-border: 1px solid var(--color-info);
+
+  --modal-bg: var(--color-white);
+  --modal-overlay-bg: rgba(0, 0, 0, 0.55);
+  --modal-radius: var(--radius-xl);
+  --modal-padding: clamp(1rem, 0.7rem + 2vw, 2rem);
+  --modal-width: min(600px, 92vw);
+  --modal-shadow: var(--shadow-modal);
+
+  --header-bg: var(--color-header-bg);
+  --header-text: var(--color-header-text);
+  --header-padding: var(--padding-header);
+  --header-shadow: var(--shadow-sm);
+
+  --nav-bg: var(--color-nav-bg);
+  --nav-text: var(--color-nav-text);
+  --nav-hover-bg: var(--color-nav-hover-bg);
+  --nav-active-bg: var(--color-nav-active-bg);
+  --nav-active-text: var(--color-nav-active-text);
+  --nav-item-radius: var(--radius-md);
+  --nav-item-padding: var(--padding-nav-item);
+
+  --footer-bg: var(--color-footer-bg);
+  --footer-text: var(--color-footer-text);
+  --footer-padding: var(--padding-footer);
+  --footer-font-size: var(--font-size-sm);
+
+  --action-gap: var(--space-xs);
+  --edit-color: var(--color-info);
+  --edit-bg: var(--color-info-light);
+  --delete-color: var(--color-error);
+  --delete-bg: var(--color-error-light);
+  --create-color: var(--color-success);
+  --create-bg: var(--color-success-light);
+
+  --stat-card-bg: var(--color-white);
+  --stat-card-radius: var(--radius-lg);
+  --stat-card-padding: clamp(1rem, 0.7rem + 1.4vw, 1.5rem);
+  --stat-card-shadow: var(--shadow-sm);
+  --stat-number-size: var(--font-size-3xl);
+  --stat-number-weight: var(--font-weight-bold);
+  --stat-label-size: var(--font-size-sm);
+  --stat-label-color: var(--color-text-muted);
+}

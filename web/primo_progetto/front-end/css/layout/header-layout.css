@@ -18,10 +18,6 @@
   gap: var(--space-xl);
 }
 
-/* =========================
-   BRAND / LOGO + TESTI
-   ========================= */
-
 .brand-section {
   display: flex;
   align-items: center;
@@ -96,10 +92,6 @@
   white-space: nowrap;
 }
 
-/* =========================
-   TITOLO PROGETTO
-   ========================= */
-
 .project-title {
   min-width: 0;
   margin: 0;
@@ -114,10 +106,6 @@
 
   white-space: nowrap;
 }
-
-/* =========================
-   MEDIA
-   ========================= */
 
 @media (max-width: 900px) {
   .header-container {

@@ -1,4 +1,5 @@
-import { getDashboardSummary } from "../api/dashboardApi.js?v=rmk-dashboard-chart-v6";
+import { escapeHtml } from "../utils/escapeHtml.js?v=rmk-architecture-v1";
+import { getDashboardSummary } from "../api/dashboardApi.js?v=rmk-architecture-v1";
 
 function toNumber(value) {
   const number = Number(value);
@@ -44,7 +45,7 @@ export async function renderDashboard(container) {
     if (!result.success) {
       container.innerHTML = `
         <h2>Dashboard</h2>
-        <p>Errore: ${result.message}</p>
+        <p>Errore: ${escapeHtml(result.message)}</p>
       `;
       return;
     }

@@ -1,4 +1,4 @@
-import { formatNumber } from "./simFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { formatNumber } from "./simFormatters.js?v=rmk-architecture-v1";
 
 export function renderSimSummary(summary = {}) {
   const cards = [

@@ -1,12 +1,12 @@
-import { renderSimForm } from "./simForm.js?v=rmk-contracts-mobile-fix-v1";
-import { escapeHtml } from "./simFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { renderSimForm } from "./simForm.js?v=rmk-architecture-v1";
+import { escapeHtml } from "./simFormatters.js?v=rmk-architecture-v1";
 
-export function renderEditModal(sim) {
+export function renderEditModal(sim, options = {}) {
   return `
     <div class="sim-modal-backdrop" role="dialog" aria-modal="true">
       <div class="sim-modal">
         <button class="sim-modal-close" type="button" aria-label="Chiudi">×</button>
-        ${renderSimForm(sim, "edit")}
+        ${renderSimForm(sim, "edit", options)}
       </div>
     </div>
   `;
