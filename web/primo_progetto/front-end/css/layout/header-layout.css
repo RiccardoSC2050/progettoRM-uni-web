@@ -1,12 +1,16 @@
 @import url(../variables/import-variables.css);
 
 .header-container {
-  width: min(var(--container-2xl), 92%);
+  width: 100%;
+  max-width: none;
   margin-inline: auto;
+  padding-inline: var(--padding-page);
+  box-sizing: border-box;
 }
 
 .header-content {
   min-height: var(--header-height);
+  min-width: 0;
 
   display: flex;
   align-items: center;
@@ -67,6 +71,16 @@
   white-space: nowrap;
 }
 
+.project-title h1 {
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
 .brand-text h3 {
   margin: 0;
 
@@ -87,6 +101,7 @@
    ========================= */
 
 .project-title {
+  min-width: 0;
   margin: 0;
 
   font-family: var(--font-family-heading);
@@ -106,7 +121,7 @@
 
 @media (max-width: 900px) {
   .header-container {
-    width: min(var(--container-2xl), 95%);
+    padding-inline: var(--space-sm);
   }
 
   .header-content {
@@ -132,5 +147,21 @@
   .project-title {
     font-size: var(--font-size-sm);
     text-align: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand-section {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .brand-text h1 {
+    font-size: var(--font-size-lg);
+  }
+
+  .project-title {
+    max-width: 100%;
+    white-space: normal;
   }
 }

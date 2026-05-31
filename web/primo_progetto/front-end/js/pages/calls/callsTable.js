@@ -4,7 +4,7 @@ import {
   formatDuration,
   formatNumber,
   formatTime
-} from "./callsFormatters.js?v=rmk-telefonate-v1";
+} from "./callsFormatters.js?v=rmk-contracts-mobile-fix-v1";
 
 function renderRows(calls) {
   return calls

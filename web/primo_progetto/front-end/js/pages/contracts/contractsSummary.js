@@ -1,4 +1,4 @@
-import { formatNumber } from "./contractsFormatters.js?v=rmk-calls-pagination-v1";
+import { formatNumber } from "./contractsFormatters.js?v=rmk-contracts-mobile-fix-v1";
 
 export function renderContractsSummary(summary) {
   return `

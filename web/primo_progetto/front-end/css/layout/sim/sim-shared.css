@@ -1,9 +1,11 @@
 .sim-page {
+  min-width: 0;
   display: grid;
   gap: var(--sim-page-gap);
 }
 
 .sim-page-header {
+  min-width: 0;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -19,7 +21,7 @@
 }
 
 .sim-page-header h2 {
-  font-size: var(--font-size-2xl);
+  font-size: clamp(1.2rem, 1rem + 1.2vw, 1.85rem);
 }
 
 .sim-page-header p,
@@ -47,6 +49,7 @@
 }
 
 .sim-summary-card {
+  min-width: 0;
   min-height: clamp(76px, 8vw, 92px);
   padding: var(--space-md);
   display: flex;
@@ -61,7 +64,7 @@
 .sim-summary-card strong {
   color: var(--color-primary-dark);
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-2xl);
+  font-size: clamp(1.2rem, 1rem + 1.2vw, 1.85rem);
   line-height: var(--line-height-tight);
   font-variant-numeric: tabular-nums;
 }

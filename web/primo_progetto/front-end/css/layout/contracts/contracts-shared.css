@@ -1,9 +1,11 @@
 .contracts-page {
+  min-width: 0;
   display: grid;
   gap: var(--space-md);
 }
 
 .contracts-header {
+  min-width: 0;
   padding: var(--space-md) var(--space-lg);
   display: flex;
   align-items: center;
@@ -51,5 +53,11 @@
   .contracts-header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .contracts-header strong {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
   }
 }

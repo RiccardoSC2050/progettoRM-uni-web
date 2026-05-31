@@ -1,24 +1,26 @@
-import { getCalls } from "../../api/callsApi.js?v=rmk-telefonate-v1";
-import { formatNumber } from "./callsFormatters.js?v=rmk-telefonate-v1";
-import { getCallsFiltersFromForm, renderCallsFilter } from "./callsFilter.js?v=rmk-telefonate-v1";
-import { renderCallsTable } from "./callsTable.js?v=rmk-telefonate-v1";
+import { getCalls } from "../../api/callsApi.js?v=rmk-contracts-mobile-fix-v1";
+import { formatCurrency, formatNumber } from "./callsFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { getCallsFiltersFromForm, renderCallsFilter } from "./callsFilter.js?v=rmk-contracts-mobile-fix-v1";
+import { renderCallsTable } from "./callsTable.js?v=rmk-contracts-mobile-fix-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-contracts-mobile-fix-v1";
 
-const PAGE_SIZE = 15;
+const DESKTOP_PAGE_SIZE = 15;
+const MOBILE_PAGE_SIZE = 3;
 
-function getRangeStart(page, total, count) {
+function getRangeStart(page, total, count, pageSize) {
   if (total === 0 || count === 0) {
     return 0;
   }
 
-  return (page - 1) * PAGE_SIZE + 1;
+  return (page - 1) * pageSize + 1;
 }
 
-function getRangeEnd(page, total, count) {
+function getRangeEnd(page, total, count, pageSize) {
   if (total === 0 || count === 0) {
     return 0;
   }
 
-  return Math.min(page * PAGE_SIZE, total);
+  return Math.min(page * pageSize, total);
 }
 
 function setCallsPage(page, filters = {}) {
@@ -42,7 +44,8 @@ export async function renderCallsList(container, params = new URLSearchParams())
     costoMin: params.get("costoMin") || "",
     costoMax: params.get("costoMax") || ""
   };
-  const offset = (currentPage - 1) * PAGE_SIZE;
+  const pageSize = getResponsivePageSize(DESKTOP_PAGE_SIZE, MOBILE_PAGE_SIZE);
+  const offset = (currentPage - 1) * pageSize;
 
   container.innerHTML = `
     <h2>Telefonate</h2>
@@ -52,7 +55,7 @@ export async function renderCallsList(container, params = new URLSearchParams())
   try {
     const result = await getCalls({
       ...filters,
-      limit: PAGE_SIZE,
+      limit: pageSize,
       offset
     });
 
@@ -64,9 +67,9 @@ export async function renderCallsList(container, params = new URLSearchParams())
       return;
     }
 
-    const { totale, telefonate, hasNext, hasPrevious } = result.data;
-    const start = getRangeStart(currentPage, totale, telefonate.length);
-    const end = getRangeEnd(currentPage, totale, telefonate.length);
+    const { totale, telefonate, hasNext, hasPrevious, summary } = result.data;
+    const start = getRangeStart(currentPage, totale, telefonate.length, pageSize);
+    const end = getRangeEnd(currentPage, totale, telefonate.length, pageSize);
 
     container.innerHTML = `
       <section class="calls-page calls-list-page">
@@ -79,12 +82,17 @@ export async function renderCallsList(container, params = new URLSearchParams())
           <strong>${formatNumber(start)}-${formatNumber(end)} / ${formatNumber(totale)}</strong>
         </header>
 
+        <section class="calls-detail-total-card">
+          <span>Entrate totali</span>
+          <strong>${formatCurrency(summary?.entrateTotali || 0)}</strong>
+        </section>
+
         ${renderCallsFilter(filters)}
 
         <section class="calls-table-card">
           <div class="calls-section-heading">
             <h3>Elenco telefonate</h3>
-            <p>Visualizzazione di 15 telefonate alla volta.</p>
+            <p>Visualizzazione di ${formatNumber(pageSize)} telefonate alla volta.</p>
           </div>
 
           ${telefonate.length > 0 ? renderCallsTable(telefonate) : `<p class="calls-empty">Nessuna telefonata trovata.</p>`}

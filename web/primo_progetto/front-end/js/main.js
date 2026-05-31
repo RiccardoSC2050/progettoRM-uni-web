@@ -1,4 +1,4 @@
-const VERSION = "rmk-lazy-loading-v1";
+const VERSION = "rmk-contracts-mobile-fix-v1";
 
 const appContent = document.querySelector("#app-content");
 const dashboardTop = document.querySelector(".dashboard-top");

@@ -5,6 +5,7 @@
 }
 
 .calls-summary-card {
+  min-width: 0;
   padding: var(--stat-card-padding);
   border: var(--card-border);
   border-radius: var(--stat-card-radius);
@@ -14,9 +15,12 @@
 
 .calls-summary-card strong {
   display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--color-primary-dark);
   font-family: var(--font-family-heading);
-  font-size: var(--font-size-xl);
+  font-size: clamp(1.05rem, 0.92rem + 0.8vw, 1.45rem);
   font-weight: var(--stat-number-weight);
   line-height: var(--line-height-tight);
   font-variant-numeric: tabular-nums;
@@ -28,4 +32,8 @@
   color: var(--stat-label-color);
   font-size: var(--stat-label-size);
   font-weight: var(--font-weight-semibold);
+}
+
+.calls-summary-card-compact strong {
+  font-size: clamp(1rem, 0.82rem + 0.9vw, 1.35rem);
 }

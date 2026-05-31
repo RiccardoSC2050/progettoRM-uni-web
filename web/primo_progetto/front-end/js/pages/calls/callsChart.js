@@ -1,8 +1,9 @@
 import {
+  formatChartCurrency,
   formatCurrency,
   formatNumber,
   getMonthLabel
-} from "./callsFormatters.js?v=rmk-telefonate-v1";
+} from "./callsFormatters.js?v=rmk-contracts-mobile-fix-v1";
 
 export function renderCallsYearSelector(years = [], selectedYear) {
   return `
@@ -34,15 +35,17 @@ export function renderCallsChart(monthly = []) {
       <div class="calls-chart">
         ${monthly
           .map((item) => {
-            const height = Math.max(6, (Number(item.entrate || 0) / maxValue) * 100);
+            const value = Number(item.entrate || 0);
+            const height = Math.max(6, (value / maxValue) * 100);
 
             return `
               <div class="calls-chart-item">
-                <div class="calls-chart-bar-wrap">
+                <div class="calls-chart-bar-wrap" title="${formatCurrency(value)} · ${formatNumber(item.telefonate)} telefonate">
+                  <span class="calls-chart-value">${formatChartCurrency(value)}</span>
                   <span
                     class="calls-chart-bar"
                     style="--calls-bar-height: ${height}%"
-                    title="${formatCurrency(item.entrate)} · ${formatNumber(item.telefonate)} telefonate"
+                    aria-hidden="true"
                   ></span>
                 </div>
                 <strong>${getMonthLabel(item.mese)}</strong>

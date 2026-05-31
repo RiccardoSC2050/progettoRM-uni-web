@@ -3,7 +3,7 @@ import {
   formatContractValue,
   formatDate,
   formatNumber,
-} from "./contractsFormatters.js?v=rmk-calls-pagination-v1";
+} from "./contractsFormatters.js?v=rmk-contracts-mobile-fix-v1";
 
 function renderSimCell(contract) {
   if (!contract.tipoSIM) {
@@ -26,13 +26,13 @@ function renderRows(contracts) {
     .map(
       (contract) => `
       <tr>
-        <td class="contracts-cell-number"><strong>${contract.numero}</strong></td>
-        <td class="contracts-cell-type"><span class="contracts-type-badge contracts-type-${contract.tipo}">${formatContractType(contract.tipo)}</span></td>
-        <td class="contracts-cell-date">${formatDate(contract.dataAttivazione)}</td>
-        <td class="contracts-cell-value">${formatContractValue(contract)}</td>
-        <td class="contracts-cell-sim">${renderSimCell(contract)}</td>
-        <td class="contracts-cell-calls">${formatNumber(contract.numeroTelefonate)}</td>
-        <td class="contracts-cell-action">
+        <td class="contracts-cell-number" data-label="Numero"><strong>${contract.numero}</strong></td>
+        <td class="contracts-cell-type" data-label="Tipo"><span class="contracts-type-badge contracts-type-${contract.tipo}">${formatContractType(contract.tipo)}</span></td>
+        <td class="contracts-cell-date" data-label="Data attivazione">${formatDate(contract.dataAttivazione)}</td>
+        <td class="contracts-cell-value" data-label="Credito / minuti">${formatContractValue(contract)}</td>
+        <td class="contracts-cell-sim" data-label="SIM attiva">${renderSimCell(contract)}</td>
+        <td class="contracts-cell-calls" data-label="Telefonate">${formatNumber(contract.numeroTelefonate)}</td>
+        <td class="contracts-cell-action" data-label="Azione">
           <a class="contracts-row-link" href="#/contratto?numero=${encodeURIComponent(contract.numero)}">Dettaglio →</a>
         </td>
       </tr>

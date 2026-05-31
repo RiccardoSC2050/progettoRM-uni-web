@@ -1,4 +1,6 @@
 .contract-detail-summary {
+  width: 100%;
+  min-width: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-sm);
@@ -34,6 +36,8 @@
 }
 
 .contract-calls-section {
+  width: 100%;
+  min-width: 0;
   display: grid;
   gap: var(--space-md);
 }
@@ -53,11 +57,15 @@
 }
 
 .contract-calls-filter-form {
+  width: 100%;
+  min-width: 0;
   display: grid;
   gap: var(--space-md);
 }
 
 .contract-calls-filter-fields {
+  width: 100%;
+  min-width: 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-sm);
@@ -94,6 +102,8 @@
 }
 
 .contract-calls-content {
+  width: 100%;
+  min-width: 0;
   padding: var(--space-md);
   display: grid;
   gap: var(--space-sm);
@@ -114,6 +124,9 @@
 }
 
 .contract-calls-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
 }
 
@@ -181,5 +194,96 @@
 
   .contract-calls-filter-actions {
     flex-direction: column;
+  }
+}
+
+
+@media (max-width: 620px) {
+  .contract-calls-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .contract-calls-table-wrapper {
+    overflow-x: visible;
+  }
+
+  .contract-calls-table {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    border-spacing: 0;
+    table-layout: auto;
+  }
+
+  .contract-calls-table thead {
+    display: none;
+  }
+
+  .contract-calls-table,
+  .contract-calls-table tbody,
+  .contract-calls-table tr,
+  .contract-calls-table td {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .contract-calls-table tr {
+    margin-bottom: var(--space-sm);
+    padding: var(--space-sm);
+    overflow: hidden;
+    border: var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-sizing: border-box;
+  }
+
+  .contract-calls-table td {
+    min-height: 38px;
+    padding: var(--space-xs) 0;
+    display: grid;
+    grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-sm);
+    border: 0;
+    background: transparent;
+    text-align: left;
+    white-space: normal;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+  }
+
+  .contract-calls-table td::before {
+    content: attr(data-label);
+    color: var(--color-text-muted);
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  .contract-calls-table td:first-child,
+  .contract-calls-table td:last-child {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .call-cell-id,
+  .call-cell-duration,
+  .call-cell-cost,
+  .call-cell-date,
+  .call-cell-time {
+    text-align: left;
+  }
+}
+
+@media (max-width: 560px) {
+  .contract-calls-table td {
+    grid-template-columns: 1fr;
+    gap: var(--space-xxs);
   }
 }

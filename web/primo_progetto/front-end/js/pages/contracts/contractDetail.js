@@ -1,20 +1,26 @@
-import { getContractCalls, getContractDetail } from "../../api/contractsApi.js?v=rmk-calls-pagination-v1";
+import { getContractCalls, getContractDetail } from "../../api/contractsApi.js?v=rmk-contracts-mobile-fix-v1";
 import {
   formatContractType,
   formatContractValue,
   formatCurrency,
   formatDate,
   formatNumber
-} from "./contractsFormatters.js?v=rmk-calls-pagination-v1";
+} from "./contractsFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-contracts-mobile-fix-v1";
 
-const CALLS_PAGE_SIZE = 5;
+const DESKTOP_CALLS_PAGE_SIZE = 5;
+const MOBILE_CALLS_PAGE_SIZE = 3;
+
+function getCallsPageSize() {
+  return getResponsivePageSize(DESKTOP_CALLS_PAGE_SIZE, MOBILE_CALLS_PAGE_SIZE);
+}
 
 function getRangeStart(page, total, count) {
   if (total === 0 || count === 0) {
     return 0;
   }
 
-  return (page - 1) * CALLS_PAGE_SIZE + 1;
+  return (page - 1) * getCallsPageSize() + 1;
 }
 
 function getRangeEnd(page, total, count) {
@@ -22,7 +28,7 @@ function getRangeEnd(page, total, count) {
     return 0;
   }
 
-  return Math.min(page * CALLS_PAGE_SIZE, total);
+  return Math.min(page * getCallsPageSize(), total);
 }
 
 function getCallsFilters(container) {
@@ -136,11 +142,11 @@ function renderCallsTable(calls) {
           ${calls
             .map((call) => `
               <tr>
-                <td class="call-cell-id">${formatNumber(call.id)}</td>
-                <td class="call-cell-date">${formatDate(call.data)}</td>
-                <td class="call-cell-time">${call.ora}</td>
-                <td class="call-cell-duration">${formatNumber(call.durata)} s</td>
-                <td class="call-cell-cost">${formatCurrency(call.costo)}</td>
+                <td class="call-cell-id" data-label="ID">${formatNumber(call.id)}</td>
+                <td class="call-cell-date" data-label="Data">${formatDate(call.data)}</td>
+                <td class="call-cell-time" data-label="Ora">${call.ora}</td>
+                <td class="call-cell-duration" data-label="Durata">${formatNumber(call.durata)} s</td>
+                <td class="call-cell-cost" data-label="Costo">${formatCurrency(call.costo)}</td>
               </tr>
             `)
             .join("")}
@@ -152,7 +158,8 @@ function renderCallsTable(calls) {
 
 async function renderCalls(container, numero, page = 1, filters = {}) {
   const currentPage = Math.max(1, Number(page) || 1);
-  const offset = (currentPage - 1) * CALLS_PAGE_SIZE;
+  const pageSize = getCallsPageSize();
+  const offset = (currentPage - 1) * pageSize;
   const callsContainer = container.querySelector(".contract-calls-content");
 
   if (!callsContainer) {
@@ -165,7 +172,7 @@ async function renderCalls(container, numero, page = 1, filters = {}) {
     const result = await getContractCalls({
       numero,
       ...filters,
-      limit: CALLS_PAGE_SIZE,
+      limit: pageSize,
       offset
     });
 

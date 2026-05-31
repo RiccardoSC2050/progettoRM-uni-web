@@ -3,30 +3,32 @@ import {
   deleteSimDisattiva,
   getSimDisattive,
   updateSimDisattiva
-} from "../../api/simDisattiveApi.js?v=rmk-sim-responsive-v2";
-import { formatNumber } from "./simFormatters.js?v=rmk-sim-responsive-v2";
-import { getSimFiltersFromForm, renderSimFilter } from "./simFilter.js?v=rmk-sim-responsive-v2";
-import { getSimFormData, renderSimForm } from "./simForm.js?v=rmk-sim-responsive-v2";
-import { renderDeleteModal, renderEditModal } from "./simModal.js?v=rmk-sim-responsive-v2";
-import { renderSimSummary } from "./simSummary.js?v=rmk-sim-responsive-v2";
-import { renderSimTable } from "./simTable.js?v=rmk-sim-responsive-v2";
+} from "../../api/simDisattiveApi.js?v=rmk-contracts-mobile-fix-v1";
+import { formatNumber } from "./simFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { getSimFiltersFromForm, renderSimFilter } from "./simFilter.js?v=rmk-contracts-mobile-fix-v1";
+import { getSimFormData, renderSimForm } from "./simForm.js?v=rmk-contracts-mobile-fix-v1";
+import { renderDeleteModal, renderEditModal } from "./simModal.js?v=rmk-contracts-mobile-fix-v1";
+import { renderSimSummary } from "./simSummary.js?v=rmk-contracts-mobile-fix-v1";
+import { renderSimTable } from "./simTable.js?v=rmk-contracts-mobile-fix-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-contracts-mobile-fix-v1";
 
-const PAGE_SIZE = 15;
+const DESKTOP_PAGE_SIZE = 15;
+const MOBILE_PAGE_SIZE = 3;
 
-function getRangeStart(page, total, count) {
+function getRangeStart(page, total, count, pageSize) {
   if (total === 0 || count === 0) {
     return 0;
   }
 
-  return (page - 1) * PAGE_SIZE + 1;
+  return (page - 1) * pageSize + 1;
 }
 
-function getRangeEnd(page, total, count) {
+function getRangeEnd(page, total, count, pageSize) {
   if (total === 0 || count === 0) {
     return 0;
   }
 
-  return Math.min(page * PAGE_SIZE, total);
+  return Math.min(page * pageSize, total);
 }
 
 function setSimPage(page, filters = {}) {
@@ -48,7 +50,8 @@ export async function renderSimList(container, params = new URLSearchParams()) {
     tipoSIM: params.get("tipoSIM") || "",
     dataDisattivazione: params.get("dataDisattivazione") || ""
   };
-  const offset = (currentPage - 1) * PAGE_SIZE;
+  const pageSize = getResponsivePageSize(DESKTOP_PAGE_SIZE, MOBILE_PAGE_SIZE);
+  const offset = (currentPage - 1) * pageSize;
 
   container.innerHTML = `
     <h2>Gestione SIM</h2>
@@ -58,7 +61,7 @@ export async function renderSimList(container, params = new URLSearchParams()) {
   async function load() {
     const result = await getSimDisattive({
       ...filters,
-      limit: PAGE_SIZE,
+      limit: pageSize,
       offset
     });
 
@@ -71,8 +74,8 @@ export async function renderSimList(container, params = new URLSearchParams()) {
     }
 
     const { totale, sim, hasNext, hasPrevious, summary } = result.data;
-    const start = getRangeStart(currentPage, totale, sim.length);
-    const end = getRangeEnd(currentPage, totale, sim.length);
+    const start = getRangeStart(currentPage, totale, sim.length, pageSize);
+    const end = getRangeEnd(currentPage, totale, sim.length, pageSize);
 
     container.innerHTML = `
       <section class="sim-page sim-list-page">

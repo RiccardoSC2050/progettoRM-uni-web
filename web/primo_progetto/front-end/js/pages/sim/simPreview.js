@@ -1,7 +1,7 @@
-import { createSimDisattiva, getSimDisattive } from "../../api/simDisattiveApi.js?v=rmk-sim-responsive-v2";
-import { formatNumber } from "./simFormatters.js?v=rmk-sim-responsive-v2";
-import { getSimFormData, renderSimForm } from "./simForm.js?v=rmk-sim-responsive-v2";
-import { renderSimSummary } from "./simSummary.js?v=rmk-sim-responsive-v2";
+import { createSimDisattiva, getSimDisattive } from "../../api/simDisattiveApi.js?v=rmk-contracts-mobile-fix-v1";
+import { formatNumber } from "./simFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { getSimFormData, renderSimForm } from "./simForm.js?v=rmk-contracts-mobile-fix-v1";
+import { renderSimSummary } from "./simSummary.js?v=rmk-contracts-mobile-fix-v1";
 
 export async function renderSimPreview(container) {
   container.innerHTML = `

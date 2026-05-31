@@ -14,6 +14,40 @@ export function formatCurrency(value) {
   });
 }
 
+export function formatCompactCurrency(value) {
+  const amount = Number(value || 0);
+
+  if (Math.abs(amount) <= 100000) {
+    return formatCurrency(amount);
+  }
+
+  const compactValue = amount.toLocaleString("it-IT", {
+    notation: "compact",
+    maximumFractionDigits: 1
+  });
+
+  return `${compactValue} €`;
+}
+
+export function formatChartCurrency(value) {
+  const amount = Number(value || 0);
+
+  if (Math.abs(amount) < 1000) {
+    const valueLabel = amount.toLocaleString("it-IT", {
+      maximumFractionDigits: 0
+    });
+
+    return `${valueLabel} €`;
+  }
+
+  const compactValue = amount.toLocaleString("it-IT", {
+    notation: "compact",
+    maximumFractionDigits: 1
+  });
+
+  return `${compactValue} €`;
+}
+
 export function formatDate(value) {
   if (!value) {
     return "-";

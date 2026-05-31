@@ -1,5 +1,5 @@
-import { renderSimForm } from "./simForm.js?v=rmk-sim-responsive-v2";
-import { escapeHtml } from "./simFormatters.js?v=rmk-sim-responsive-v2";
+import { renderSimForm } from "./simForm.js?v=rmk-contracts-mobile-fix-v1";
+import { escapeHtml } from "./simFormatters.js?v=rmk-contracts-mobile-fix-v1";
 
 export function renderEditModal(sim) {
   return `

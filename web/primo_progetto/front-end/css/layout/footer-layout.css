@@ -1,12 +1,16 @@
 .site-footer {
   background: var(--footer-bg);
   color: var(--footer-text);
+  width: 100%;
+  min-width: 0;
   padding: var(--footer-padding);
   font-family: var(--font-family-base);
+  box-sizing: border-box;
 }
 
 .footer-container {
-  width: var(--container-width);
+  width: 100%;
+  max-width: none;
   margin-inline: auto;
   display: flex;
   flex-direction: column;

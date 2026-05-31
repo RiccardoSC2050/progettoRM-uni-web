@@ -1,4 +1,4 @@
-import { escapeHtml } from "./simFormatters.js?v=rmk-sim-responsive-v2";
+import { escapeHtml } from "./simFormatters.js?v=rmk-contracts-mobile-fix-v1";
 
 const TYPES = ["standard", "microSIM", "nanoSIM", "eSIM"];
 

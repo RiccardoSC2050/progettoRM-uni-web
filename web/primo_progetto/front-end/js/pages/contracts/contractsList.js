@@ -1,25 +1,27 @@
-import { getContracts } from "../../api/contractsApi.js?v=rmk-calls-pagination-v1";
-import { formatNumber } from "./contractsFormatters.js?v=rmk-calls-pagination-v1";
-import { renderContractsTable } from "./contractsTable.js?v=rmk-calls-pagination-v1";
-import { renderContractsSummary } from "./contractsSummary.js?v=rmk-calls-pagination-v1";
-import { renderContractsSort } from "./contractsSort.js?v=rmk-calls-pagination-v1";
+import { getContracts } from "../../api/contractsApi.js?v=rmk-contracts-mobile-fix-v1";
+import { formatNumber } from "./contractsFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { renderContractsTable } from "./contractsTable.js?v=rmk-contracts-mobile-fix-v1";
+import { renderContractsSummary } from "./contractsSummary.js?v=rmk-contracts-mobile-fix-v1";
+import { renderContractsSort } from "./contractsSort.js?v=rmk-contracts-mobile-fix-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-contracts-mobile-fix-v1";
 
-const PAGE_SIZE = 15;
+const DESKTOP_PAGE_SIZE = 15;
+const MOBILE_PAGE_SIZE = 3;
 
-function getRangeStart(page, total, count) {
+function getRangeStart(page, total, count, pageSize) {
   if (total === 0 || count === 0) {
     return 0;
   }
 
-  return (page - 1) * PAGE_SIZE + 1;
+  return (page - 1) * pageSize + 1;
 }
 
-function getRangeEnd(page, total, count) {
+function getRangeEnd(page, total, count, pageSize) {
   if (total === 0 || count === 0) {
     return 0;
   }
 
-  return Math.min(page * PAGE_SIZE, total);
+  return Math.min(page * pageSize, total);
 }
 
 function setContractsPage(page, sort, direction) {
@@ -29,7 +31,8 @@ function setContractsPage(page, sort, direction) {
 
 export async function renderContractsList(container, filters = {}, page = 1, sort = "dataAttivazione", direction = "desc") {
   const currentPage = Math.max(1, Number(page) || 1);
-  const offset = (currentPage - 1) * PAGE_SIZE;
+  const pageSize = getResponsivePageSize(DESKTOP_PAGE_SIZE, MOBILE_PAGE_SIZE);
+  const offset = (currentPage - 1) * pageSize;
 
   container.innerHTML = `
     <h2>Contratti</h2>
@@ -41,7 +44,7 @@ export async function renderContractsList(container, filters = {}, page = 1, sor
       ...filters,
       sort,
       direction,
-      limit: PAGE_SIZE,
+      limit: pageSize,
       offset
     });
 
@@ -55,8 +58,8 @@ export async function renderContractsList(container, filters = {}, page = 1, sor
 
     const { totale, contratti, hasNext, hasPrevious, summary } = result.data;
     const hasContracts = contratti.length > 0;
-    const start = getRangeStart(currentPage, totale, contratti.length);
-    const end = getRangeEnd(currentPage, totale, contratti.length);
+    const start = getRangeStart(currentPage, totale, contratti.length, pageSize);
+    const end = getRangeEnd(currentPage, totale, contratti.length, pageSize);
 
     container.innerHTML = `
       <section class="contracts-page contracts-list-page">

@@ -1,6 +1,7 @@
-import { getContracts } from "../../api/contractsApi.js?v=rmk-calls-pagination-v1";
-import { formatNumber } from "./contractsFormatters.js?v=rmk-calls-pagination-v1";
-import { renderContractsTable } from "./contractsTable.js?v=rmk-calls-pagination-v1";
+import { getContracts } from "../../api/contractsApi.js?v=rmk-contracts-mobile-fix-v1";
+import { formatNumber } from "./contractsFormatters.js?v=rmk-contracts-mobile-fix-v1";
+import { renderContractsTable } from "./contractsTable.js?v=rmk-contracts-mobile-fix-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-contracts-mobile-fix-v1";
 
 export async function renderContractsPreview(container, filters = {}) {
   container.innerHTML = `
@@ -11,7 +12,7 @@ export async function renderContractsPreview(container, filters = {}) {
   try {
     const result = await getContracts({
       ...filters,
-      limit: 5,
+      limit: getResponsivePageSize(5, 3),
       offset: 0
     });
 

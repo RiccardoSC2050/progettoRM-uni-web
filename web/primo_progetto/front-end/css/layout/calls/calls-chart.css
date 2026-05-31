@@ -31,6 +31,7 @@
 .calls-latest-card,
 .calls-table-card,
 .calls-filter-card {
+  min-width: 0;
   display: grid;
   gap: var(--space-md);
   padding: var(--card-padding);
@@ -59,6 +60,7 @@
 }
 
 .calls-chart-bar-wrap {
+  position: relative;
   height: 210px;
   display: flex;
   align-items: end;
@@ -66,6 +68,21 @@
   border-radius: var(--radius-pill);
   background: var(--color-primary-lighter);
   overflow: hidden;
+}
+
+.calls-chart-value {
+  position: absolute;
+  top: var(--space-xs);
+  left: 50%;
+  z-index: 1;
+  width: calc(100% - var(--space-xs));
+  transform: translateX(-50%);
+  color: var(--color-primary-darker);
+  font-size: clamp(0.62rem, 0.55rem + 0.35vw, 0.78rem);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .calls-chart-bar {
@@ -105,5 +122,11 @@
 @media (max-width: 460px) {
   .calls-chart {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .calls-chart-value {
+    font-size: 0.68rem;
   }
 }

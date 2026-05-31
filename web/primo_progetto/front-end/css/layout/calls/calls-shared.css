@@ -1,4 +1,5 @@
 .calls-page {
+  min-width: 0;
   display: grid;
   gap: var(--space-lg);
 }
@@ -119,4 +120,31 @@
   .page-preview-link {
     width: 100%;
   }
+}
+
+.calls-detail-total-card {
+  padding: var(--space-md);
+  display: grid;
+  gap: var(--space-xxs);
+  border: var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--color-primary-lighter);
+  box-shadow: var(--card-shadow);
+}
+
+.calls-detail-total-card span {
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.calls-detail-total-card strong {
+  color: var(--color-primary-darker);
+  font-family: var(--font-family-heading);
+  font-size: clamp(1.15rem, 1rem + 1vw, 1.75rem);
+  line-height: var(--line-height-tight);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }

@@ -54,7 +54,9 @@ if ($durataMin !== false && $durataMin !== null) {
 $whereSql = count($where) > 0 ? "WHERE " . implode(" AND ", $where) : "";
 
 $countSql = "
-    SELECT COUNT(*) AS totale
+    SELECT
+        COUNT(*) AS totale,
+        COALESCE(SUM(t.costo), 0) AS entrateTotali
     FROM Telefonata t
     $whereSql
 ";
@@ -75,6 +77,7 @@ $countStmt->execute();
 $countResult = $countStmt->get_result();
 $countRow = $countResult->fetch_assoc();
 $totale = (int) $countRow["totale"];
+$entrateTotali = (float) $countRow["entrateTotali"];
 $countStmt->close();
 
 $sql = "
@@ -134,6 +137,9 @@ echo json_encode([
         "offset" => $offset,
         "hasNext" => $offset + $limit < $totale,
         "hasPrevious" => $offset - $limit >= 0,
+        "summary" => [
+            "entrateTotali" => $entrateTotali
+        ],
         "telefonate" => $telefonate
     ]
 ]);
