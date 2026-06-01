@@ -13,10 +13,10 @@ export const API_ENDPOINTS = {
     summary: `${API_BASE}/telefonate/get-calls-summary.php`,
     list: `${API_BASE}/telefonate/get-calls.php`
   },
-  simDisattive: {
-    list: `${API_BASE}/sim-disattive/get-sim-disattive.php`,
-    create: `${API_BASE}/sim-disattive/create-sim-disattiva.php`,
-    update: `${API_BASE}/sim-disattive/update-sim-disattiva.php`,
-    delete: `${API_BASE}/sim-disattive/delete-sim-disattiva.php`
+  sim: {
+    list: `${API_BASE}/sim/get-sim.php`,
+    create: `${API_BASE}/sim/create-sim.php`,
+    update: `${API_BASE}/sim/update-sim.php`,
+    delete: `${API_BASE}/sim/delete-sim.php`
   }
 };

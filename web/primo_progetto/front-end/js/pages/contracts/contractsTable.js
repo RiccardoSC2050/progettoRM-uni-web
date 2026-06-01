@@ -1,10 +1,10 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
 import {
   formatContractType,
   formatContractValue,
   formatDate,
   formatNumber
-} from "./contractsFormatters.js?v=rmk-architecture-v1";
+} from "./contractsFormatters.js?v=rmk-sim-db-v1";
 
 function getContractTypeClass(type) {
   return type === "ricarica" ? "ricarica" : "consumo";

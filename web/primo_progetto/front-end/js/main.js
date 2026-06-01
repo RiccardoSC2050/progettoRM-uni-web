@@ -1,8 +1,8 @@
-import { getAppDomRefs } from "./app/domRefs.js?v=rmk-architecture-v1";
-import { getDashboardFilters } from "./app/filters.js?v=rmk-architecture-v1";
-import { setLayout } from "./app/navigation.js?v=rmk-architecture-v1";
-import { getRouteData, setContractsDetailPage } from "./app/routeState.js?v=rmk-architecture-v1";
-import { VERSION } from "./app/version.js?v=rmk-architecture-v1";
+import { getAppDomRefs } from "./app/domRefs.js?v=rmk-sim-db-v1";
+import { getDashboardFilters } from "./app/filters.js?v=rmk-sim-db-v1";
+import { setLayout } from "./app/navigation.js?v=rmk-sim-db-v1";
+import { getRouteData, setContractsDetailPage } from "./app/routeState.js?v=rmk-sim-db-v1";
+import { VERSION } from "./app/version.js?v=rmk-sim-db-v1";
 
 const refs = getAppDomRefs();
 

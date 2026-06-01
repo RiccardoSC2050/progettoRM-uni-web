@@ -2,7 +2,7 @@
 
 function fetchLatestCallYear(mysqli $conn): int
 {
-    $result = $conn->query("SELECT YEAR(MAX(data)) AS anno FROM Telefonata");
+    $result = $conn->query("SELECT YEAR(MAX(data)) AS anno FROM telefonata");
 
     if (!$result) {
         throw new RuntimeException($conn->error);
@@ -22,7 +22,7 @@ function fetchCallsSummary(mysqli $conn, int $year, string $mode = "full"): arra
             COALESCE(SUM(durata), 0) AS durataTotale,
             COALESCE(AVG(durata), 0) AS durataMedia,
             COUNT(DISTINCT effettuataDa) AS contrattiCoinvolti
-        FROM Telefonata
+        FROM telefonata
     ");
 
     if (!$summaryResult) {
@@ -32,7 +32,7 @@ function fetchCallsSummary(mysqli $conn, int $year, string $mode = "full"): arra
     $summary = $summaryResult->fetch_assoc();
     $yearsResult = $conn->query("
         SELECT DISTINCT YEAR(data) AS anno
-        FROM Telefonata
+        FROM telefonata
         ORDER BY anno DESC
     ");
 
@@ -51,7 +51,7 @@ function fetchCallsSummary(mysqli $conn, int $year, string $mode = "full"): arra
             MONTH(data) AS mese,
             COUNT(*) AS telefonate,
             COALESCE(SUM(costo), 0) AS entrate
-        FROM Telefonata
+        FROM telefonata
         WHERE YEAR(data) = ?
         GROUP BY MONTH(data)
         ORDER BY mese ASC
@@ -99,7 +99,7 @@ function fetchCallsSummary(mysqli $conn, int $year, string $mode = "full"): arra
 
     $latestResult = $conn->query("
         SELECT id, effettuataDa, data, ora, durata, costo
-        FROM Telefonata
+        FROM telefonata
         ORDER BY data DESC, ora DESC, id DESC
         LIMIT 5
     ");
@@ -187,7 +187,7 @@ function fetchCalls(mysqli $conn, array $filters): array
         SELECT
             COUNT(*) AS totale,
             COALESCE(SUM(t.costo), 0) AS entrateTotali
-        FROM Telefonata t
+        FROM telefonata t
         $whereSql
     ");
 
@@ -217,8 +217,8 @@ function fetchCalls(mysqli $conn, array $filters): array
             t.durata,
             t.costo,
             ct.tipo AS tipoContratto
-        FROM Telefonata t
-        LEFT JOIN ContrattoTelefonico ct
+        FROM telefonata t
+        LEFT JOIN contrattotelefonico ct
             ON ct.numero = t.effettuataDa
         $whereSql
         ORDER BY t.data DESC, t.ora DESC, t.id DESC

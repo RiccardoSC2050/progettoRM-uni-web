@@ -4,7 +4,7 @@
 
 RK/MK è un'applicazione web didattica sviluppata per il progetto di Programmazione Web sul dominio dei contratti telefonici.
 
-L'applicazione permette di consultare dati relativi a contratti, telefonate e SIM, con una gestione CRUD dedicata alle SIM disattivate. Il lavoro è stato orientato a costruire un'interfaccia leggibile, responsive e coerente, mantenendo una separazione ordinata tra front-end, back-end e database.
+L'applicazione permette di consultare dati relativi a contratti, telefonate e SIM, con una gestione dedicata all’intero ciclo delle SIM: non attive, attive e disattivate. Il lavoro è stato orientato a costruire un'interfaccia leggibile, responsive e coerente, mantenendo una separazione ordinata tra front-end, back-end e database.
 
 ## 2. Obiettivo del progetto
 
@@ -14,7 +14,7 @@ L'obiettivo principale è realizzare una web application capace di:
 - consultare contratti telefonici;
 - approfondire i dati di un singolo contratto;
 - visualizzare e filtrare telefonate;
-- gestire le SIM disattivate tramite operazioni di creazione, lettura, modifica ed eliminazione;
+- gestire le SIM su tutte le condizioni operative: creazione, consultazione, modifica delle SIM attive/non attive, disattivazione ed eliminazione delle SIM disattivate;
 - mantenere un collegamento chiaro tra interfaccia, API PHP e database MySQL.
 
 Il progetto non prevede autenticazione, perché l'applicazione è stata pensata per un unico tipo di utente, come richiesto dalle indicazioni progettuali.
@@ -88,28 +88,29 @@ Questa struttura valorizza il collegamento tra front-end e back-end perché ogni
 
 Il database è basato sulle entità principali del dominio telefonico:
 
-- `ContrattoTelefonico`;
-- `Telefonata`;
-- `SIMAttiva`;
-- `SIMDisattiva`;
-- `SIMNonAttiva`.
+- `contrattotelefonico`;
+- `telefonata`;
+- `simattiva`;
+- `simdisattiva`;
+- `simnonattiva`.
 
 La cartella `database/` contiene lo schema SQL di riferimento e le istruzioni per ricreare la struttura dati.
 
 ## 8. CRUD SIM
 
-La gestione CRUD è stata concentrata sulle SIM disattivate.
+La gestione SIM lavora sull’insieme delle tabelle `simattiva`, `simdisattiva` e `simnonattiva`.
 
 L'utente può:
 
-- visualizzare le SIM disattivate;
-- filtrare l'elenco;
-- creare una nuova SIM disattivata;
-- modificare una SIM esistente;
-- eliminare una SIM;
-- gestire casi particolari, come la riattivazione di una SIM.
+- visualizzare tutte le SIM;
+- filtrare l'elenco per codice, contratto, tipo, stato e data di disattivazione;
+- creare una nuova SIM;
+- modificare le SIM attive o non attive;
+- attivare SIM non attive o disattivate collegandole a un contratto e indicando la data di attivazione;
+- disattivare una SIM attiva spostandola subito nello storico `simdisattiva` con data di disattivazione odierna;
+- eliminare solo le SIM disattivate.
 
-La sezione è stata curata sia dal punto di vista funzionale sia dal punto di vista dell'esperienza utente, con controlli sui dati e suggerimenti nei form.
+La sezione è stata curata sia dal punto di vista funzionale sia dal punto di vista dell'esperienza utente, con controlli sui dati, suggerimenti nei form e coerenza con lo schema originale del database.
 
 ## 9. UI, UX e responsive design
 

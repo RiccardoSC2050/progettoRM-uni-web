@@ -1,11 +1,11 @@
-import { formatNumber } from "./simFormatters.js?v=rmk-architecture-v1";
+import { formatNumber } from "./simFormatters.js?v=rmk-sim-db-v1";
 
 export function renderSimSummary(summary = {}) {
   const cards = [
-    ["SIM disattive", summary.totale],
-    ["standard", summary.standard],
-    ["microSIM", summary.microSIM],
-    ["nanoSIM", summary.nanoSIM],
+    ["SIM totali", summary.totale],
+    ["Attive", summary.attive],
+    ["Disattivate", summary.disattive],
+    ["Non attive", summary.nonAttive],
     ["eSIM", summary.eSIM]
   ];
 

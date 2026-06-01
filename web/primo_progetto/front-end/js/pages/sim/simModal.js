@@ -1,5 +1,5 @@
-import { renderSimForm } from "./simForm.js?v=rmk-architecture-v1";
-import { escapeHtml } from "./simFormatters.js?v=rmk-architecture-v1";
+import { renderSimForm } from "./simForm.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "./simFormatters.js?v=rmk-sim-db-v1";
 
 export function renderEditModal(sim, options = {}) {
   return `
@@ -17,7 +17,7 @@ export function renderDeleteModal(codice) {
     <div class="sim-modal-backdrop" role="dialog" aria-modal="true">
       <div class="sim-modal sim-modal-confirm">
         <h3>Eliminare la SIM?</h3>
-        <p>Stai per eliminare la SIM <strong>${escapeHtml(codice)}</strong>. L’operazione aggiorna il database.</p>
+        <p>Stai per eliminare la SIM disattivata <strong>${escapeHtml(codice)}</strong>. L’operazione aggiorna il database.</p>
 
         <div class="sim-form-actions">
           <button class="sim-btn sim-btn-danger" type="button" data-confirm-delete="${escapeHtml(codice)}">Elimina</button>

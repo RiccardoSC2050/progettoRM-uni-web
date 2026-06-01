@@ -21,23 +21,24 @@ L'applicazione deve permettere di:
 - approfondire i dati di un contratto;
 - visualizzare le telefonate effettuate;
 - filtrare e ordinare i dati dove previsto;
-- gestire CRUD sulla tabella `SIMDisattiva`;
+- gestire le SIM considerando `simattiva`, `simdisattiva` e `simnonattiva`;
 - mostrare informazioni collegate tra contratti, SIM e telefonate.
 
-## 3. CRUD SIMDisattiva
+## 3. Gestione SIM
 
-La tabella principale per il CRUD è `SIMDisattiva`.
+La sezione SIM lavora sull’insieme delle tabelle `simattiva`, `simdisattiva` e `simnonattiva`.
 
 Operazioni richieste:
 
 ```text
-Create → inserimento di una SIM disattivata
-Read   → visualizzazione e ricerca delle SIM disattivate
-Update → modifica dei dati di una SIM disattivata
-Delete → eliminazione di una SIM disattivata
+Create → inserimento di una nuova SIM non attiva
+Read   → visualizzazione e ricerca di tutte le SIM
+Update → modifica delle SIM attive o non attive
+Stato  → attivazione o disattivazione rispettando simattiva, simdisattiva e simnonattiva
+Delete → eliminazione consentita solo per SIM disattivate
 ```
 
-Il form deve guidare l'utente con controlli, messaggi ed esempi.
+Il form deve guidare l'utente con controlli, messaggi ed esempi. La data di scadenza futura non viene gestita perché non esiste nella tabella `simattiva`. La `dataDisattivazione` viene valorizzata solo quando la SIM passa realmente nello storico `simdisattiva`.
 
 ## 4. Requisiti di interfaccia
 
@@ -67,11 +68,11 @@ Il back-end deve comunicare con il front-end tramite risposte JSON.
 Il database deve contenere tabelle coerenti con il dominio:
 
 ```text
-ContrattoTelefonico
-Telefonata
-SIMAttiva
-SIMDisattiva
-SIMNonAttiva
+contrattotelefonico
+telefonata
+simattiva
+simdisattiva
+simnonattiva
 ```
 
 Le relazioni principali devono permettere di collegare:

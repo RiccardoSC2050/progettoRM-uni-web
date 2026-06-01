@@ -1,4 +1,4 @@
-import { formatNumber } from "./contractsFormatters.js?v=rmk-architecture-v1";
+import { formatNumber } from "./contractsFormatters.js?v=rmk-sim-db-v1";
 
 export function renderContractsSummary(summary) {
   return `

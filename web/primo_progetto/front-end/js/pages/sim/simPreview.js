@@ -1,29 +1,17 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
-import { createSimDisattiva, getSimDisattive } from "../../api/simDisattiveApi.js?v=rmk-architecture-v1";
-import { getContracts } from "../../api/contractsApi.js?v=rmk-architecture-v1";
-import { formatNumber } from "./simFormatters.js?v=rmk-architecture-v1";
-import { getSimFormData, renderSimForm } from "./simForm.js?v=rmk-architecture-v1";
-import { renderSimSummary } from "./simSummary.js?v=rmk-architecture-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
+import { createSim, getSim } from "../../api/simApi.js?v=rmk-sim-db-v1";
+import { formatNumber } from "./simFormatters.js?v=rmk-sim-db-v1";
+import { getSimFormData, renderSimForm } from "./simForm.js?v=rmk-sim-db-v1";
+import { bindSimGuide, renderSimGuideTrigger } from "./simGuide.js?v=rmk-sim-db-v1";
+import { renderSimSummary } from "./simSummary.js?v=rmk-sim-db-v1";
+import { showSimPostCreateActions } from "./simPostCreate.js?v=rmk-sim-db-v1";
+import { getContractOptions } from "./simOptions.js?v=rmk-sim-db-v1";
 import {
   bindSimFormAssistance,
   getUserFriendlySimError,
   showSimFormMessage,
   validateSimFormBeforeSubmit
-} from "./simValidation.js?v=rmk-architecture-v1";
-
-async function getContractOptions() {
-  try {
-    const result = await getContracts({ limit: 5, offset: 0, sort: "dataAttivazione", direction: "desc" });
-
-    if (!result.success) {
-      return [];
-    }
-
-    return result.data.contratti.map((contract) => contract.numero).filter(Boolean);
-  } catch (_) {
-    return [];
-  }
-}
+} from "./simValidation.js?v=rmk-sim-db-v1";
 
 export async function renderSimPreview(container) {
   container.innerHTML = `
@@ -33,7 +21,7 @@ export async function renderSimPreview(container) {
 
   async function load() {
     const [result, contractOptions] = await Promise.all([
-      getSimDisattive({ limit: 1, offset: 0 }),
+      getSim({ limit: 1, offset: 0 }),
       getContractOptions()
     ]);
 
@@ -52,10 +40,13 @@ export async function renderSimPreview(container) {
         <header class="sim-page-header">
           <div>
             <h2>Gestione SIM</h2>
-            <p>Riepilogo operativo delle SIM disattive e creazione rapida.</p>
+            <p>Riepilogo operativo di tutte le SIM e creazione rapida.</p>
           </div>
 
-          <strong>${formatNumber(summary.totale)} SIM disattive</strong>
+          <div class="sim-page-header-actions">
+            ${renderSimGuideTrigger()}
+            <strong>${formatNumber(summary.totale)} SIM totali</strong>
+          </div>
         </header>
 
         ${renderSimSummary(summary)}
@@ -67,6 +58,7 @@ export async function renderSimPreview(container) {
       </section>
     `;
 
+    bindSimGuide(container);
     bindCreateForm(contractOptions);
   }
 
@@ -90,11 +82,10 @@ export async function renderSimPreview(container) {
       button.disabled = true;
 
       try {
-        const result = await createSimDisattiva(getSimFormData(form));
+        const result = await createSim(getSimFormData(form));
 
         if (result.success) {
-          showSimFormMessage(form, "info", result.message);
-          window.setTimeout(load, 500);
+          showSimPostCreateActions(form, getSimFormData(form), load);
           return;
         }
 
@@ -103,7 +94,7 @@ export async function renderSimPreview(container) {
         showSimFormMessage(
           form,
           "error",
-          getUserFriendlySimError(error, "Errore nella creazione della SIM. Controlla codice, contratto e date.")
+          getUserFriendlySimError(error, "Errore nella creazione della SIM. Controlla codice, stato e dati richiesti.")
         );
       } finally {
         button.disabled = false;

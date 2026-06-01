@@ -1,11 +1,11 @@
-import { escapeHtml } from "../../../utils/escapeHtml.js?v=rmk-architecture-v1";
+import { escapeHtml } from "../../../utils/escapeHtml.js?v=rmk-sim-db-v1";
 import {
   formatContractType,
   formatContractValue,
   formatCurrency,
   formatDate,
   formatNumber
-} from "../contractsFormatters.js?v=rmk-architecture-v1";
+} from "../contractsFormatters.js?v=rmk-sim-db-v1";
 
 export function renderMissingContractNumber() {
   return `

@@ -3,7 +3,7 @@ import {
   formatCurrency,
   formatNumber,
   getMonthLabel
-} from "./callsFormatters.js?v=rmk-architecture-v1";
+} from "./callsFormatters.js?v=rmk-sim-db-v1";
 
 export function renderCallsYearSelector(years = [], selectedYear) {
   return `

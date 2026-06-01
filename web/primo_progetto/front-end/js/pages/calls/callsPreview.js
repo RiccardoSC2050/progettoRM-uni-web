@@ -1,8 +1,8 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
-import { getCallsSummary } from "../../api/callsApi.js?v=rmk-architecture-v1";
-import { renderCallsChart, renderCallsYearSelector } from "./callsChart.js?v=rmk-architecture-v1";
-import { renderCallsSummary } from "./callsSummary.js?v=rmk-architecture-v1";
-import { renderCallsTable } from "./callsTable.js?v=rmk-architecture-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
+import { getCallsSummary } from "../../api/callsApi.js?v=rmk-sim-db-v1";
+import { renderCallsChart, renderCallsYearSelector } from "./callsChart.js?v=rmk-sim-db-v1";
+import { renderCallsSummary } from "./callsSummary.js?v=rmk-sim-db-v1";
+import { renderCallsTable } from "./callsTable.js?v=rmk-sim-db-v1";
 
 function setCallsYearInUrl(year) {
   const params = new URLSearchParams();

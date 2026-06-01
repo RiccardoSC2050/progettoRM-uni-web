@@ -36,10 +36,11 @@ La checklist serve a controllare che le sezioni principali funzionino e che la s
 
 - [ ] Visualizzazione anteprima SIM
 - [ ] Apertura approfondimento SIM
-- [ ] Creazione SIM disattivata
-- [ ] Modifica SIM disattivata
-- [ ] Eliminazione SIM disattivata
-- [ ] Riattivazione SIM quando prevista
+- [ ] Creazione SIM
+- [ ] Visualizzazione di SIM attive, disattivate e non attive
+- [ ] Modifica SIM attiva o non attiva
+- [ ] Disattivazione immediata di una SIM attiva con data odierna
+- [ ] Eliminazione consentita solo per SIM disattivate
 - [ ] Messaggi utente chiari
 - [ ] Suggerimenti nei form comprensibili
 

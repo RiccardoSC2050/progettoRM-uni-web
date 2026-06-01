@@ -51,7 +51,7 @@ function fetchContracts(mysqli $conn, array $filters): array
 
     $countSql = "
         SELECT COUNT(*) AS totale
-        FROM ContrattoTelefonico ct
+        FROM contrattotelefonico ct
         $whereSql
     ";
 
@@ -77,8 +77,8 @@ function fetchContracts(mysqli $conn, array $filters): array
             SUM(CASE WHEN ct.tipo = 'ricarica' THEN 1 ELSE 0 END) AS ricarica,
             SUM(CASE WHEN ct.tipo = 'consumo' THEN 1 ELSE 0 END) AS consumo,
             SUM(CASE WHEN sa.codice IS NULL THEN 1 ELSE 0 END) AS senzaSIM
-        FROM ContrattoTelefonico ct
-        LEFT JOIN SIMAttiva sa
+        FROM contrattotelefonico ct
+        LEFT JOIN simattiva sa
             ON sa.associataA = ct.numero
         $whereSql
     ";
@@ -109,11 +109,11 @@ function fetchContracts(mysqli $conn, array $filters): array
             sa.tipoSIM,
             (
                 SELECT COUNT(*)
-                FROM Telefonata tel
+                FROM telefonata tel
                 WHERE tel.effettuataDa = ct.numero
             ) AS numeroTelefonate
-        FROM ContrattoTelefonico ct
-        LEFT JOIN SIMAttiva sa
+        FROM contrattotelefonico ct
+        LEFT JOIN simattiva sa
             ON sa.associataA = ct.numero
         $whereSql
         ORDER BY $orderColumn $directionSql, ct.numero ASC
@@ -184,8 +184,8 @@ function fetchContractDetail(mysqli $conn, string $numero): ?array
             COALESCE(tel.numeroTelefonate, 0) AS numeroTelefonate,
             COALESCE(tel.durataTotale, 0) AS durataTotale,
             COALESCE(tel.costoTotale, 0) AS costoTotale
-        FROM ContrattoTelefonico ct
-        LEFT JOIN SIMAttiva sa
+        FROM contrattotelefonico ct
+        LEFT JOIN simattiva sa
             ON sa.associataA = ct.numero
         LEFT JOIN (
             SELECT
@@ -193,7 +193,7 @@ function fetchContractDetail(mysqli $conn, string $numero): ?array
                 COUNT(*) AS numeroTelefonate,
                 SUM(durata) AS durataTotale,
                 SUM(costo) AS costoTotale
-            FROM Telefonata
+            FROM telefonata
             GROUP BY effettuataDa
         ) tel
             ON tel.effettuataDa = ct.numero
@@ -273,7 +273,7 @@ function fetchContractCalls(mysqli $conn, array $filters): array
     }
 
     $whereSql = "WHERE " . implode(" AND ", $where);
-    $countStmt = $conn->prepare("SELECT COUNT(*) AS totale FROM Telefonata $whereSql");
+    $countStmt = $conn->prepare("SELECT COUNT(*) AS totale FROM telefonata $whereSql");
 
     if (!$countStmt) {
         throw new RuntimeException($conn->error);
@@ -290,7 +290,7 @@ function fetchContractCalls(mysqli $conn, array $filters): array
 
     $sql = "
         SELECT id, data, ora, durata, costo
-        FROM Telefonata
+        FROM telefonata
         $whereSql
         ORDER BY data DESC, ora DESC, id DESC
         LIMIT ? OFFSET ?

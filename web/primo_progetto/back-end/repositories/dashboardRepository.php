@@ -4,11 +4,11 @@ function fetchDashboardSummary(mysqli $conn): array
 {
     $summary = [];
     $queries = [
-        "contratti" => "SELECT COUNT(*) AS totale FROM ContrattoTelefonico",
-        "simAttive" => "SELECT COUNT(*) AS totale FROM SIMAttiva",
-        "simDisattive" => "SELECT COUNT(*) AS totale FROM SIMDisattiva",
-        "simNonAttive" => "SELECT COUNT(*) AS totale FROM SIMNonAttiva",
-        "telefonate" => "SELECT COUNT(*) AS totale FROM Telefonata"
+        "contratti" => "SELECT COUNT(*) AS totale FROM contrattotelefonico",
+        "simAttive" => "SELECT COUNT(*) AS totale FROM simattiva",
+        "simDisattive" => "SELECT COUNT(*) AS totale FROM simdisattiva",
+        "simNonAttive" => "SELECT COUNT(*) AS totale FROM simnonattiva",
+        "telefonate" => "SELECT COUNT(*) AS totale FROM telefonata"
     ];
 
     foreach ($queries as $key => $sql) {

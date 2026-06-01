@@ -13,12 +13,41 @@ database/
 ## Tabelle principali
 
 ```text
-ContrattoTelefonico
-Telefonata
-SIMAttiva
-SIMDisattiva
-SIMNonAttiva
+contrattotelefonico
+telefonata
+simattiva
+simdisattiva
+simnonattiva
 ```
+
+## Gestione SIM
+
+La struttura segue lo schema originale del progetto:
+
+```text
+simnonattiva
+- codice
+- tipoSIM
+```
+
+```text
+simattiva
+- codice
+- tipoSIM
+- associataA
+- dataAttivazione
+```
+
+```text
+simdisattiva
+- codice
+- tipoSIM
+- eraAssociataA
+- dataAttivazione
+- dataDisattivazione
+```
+
+La data di disattivazione non è una scadenza futura della SIM attiva. Viene salvata solo quando la SIM viene effettivamente disattivata e passa nello storico `simdisattiva`.
 
 ## Uso
 

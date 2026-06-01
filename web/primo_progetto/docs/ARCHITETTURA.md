@@ -114,7 +114,7 @@ front-end/js/api/
 ├── dashboardApi.js
 ├── endpoints.js
 ├── httpClient.js
-└── simDisattiveApi.js
+└── simApi.js
 ```
 
 La cartella `api/` contiene solo il dialogo con il back-end.
@@ -160,7 +160,7 @@ back-end/
 back-end/api/
 ├── contracts/
 ├── dashboard/
-├── sim-disattive/
+├── sim/
 └── telefonate/
 ```
 
@@ -178,8 +178,8 @@ Esempio:
 
 ```text
 endpoint SIM
-→ simDisattiveService.php
-→ simDisattiveRepository.php
+→ simService.php
+→ repositories/sim/
 ```
 
 ### 5.3 Repositories
@@ -189,6 +189,21 @@ back-end/repositories/
 ```
 
 I repository contengono le query SQL. Questo permette di non mischiare codice HTTP e SQL nello stesso file.
+
+Per la Gestione SIM, il repository è diviso in moduli mirati:
+
+```text
+back-end/repositories/sim/
+├── simLookupRepository.php
+├── simQueryHelpers.php
+├── simReadRepository.php
+└── simWriteRepository.php
+```
+
+- `simReadRepository.php` legge lista, filtri e riepilogo;
+- `simWriteRepository.php` gestisce inserimenti, spostamenti di stato ed eliminazioni;
+- `simLookupRepository.php` controlla contratti disponibili e codici duplicati;
+- `simQueryHelpers.php` contiene costruzione della UNION e filtri comuni.
 
 ### 5.4 Core
 
@@ -225,7 +240,7 @@ database/
 └── schema.sql
 ```
 
-Lo schema rende esplicite le tabelle usate dall'applicazione e permette di ricreare la struttura dati.
+Lo schema rende esplicite le tabelle usate dall'applicazione e permette di ricreare la struttura dati. La Gestione SIM rispetta le tre tabelle originali: `simnonattiva`, `simattiva` e `simdisattiva`. La scadenza futura non è memorizzabile nello schema attuale: `simattiva` non contiene una colonna dedicata. La `dataDisattivazione` viene salvata solo nello storico `simdisattiva`.
 
 ## 7. Documentazione
 

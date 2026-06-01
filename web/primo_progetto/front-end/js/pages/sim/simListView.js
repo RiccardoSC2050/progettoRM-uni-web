@@ -1,13 +1,14 @@
-import { formatNumber } from "./simFormatters.js?v=rmk-architecture-v1";
-import { renderSimFilter } from "./simFilter.js?v=rmk-architecture-v1";
-import { renderSimForm } from "./simForm.js?v=rmk-architecture-v1";
-import { renderSimSummary } from "./simSummary.js?v=rmk-architecture-v1";
-import { renderSimTable } from "./simTable.js?v=rmk-architecture-v1";
+import { formatNumber } from "./simFormatters.js?v=rmk-sim-db-v1";
+import { renderSimFilter } from "./simFilter.js?v=rmk-sim-db-v1";
+import { renderSimGuideTrigger } from "./simGuide.js?v=rmk-sim-db-v1";
+import { renderSimForm } from "./simForm.js?v=rmk-sim-db-v1";
+import { renderSimSummary } from "./simSummary.js?v=rmk-sim-db-v1";
+import { renderSimTable } from "./simTable.js?v=rmk-sim-db-v1";
 
 export function renderSimListLoading() {
   return `
     <h2>Gestione SIM</h2>
-    <p>Caricamento SIM disattive...</p>
+    <p>Caricamento SIM...</p>
   `;
 }
 
@@ -27,11 +28,14 @@ export function renderSimListPage({ currentPage, filters, pageSize, contractOpti
     <section class="sim-page sim-list-page">
       <header class="sim-page-header">
         <div>
-          <h2>Gestione SIM disattive</h2>
-          <p>Pagina dedicata al CRUD della tabella SIMDisattiva.</p>
+          <h2>Gestione SIM</h2>
+          <p>Pagina dedicata alla gestione completa delle SIM: attive, disattivate e non attive.</p>
         </div>
 
-        <strong>${formatNumber(start)}-${formatNumber(end)} / ${formatNumber(totale)}</strong>
+        <div class="sim-page-header-actions">
+          ${renderSimGuideTrigger()}
+          <strong>${formatNumber(start)}-${formatNumber(end)} / ${formatNumber(totale)}</strong>
+        </div>
       </header>
 
       ${renderSimSummary(summary)}
@@ -40,8 +44,8 @@ export function renderSimListPage({ currentPage, filters, pageSize, contractOpti
 
       <section class="sim-table-card">
         <div class="sim-section-heading">
-          <h3>SIM disattive registrate</h3>
-          <p>Modifica o elimina la riga interessata.</p>
+          <h3>SIM registrate</h3>
+          <p>Usa Attiva, Disattiva o Modifica per cambiare stato. Le SIM disattivate possono essere riattivate o eliminate.</p>
         </div>
 
         ${sim.length > 0 ? renderSimTable(sim) : `<p class="sim-empty">Nessuna SIM trovata.</p>`}

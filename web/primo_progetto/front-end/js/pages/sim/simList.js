@@ -1,22 +1,20 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
-import {
-  createSimDisattiva,
-  deleteSimDisattiva,
-  getSimDisattive,
-  updateSimDisattiva
-} from "../../api/simDisattiveApi.js?v=rmk-architecture-v1";
-import { getSimFiltersFromForm } from "./simFilter.js?v=rmk-architecture-v1";
-import { getSimFormData } from "./simForm.js?v=rmk-architecture-v1";
-import { renderDeleteModal, renderEditModal } from "./simModal.js?v=rmk-architecture-v1";
-import { getContractOptions } from "./simOptions.js?v=rmk-architecture-v1";
-import { getSimPageSize, getSimRouteState, setSimPage } from "./simListState.js?v=rmk-architecture-v1";
-import { renderSimListError, renderSimListLoading, renderSimListPage } from "./simListView.js?v=rmk-architecture-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
+import { createSim, deleteSim, getSim, updateSim } from "../../api/simApi.js?v=rmk-sim-db-v1";
+import { getSimFiltersFromForm } from "./simFilter.js?v=rmk-sim-db-v1";
+import { getSimFormData } from "./simForm.js?v=rmk-sim-db-v1";
+import { bindSimGuide } from "./simGuide.js?v=rmk-sim-db-v1";
+import { renderDeleteModal, renderEditModal } from "./simModal.js?v=rmk-sim-db-v1";
+import { showSimModalCompletion } from "./simModalCompletion.js?v=rmk-sim-db-v1";
+import { getContractOptions } from "./simOptions.js?v=rmk-sim-db-v1";
+import { showSimPostCreateActions } from "./simPostCreate.js?v=rmk-sim-db-v1";
+import { getSimPageSize, getSimRouteState, setSimPage } from "./simListState.js?v=rmk-sim-db-v1";
+import { renderSimListError, renderSimListLoading, renderSimListPage } from "./simListView.js?v=rmk-sim-db-v1";
 import {
   bindSimFormAssistance,
   getUserFriendlySimError,
   showSimFormMessage,
   validateSimFormBeforeSubmit
-} from "./simValidation.js?v=rmk-architecture-v1";
+} from "./simValidation.js?v=rmk-sim-db-v1";
 
 export async function renderSimList(container, params = new URLSearchParams()) {
   const { currentPage, filters } = getSimRouteState(params);
@@ -28,7 +26,7 @@ export async function renderSimList(container, params = new URLSearchParams()) {
 
   async function load() {
     const [result, loadedContracts] = await Promise.all([
-      getSimDisattive({
+      getSim({
         ...filters,
         limit: pageSize,
         offset
@@ -55,6 +53,7 @@ export async function renderSimList(container, params = new URLSearchParams()) {
   }
 
   function bindEvents() {
+    bindSimGuide(container);
     bindCreateForm();
     bindFilterForm();
     bindPagination();
@@ -81,11 +80,18 @@ export async function renderSimList(container, params = new URLSearchParams()) {
       button.disabled = true;
 
       try {
-        const result = await createSimDisattiva(getSimFormData(createForm));
+        const result = await createSim(getSimFormData(createForm));
 
         if (result.success) {
-          showSimFormMessage(createForm, "info", result.message);
-          window.setTimeout(() => setSimPage(1, filters), 500);
+          showSimPostCreateActions(
+            createForm,
+            getSimFormData(createForm),
+            () => setSimPage(1, filters),
+            (createdSim) => openModal(renderEditModal(createdSim, {
+              contractOptions,
+              intent: "activate"
+            }))
+          );
           return;
         }
 
@@ -94,7 +100,7 @@ export async function renderSimList(container, params = new URLSearchParams()) {
         showSimFormMessage(
           createForm,
           "error",
-          getUserFriendlySimError(error, "Errore nella creazione della SIM. Controlla codice, contratto e date.")
+          getUserFriendlySimError(error, "Errore nella creazione della SIM. Controlla codice, stato e dati richiesti.")
         );
       } finally {
         button.disabled = false;
@@ -134,7 +140,10 @@ export async function renderSimList(container, params = new URLSearchParams()) {
   function bindRowActions() {
     container.querySelectorAll("[data-edit]").forEach((button) => {
       button.addEventListener("click", () => {
-        openModal(renderEditModal(JSON.parse(button.dataset.edit), { contractOptions }));
+        openModal(renderEditModal(JSON.parse(button.dataset.edit), {
+          contractOptions,
+          intent: button.dataset.simIntent || ""
+        }));
       });
     });
 
@@ -157,7 +166,14 @@ export async function renderSimList(container, params = new URLSearchParams()) {
   }
 
   function closeModal() {
-    document.querySelector(".sim-modal-backdrop")?.remove();
+    const modal = document.querySelector(".sim-modal-backdrop");
+    const shouldReload = modal?.dataset.reloadOnClose === "true";
+
+    modal?.remove();
+
+    if (shouldReload) {
+      load();
+    }
   }
 
   function bindModalEvents() {
@@ -205,9 +221,14 @@ export async function renderSimList(container, params = new URLSearchParams()) {
       button.disabled = true;
 
       try {
-        const result = await updateSimDisattiva(getSimFormData(editForm));
+        const result = await updateSim(getSimFormData(editForm));
 
         if (result.success) {
+          if (editForm.dataset.intent === "activate") {
+            showSimModalCompletion(editForm, result.message);
+            return;
+          }
+
           showSimFormMessage(editForm, "info", result.message);
           window.setTimeout(async () => {
             closeModal();
@@ -221,7 +242,7 @@ export async function renderSimList(container, params = new URLSearchParams()) {
         showSimFormMessage(
           editForm,
           "error",
-          getUserFriendlySimError(error, "Errore nella modifica della SIM. Controlla codice, contratto e date.")
+          getUserFriendlySimError(error, "Errore nella modifica della SIM. Controlla stato e contratto.")
         );
       } finally {
         button.disabled = false;
@@ -232,7 +253,7 @@ export async function renderSimList(container, params = new URLSearchParams()) {
   function bindDeleteConfirm(modal, closeModal, reload) {
     modal.querySelector("[data-confirm-delete]")?.addEventListener("click", async (event) => {
       try {
-        const result = await deleteSimDisattiva(event.currentTarget.dataset.confirmDelete);
+        const result = await deleteSim(event.currentTarget.dataset.confirmDelete);
         alert(result.message);
 
         if (result.success) {
@@ -240,7 +261,7 @@ export async function renderSimList(container, params = new URLSearchParams()) {
           await reload();
         }
       } catch (error) {
-        alert("Errore nell'eliminazione della SIM.");
+        alert(error?.message || "Errore nell'eliminazione della SIM.");
       }
     });
   }

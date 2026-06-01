@@ -1,5 +1,5 @@
-import { escapeHtml } from "../utils/escapeHtml.js?v=rmk-architecture-v1";
-import { getDashboardSummary } from "../api/dashboardApi.js?v=rmk-architecture-v1";
+import { escapeHtml } from "../utils/escapeHtml.js?v=rmk-sim-db-v1";
+import { getDashboardSummary } from "../api/dashboardApi.js?v=rmk-sim-db-v1";
 
 function toNumber(value) {
   const number = Number(value);

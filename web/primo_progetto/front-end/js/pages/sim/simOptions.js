@@ -1,22 +1,42 @@
-import { getContracts } from "../../api/contractsApi.js?v=rmk-architecture-v1";
+import { getContracts } from "../../api/contractsApi.js?v=rmk-sim-db-v1";
 
-export async function getContractOptions() {
+function isAvailableContract(contract, currentContract = "") {
+  if (!contract?.numero) {
+    return false;
+  }
+
+  return !contract.codiceSIM || contract.numero === currentContract;
+}
+
+export async function getAvailableContractOptions(query = "", currentContract = "") {
   try {
     const result = await getContracts({
-      limit: 8,
+      q: query,
+      limit: 20,
       offset: 0,
-      sort: "dataAttivazione",
-      direction: "desc"
+      sort: "numero",
+      direction: "asc"
     });
 
     if (!result.success) {
-      return [];
+      return currentContract ? [currentContract] : [];
     }
 
-    return result.data.contratti
+    const options = result.data.contratti
+      .filter((contract) => isAvailableContract(contract, currentContract))
       .map((contract) => contract.numero)
       .filter(Boolean);
+
+    if (currentContract && !options.includes(currentContract)) {
+      options.unshift(currentContract);
+    }
+
+    return options;
   } catch (_) {
-    return [];
+    return currentContract ? [currentContract] : [];
   }
+}
+
+export function getContractOptions() {
+  return getAvailableContractOptions();
 }

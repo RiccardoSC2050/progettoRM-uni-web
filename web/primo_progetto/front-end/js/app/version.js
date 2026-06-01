@@ -1,1 +1,1 @@
-export const VERSION = "rmk-architecture-v1";
+export const VERSION = "rmk-sim-db-v1";

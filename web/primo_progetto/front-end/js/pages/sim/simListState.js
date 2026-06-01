@@ -1,10 +1,10 @@
-import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-architecture-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-sim-db-v1";
 
 const DESKTOP_PAGE_SIZE = 15;
 const MOBILE_PAGE_SIZE = 3;
 
 export function getSimPageSize() {
-  return getResponsivePageSize(DESKTOP_PAGE_SIZE, MOBILE_PAGE_SIZE);
+  return getResponsivePageSize(DESKTOP_PAGE_SIZE, MOBILE_PAGE_SIZE, "(max-width: 900px)");
 }
 
 export function getRangeStart(page, total, count, pageSize) {
@@ -40,6 +40,7 @@ export function getSimRouteState(params = new URLSearchParams()) {
     currentPage: Math.max(1, Number(params.get("page")) || 1),
     filters: {
       q: params.get("q") || "",
+      stato: params.get("stato") || "",
       tipoSIM: params.get("tipoSIM") || "",
       dataDisattivazione: params.get("dataDisattivazione") || ""
     }

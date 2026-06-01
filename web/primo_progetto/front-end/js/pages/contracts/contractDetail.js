@@ -1,18 +1,18 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
-import { getContractCalls, getContractDetail } from "../../api/contractsApi.js?v=rmk-architecture-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
+import { getContractCalls, getContractDetail } from "../../api/contractsApi.js?v=rmk-sim-db-v1";
 import {
   getCallsFilters,
   getCallsPageSize,
   getRangeEnd,
   getRangeStart
-} from "./detail/contractDetailState.js?v=rmk-architecture-v1";
+} from "./detail/contractDetailState.js?v=rmk-sim-db-v1";
 import {
   renderCallsList,
   renderContractDetailError,
   renderContractDetailLoading,
   renderContractDetailPage,
   renderMissingContractNumber
-} from "./detail/contractDetailRender.js?v=rmk-architecture-v1";
+} from "./detail/contractDetailRender.js?v=rmk-sim-db-v1";
 
 async function renderCalls(container, numero, page = 1, filters = {}) {
   const currentPage = Math.max(1, Number(page) || 1);

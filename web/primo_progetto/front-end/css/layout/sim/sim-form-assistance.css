@@ -75,3 +75,10 @@
 .sim-field select.is-invalid {
   border-color: var(--color-error);
 }
+
+.sim-form-message-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}

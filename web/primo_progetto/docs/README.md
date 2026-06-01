@@ -23,3 +23,5 @@ docs/
 - `UI_UX_E_RESPONSIVE.md` raccoglie le scelte di interfaccia e responsive design.
 - `TEST_E_REVISIONE.md` contiene la checklist di verifica.
 - `REQUISITI.md` sintetizza i requisiti funzionali e tecnici.
+
+- `ANALISI_LOGICA_SIM.md`: analisi del flusso CRUD SIM e del limite relativo alla scadenza futura.

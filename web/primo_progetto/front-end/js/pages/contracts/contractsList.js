@@ -1,10 +1,10 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-architecture-v1";
-import { getContracts } from "../../api/contractsApi.js?v=rmk-architecture-v1";
-import { formatNumber } from "./contractsFormatters.js?v=rmk-architecture-v1";
-import { renderContractsTable } from "./contractsTable.js?v=rmk-architecture-v1";
-import { renderContractsSummary } from "./contractsSummary.js?v=rmk-architecture-v1";
-import { renderContractsSort } from "./contractsSort.js?v=rmk-architecture-v1";
-import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-architecture-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
+import { getContracts } from "../../api/contractsApi.js?v=rmk-sim-db-v1";
+import { formatNumber } from "./contractsFormatters.js?v=rmk-sim-db-v1";
+import { renderContractsTable } from "./contractsTable.js?v=rmk-sim-db-v1";
+import { renderContractsSummary } from "./contractsSummary.js?v=rmk-sim-db-v1";
+import { renderContractsSort } from "./contractsSort.js?v=rmk-sim-db-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-sim-db-v1";
 
 const DESKTOP_PAGE_SIZE = 15;
 const MOBILE_PAGE_SIZE = 3;
