@@ -1,2 +1,15 @@
 @import url(table/contracts-table-desktop.css?v=rmk-sim-db-v1);
 @import url(table/contracts-table-mobile.css?v=rmk-sim-db-v1);
+
+.contracts-calls-cell-content {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.contracts-calls-cell-content small {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}

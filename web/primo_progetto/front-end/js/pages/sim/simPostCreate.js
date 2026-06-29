@@ -32,7 +32,7 @@ export function showSimPostCreateActions(form, simData, onStay = null, onConfigu
       return;
     }
 
-    window.location.hash = `#/sim-dettaglio?q=${encodeURIComponent(codice)}`;
+    window.location.hash = `#/sim-configura?codice=${encodeURIComponent(codice)}&tipoSIM=${encodeURIComponent(simData.tipoSIM || "standard")}`;
   });
 
   box.querySelector("[data-keep-created-sim]")?.addEventListener("click", () => {

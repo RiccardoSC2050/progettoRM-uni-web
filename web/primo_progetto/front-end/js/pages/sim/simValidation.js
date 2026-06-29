@@ -1,5 +1,6 @@
 import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
 import { bindSimContractSuggestions } from "./simContractSuggestions.js?v=rmk-sim-db-v1";
+import { bindCreateExamples } from "./simExamples.js?v=rmk-sim-db-v1";
 import { field, messageBox, setFieldVisibility, setInvalid, valueOf } from "./simFormDom.js?v=rmk-sim-db-v1";
 import { getSimFormStatus, validateSimFields } from "./simValidationRules.js?v=rmk-sim-db-v1";
 
@@ -100,57 +101,12 @@ export function validateSimFormBeforeSubmit(form) {
   return true;
 }
 
-function buildExample(index) {
-  const seed = String(Date.now() + index).slice(-8);
-
-  return {
-    codice: `SIM${seed}`,
-    tipoSIM: ["standard", "nanoSIM", "eSIM"][index % 3],
-    statoFinale: "non_attiva",
-    contratto: "",
-    dataAttivazione: "",
-    dataDisattivazione: ""
-  };
-}
-
-function fillExample(form, example) {
-  Object.entries(example).forEach(([name, value]) => {
-    const element = field(form, name);
-
-    if (element) {
-      element.value = value;
-    }
-  });
-
-  clearSimFormMessage(form);
-  updateSimFormState(form);
-}
-
-function bindCreateExamples(form) {
-  const exampleContainer = form.querySelector("[data-sim-examples]");
-
-  if (!exampleContainer || form.dataset.mode !== "create") {
-    return;
-  }
-
-  const examples = [0, 1, 2].map((index) => buildExample(index));
-
-  exampleContainer.innerHTML = examples.map((example, index) => `
-    <button class="sim-example-btn" type="button" data-sim-example="${index}">
-      Esempio ${index + 1}: ${escapeHtml(example.codice)} · ${escapeHtml(example.tipoSIM)}
-    </button>
-  `).join("");
-
-  exampleContainer.querySelectorAll("[data-sim-example]").forEach((button) => {
-    button.addEventListener("click", () => {
-      fillExample(form, examples[Number(button.dataset.simExample)]);
-    });
-  });
-}
-
 export function bindSimFormAssistance(form, options = {}) {
   bindSimContractSuggestions(form, options.contractOptions || []);
-  bindCreateExamples(form);
+  bindCreateExamples(form, {
+    clearMessage: clearSimFormMessage,
+    updateState: updateSimFormState
+  });
 
   form.addEventListener("input", () => {
     if (messageBox(form)?.classList.contains("sim-form-message-error")) {

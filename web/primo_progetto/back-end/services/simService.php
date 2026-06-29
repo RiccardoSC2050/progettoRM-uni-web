@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../core/response.php";
 require_once __DIR__ . "/../repositories/simRepository.php";
 require_once __DIR__ . "/simValidation.php";
+require_once __DIR__ . "/simStateTransitions.php";
 
 function getSimData(mysqli $conn, array $filters): array
 {
@@ -30,20 +31,6 @@ function createSimData(mysqli $conn, array $input): string
     insertSimByState($conn, $data);
 
     return "SIM creata correttamente.";
-}
-
-function prepareDeactivateSimData(array $current, array $inputData): array
-{
-    return [
-        "codiceOriginale" => $current["codice"],
-        "statoOriginale" => "attiva",
-        "codice" => $current["codice"],
-        "tipoSIM" => $current["tipoSIM"],
-        "contratto" => $current["contratto"],
-        "dataAttivazione" => $current["dataAttivazione"],
-        "dataDisattivazione" => getTodayForSim(),
-        "statoFinale" => "disattiva"
-    ];
 }
 
 function updateSimData(mysqli $conn, array $input): string

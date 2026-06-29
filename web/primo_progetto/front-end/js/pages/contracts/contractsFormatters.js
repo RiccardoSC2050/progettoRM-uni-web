@@ -26,10 +26,24 @@ export function formatContractType(type) {
   return type === "ricarica" ? "Ricarica" : "Consumo";
 }
 
+export function secondsToRoundedMinutes(seconds) {
+  const value = toNumber(seconds);
+
+  if (value <= 0) {
+    return 0;
+  }
+
+  return Math.ceil(value / 60);
+}
+
+export function formatCallMinutes(seconds) {
+  return `${formatNumber(secondsToRoundedMinutes(seconds))} min`;
+}
+
 export function formatContractValue(contract) {
   if (contract.tipo === "ricarica") {
     return formatCurrency(contract.creditoResiduo);
   }
 
-  return `${formatNumber(contract.minutiResidui)} min`;
+  return formatCallMinutes(contract.durataTotale);
 }

@@ -41,13 +41,9 @@ function bindCreateForm(container, filters, contractOptions) {
           createForm,
           formData,
           () => setSimPage(1, filters),
-          (createdSim) => openSimModal(renderEditModal(createdSim, {
-            contractOptions,
-            intent: "activate"
-          }), {
-            contractOptions,
-            reload: () => setSimPage(1, filters)
-          })
+          (createdSim) => {
+            window.location.hash = `#/sim-configura?codice=${encodeURIComponent(createdSim.codice)}&tipoSIM=${encodeURIComponent(createdSim.tipoSIM || "standard")}`;
+          }
         );
         return;
       }

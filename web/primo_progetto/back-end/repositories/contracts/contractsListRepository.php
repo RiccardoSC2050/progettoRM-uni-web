@@ -44,7 +44,8 @@ function mapContractRow(array $row): array
         "creditoResiduo" => $row["creditoResiduo"] !== null ? (float) $row["creditoResiduo"] : null,
         "codiceSIM" => $row["codiceSIM"],
         "tipoSIM" => $row["tipoSIM"],
-        "numeroTelefonate" => (int) $row["numeroTelefonate"]
+        "numeroTelefonate" => (int) $row["numeroTelefonate"],
+        "durataTotale" => (int) $row["durataTotale"]
     ];
 }
 
@@ -100,13 +101,18 @@ function fetchContracts(mysqli $conn, array $filters): array
                 ct.creditoResiduo,
                 sa.codice AS codiceSIM,
                 sa.tipoSIM,
-                (
-                    SELECT COUNT(*)
-                    FROM telefonata tel
-                    WHERE tel.effettuataDa = ct.numero
-                ) AS numeroTelefonate
+                COALESCE(tel.numeroTelefonate, 0) AS numeroTelefonate,
+                COALESCE(tel.durataTotale, 0) AS durataTotale
             FROM contrattotelefonico ct
             LEFT JOIN simattiva sa ON sa.associataA = ct.numero
+            LEFT JOIN (
+                SELECT
+                    effettuataDa,
+                    COUNT(*) AS numeroTelefonate,
+                    SUM(durata) AS durataTotale
+                FROM telefonata
+                GROUP BY effettuataDa
+            ) tel ON tel.effettuataDa = ct.numero
             $whereSql
             ORDER BY $orderColumn $directionSql, ct.numero ASC
             LIMIT ? OFFSET ?

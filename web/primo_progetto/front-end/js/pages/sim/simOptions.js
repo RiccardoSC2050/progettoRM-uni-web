@@ -8,11 +8,24 @@ function isAvailableContract(contract, currentContract = "") {
   return !contract.codiceSIM || contract.numero === currentContract;
 }
 
+function normalizeAvailableOptions(contracts, currentContract = "") {
+  const options = contracts
+    .filter((contract) => isAvailableContract(contract, currentContract))
+    .map((contract) => contract.numero)
+    .filter(Boolean);
+
+  if (currentContract && !options.includes(currentContract)) {
+    options.unshift(currentContract);
+  }
+
+  return Array.from(new Set(options));
+}
+
 export async function getAvailableContractOptions(query = "", currentContract = "") {
   try {
     const result = await getContracts({
       q: query,
-      limit: 20,
+      limit: 30,
       offset: 0,
       sort: "numero",
       direction: "asc"
@@ -22,16 +35,7 @@ export async function getAvailableContractOptions(query = "", currentContract = 
       return currentContract ? [currentContract] : [];
     }
 
-    const options = result.data.contratti
-      .filter((contract) => isAvailableContract(contract, currentContract))
-      .map((contract) => contract.numero)
-      .filter(Boolean);
-
-    if (currentContract && !options.includes(currentContract)) {
-      options.unshift(currentContract);
-    }
-
-    return options;
+    return normalizeAvailableOptions(result.data.contratti, currentContract);
   } catch (_) {
     return currentContract ? [currentContract] : [];
   }
