@@ -1,4 +1,4 @@
-const API_BASE = "back-end/api";
+const API_BASE = new URL("../../../back-end/api", import.meta.url).pathname;
 
 export const API_ENDPOINTS = {
   dashboard: {

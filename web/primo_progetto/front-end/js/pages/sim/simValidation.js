@@ -1,57 +1,7 @@
 import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
 import { bindSimContractSuggestions } from "./simContractSuggestions.js?v=rmk-sim-db-v1";
-
-const SIM_CODE_PATTERN = /^[A-Za-z0-9_-]{3,30}$/;
-const PHONE_PATTERN = /^\+?[0-9]{8,16}$/;
-
-function field(form, name) {
-  return form.elements[name] || null;
-}
-
-function valueOf(form, name) {
-  return field(form, name)?.value?.trim() || "";
-}
-
-function setInvalid(form, names) {
-  Array.from(form.elements).forEach((element) => {
-    element.classList?.remove("is-invalid");
-  });
-
-  names.forEach((name) => {
-    field(form, name)?.classList?.add("is-invalid");
-  });
-}
-
-function messageBox(form) {
-  return form.querySelector("[data-sim-form-message]");
-}
-
-function setFieldVisibility(wrapper, visible) {
-  if (!wrapper) {
-    return;
-  }
-
-  wrapper.hidden = !visible;
-  wrapper.querySelectorAll("input, select").forEach((element) => {
-    element.disabled = !visible;
-  });
-}
-
-function setDateOptionsVisibility(form, visible) {
-  const dateOptions = form.querySelector("[data-sim-date-options]");
-
-  if (dateOptions) {
-    dateOptions.hidden = !visible;
-  }
-}
-
-function setDateNote(form, text) {
-  const note = form.querySelector("[data-sim-date-note]");
-
-  if (note) {
-    note.textContent = text;
-  }
-}
+import { field, messageBox, setFieldVisibility, setInvalid, valueOf } from "./simFormDom.js?v=rmk-sim-db-v1";
+import { getSimFormStatus, validateSimFields } from "./simValidationRules.js?v=rmk-sim-db-v1";
 
 function getOriginalStatus(form) {
   return valueOf(form, "statoOriginale");
@@ -60,6 +10,8 @@ function getOriginalStatus(form) {
 function getIntent(form) {
   return form.dataset.intent || "";
 }
+
+export { getSimFormStatus };
 
 export function clearSimFormMessage(form) {
   const box = messageBox(form);
@@ -100,10 +52,6 @@ export function getUserFriendlySimError(error, fallback) {
   }
 }
 
-export function getSimFormStatus(form) {
-  return valueOf(form, "statoFinale") || "non_attiva";
-}
-
 export function updateSimFormState(form) {
   const status = getSimFormStatus(form);
   const originalStatus = getOriginalStatus(form);
@@ -139,38 +87,7 @@ export function updateSimFormState(form) {
 }
 
 export function validateSimFormBeforeSubmit(form) {
-  const status = getSimFormStatus(form);
-  const errors = [];
-  const invalidFields = [];
-  const codice = valueOf(form, "codice");
-  const tipoSIM = valueOf(form, "tipoSIM");
-  const contratto = valueOf(form, "contratto");
-
-  if (!SIM_CODE_PATTERN.test(codice)) {
-    errors.push("Codice SIM: usa 3-30 caratteri, solo lettere, numeri, trattino o underscore. Esempio: SIM260001.");
-    invalidFields.push("codice");
-  }
-
-  if (!["standard", "microSIM", "nanoSIM", "eSIM"].includes(tipoSIM)) {
-    errors.push("Tipo SIM: scegli uno dei valori disponibili nel menu.");
-    invalidFields.push("tipoSIM");
-  }
-
-  if (status === "attiva") {
-    if (!PHONE_PATTERN.test(contratto)) {
-      errors.push("Contratto: scegli un numero suggerito o inserisci un contratto esistente senza SIM attiva.");
-      invalidFields.push("contratto");
-    }
-  }
-
-  if (status === "disattiva") {
-    if (!PHONE_PATTERN.test(contratto)) {
-      errors.push("Contratto storico non valido.");
-      invalidFields.push("contratto");
-    }
-
-    // La disattivazione è immediata: il backend conserva la data di attivazione storica e imposta la data odierna come data di disattivazione.
-  }
+  const { errors, invalidFields } = validateSimFields(form);
 
   setInvalid(form, invalidFields);
 
@@ -209,26 +126,31 @@ function fillExample(form, example) {
   updateSimFormState(form);
 }
 
-export function bindSimFormAssistance(form, options = {}) {
+function bindCreateExamples(form) {
   const exampleContainer = form.querySelector("[data-sim-examples]");
 
-  bindSimContractSuggestions(form, options.contractOptions || []);
-
-  if (exampleContainer && form.dataset.mode === "create") {
-    const examples = [0, 1, 2].map((index) => buildExample(index));
-
-    exampleContainer.innerHTML = examples.map((example, index) => `
-      <button class="sim-example-btn" type="button" data-sim-example="${index}">
-        Esempio ${index + 1}: ${escapeHtml(example.codice)} · ${escapeHtml(example.tipoSIM)}
-      </button>
-    `).join("");
-
-    exampleContainer.querySelectorAll("[data-sim-example]").forEach((button) => {
-      button.addEventListener("click", () => {
-        fillExample(form, examples[Number(button.dataset.simExample)]);
-      });
-    });
+  if (!exampleContainer || form.dataset.mode !== "create") {
+    return;
   }
+
+  const examples = [0, 1, 2].map((index) => buildExample(index));
+
+  exampleContainer.innerHTML = examples.map((example, index) => `
+    <button class="sim-example-btn" type="button" data-sim-example="${index}">
+      Esempio ${index + 1}: ${escapeHtml(example.codice)} · ${escapeHtml(example.tipoSIM)}
+    </button>
+  `).join("");
+
+  exampleContainer.querySelectorAll("[data-sim-example]").forEach((button) => {
+    button.addEventListener("click", () => {
+      fillExample(form, examples[Number(button.dataset.simExample)]);
+    });
+  });
+}
+
+export function bindSimFormAssistance(form, options = {}) {
+  bindSimContractSuggestions(form, options.contractOptions || []);
+  bindCreateExamples(form);
 
   form.addEventListener("input", () => {
     if (messageBox(form)?.classList.contains("sim-form-message-error")) {
