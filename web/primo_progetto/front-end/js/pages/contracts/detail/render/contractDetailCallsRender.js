@@ -1,5 +1,5 @@
-import { escapeHtml } from "../../../../utils/escapeHtml.js?v=rmk-sim-db-v1";
-import { formatCurrency, formatDate, formatNumber } from "../../contractsFormatters.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "../../../../utils/escapeHtml.js?v=rmk-sim-db-v5";
+import { formatCurrency, formatDate, formatNumber } from "../../contractsFormatters.js?v=rmk-sim-db-v5";
 
 export function renderCallsFilter() {
   return `

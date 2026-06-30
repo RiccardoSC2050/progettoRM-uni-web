@@ -1,12 +1,12 @@
-import { deleteSim, updateSim } from "../../api/simApi.js?v=rmk-sim-db-v1";
-import { getSimFormData } from "./simForm.js?v=rmk-sim-db-v1";
-import { showSimModalCompletion } from "./simModalCompletion.js?v=rmk-sim-db-v1";
+import { deleteSim, updateSim } from "../../api/simApi.js?v=rmk-sim-db-v5";
+import { getSimFormData } from "./simForm.js?v=rmk-sim-db-v5";
+import { showSimModalCompletion } from "./simModalCompletion.js?v=rmk-sim-db-v5";
 import {
   bindSimFormAssistance,
   getUserFriendlySimError,
   showSimFormMessage,
   validateSimFormBeforeSubmit
-} from "./simValidation.js?v=rmk-sim-db-v1";
+} from "./simValidation.js?v=rmk-sim-db-v5";
 
 function bindEditForm(modal, closeModal, reload, contractOptions) {
   const editForm = modal.querySelector(".sim-form[data-mode='edit']");

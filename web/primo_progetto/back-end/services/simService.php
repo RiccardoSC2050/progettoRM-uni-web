@@ -25,7 +25,7 @@ function createSimData(mysqli $conn, array $input): string
     }
 
     if (simCodeExistsInAnyTable($conn, $data["codice"])) {
-        sendError("Il codice SIM è già presente nel database. Usa un codice nuovo, ad esempio SIM260001.", 422);
+        sendError("Il codice SIM è già presente nel database. Usa un codice SIM univoco.", 422);
     }
 
     insertSimByState($conn, $data);

@@ -1,4 +1,4 @@
-import { valueOf } from "./simFormDom.js?v=rmk-sim-db-v1";
+import { valueOf } from "./simFormDom.js?v=rmk-sim-db-v5";
 
 const SIM_CODE_PATTERN = /^[A-Za-z0-9_-]{3,30}$/;
 const PHONE_PATTERN = /^\+?[0-9]{8,16}$/;

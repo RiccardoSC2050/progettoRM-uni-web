@@ -225,7 +225,6 @@ I file core contengono funzioni condivise:
 ```text
 back-end/config/
 ├── database.php
-└── database.local.example.php
 ```
 
 La connessione al database è centralizzata. È possibile creare un file locale non versionato per differenziare ambiente locale e hosting.
@@ -251,7 +250,6 @@ docs/
 ├── README.md
 ├── RELAZIONE_PROGETTO.md
 ├── ARCHITETTURA.md
-├── METODO_DI_LAVORO.md
 ├── UI_UX_E_RESPONSIVE.md
 ├── TEST_E_REVISIONE.md
 └── REQUISITI.md

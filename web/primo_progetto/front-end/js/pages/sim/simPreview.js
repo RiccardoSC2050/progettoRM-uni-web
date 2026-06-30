@@ -1,17 +1,17 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
-import { createSim, getSim } from "../../api/simApi.js?v=rmk-sim-db-v1";
-import { formatNumber } from "./simFormatters.js?v=rmk-sim-db-v1";
-import { getSimFormData, renderSimForm } from "./simForm.js?v=rmk-sim-db-v1";
-import { bindSimGuide, renderSimGuideTrigger } from "./simGuide.js?v=rmk-sim-db-v1";
-import { renderSimSummary } from "./simSummary.js?v=rmk-sim-db-v1";
-import { showSimPostCreateActions } from "./simPostCreate.js?v=rmk-sim-db-v1";
-import { getContractOptions } from "./simOptions.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v5";
+import { createSim, getSim } from "../../api/simApi.js?v=rmk-sim-db-v5";
+import { formatNumber } from "./simFormatters.js?v=rmk-sim-db-v5";
+import { getSimFormData, renderSimForm } from "./simForm.js?v=rmk-sim-db-v5";
+import { bindSimGuide, renderSimGuideTrigger } from "./simGuide.js?v=rmk-sim-db-v5";
+import { renderSimSummary } from "./simSummary.js?v=rmk-sim-db-v5";
+import { showSimPostCreateActions } from "./simPostCreate.js?v=rmk-sim-db-v5";
+import { getContractOptions } from "./simOptions.js?v=rmk-sim-db-v5";
 import {
   bindSimFormAssistance,
   getUserFriendlySimError,
   showSimFormMessage,
   validateSimFormBeforeSubmit
-} from "./simValidation.js?v=rmk-sim-db-v1";
+} from "./simValidation.js?v=rmk-sim-db-v5";
 
 export async function renderSimPreview(container) {
   container.innerHTML = `

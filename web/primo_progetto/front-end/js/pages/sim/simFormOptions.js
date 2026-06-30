@@ -1,4 +1,4 @@
-import { escapeHtml } from "./simFormatters.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "./simFormatters.js?v=rmk-sim-db-v5";
 
 const SIM_TYPES = ["standard", "microSIM", "nanoSIM", "eSIM"];
 

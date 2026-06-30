@@ -15,6 +15,7 @@ $filters = [
     "data" => getQueryDate("data"),
     "sort" => getQueryEnum("sort", ["numero", "dataAttivazione", "telefonate"], "dataAttivazione"),
     "direction" => getQueryEnum("direction", ["asc", "desc"], "desc"),
+    "availableForSim" => getQueryEnum("availableForSim", ["1", "true"], "") !== "",
     "limit" => $pagination["limit"],
     "offset" => $pagination["offset"]
 ];

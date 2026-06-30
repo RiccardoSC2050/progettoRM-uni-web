@@ -1,11 +1,11 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v5";
 import {
   formatCurrency,
   formatDate,
   formatDuration,
   formatNumber,
   formatTime
-} from "./callsFormatters.js?v=rmk-sim-db-v1";
+} from "./callsFormatters.js?v=rmk-sim-db-v5";
 
 function renderRows(calls) {
   return calls

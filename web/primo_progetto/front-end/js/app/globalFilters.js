@@ -1,4 +1,4 @@
-import { getRouteData, setContractsDetailPage } from "./routeState.js?v=rmk-sim-db-v1";
+import { getRouteData, setContractsDetailPage } from "./routeState.js?v=rmk-sim-db-v5";
 
 export function bindGlobalFilters(refs, router) {
   if (!refs.filterForm) {

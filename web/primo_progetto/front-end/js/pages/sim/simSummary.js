@@ -1,4 +1,4 @@
-import { formatNumber } from "./simFormatters.js?v=rmk-sim-db-v1";
+import { formatNumber } from "./simFormatters.js?v=rmk-sim-db-v5";
 
 export function renderSimSummary(summary = {}) {
   const cards = [

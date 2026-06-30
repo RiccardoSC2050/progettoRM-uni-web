@@ -1,12 +1,12 @@
-import { updateSim } from "../../api/simApi.js?v=rmk-sim-db-v1";
-import { renderSimForm, getSimFormData } from "./simForm.js?v=rmk-sim-db-v1";
-import { getContractOptions } from "./simOptions.js?v=rmk-sim-db-v1";
+import { updateSim } from "../../api/simApi.js?v=rmk-sim-db-v5";
+import { renderSimForm, getSimFormData } from "./simForm.js?v=rmk-sim-db-v5";
+import { getContractOptions } from "./simOptions.js?v=rmk-sim-db-v5";
 import {
   bindSimFormAssistance,
   getUserFriendlySimError,
   showSimFormMessage,
   validateSimFormBeforeSubmit
-} from "./simValidation.js?v=rmk-sim-db-v1";
+} from "./simValidation.js?v=rmk-sim-db-v5";
 
 function getCreatedSimFromParams(params) {
   return {

@@ -1,10 +1,10 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v5";
 import {
   formatContractType,
   formatContractValue,
   formatDate,
   formatNumber
-} from "./contractsFormatters.js?v=rmk-sim-db-v1";
+} from "./contractsFormatters.js?v=rmk-sim-db-v5";
 
 function getContractTypeClass(type) {
   return type === "ricarica" ? "ricarica" : "consumo";
@@ -38,7 +38,7 @@ function renderRows(contracts) {
           <td class="contracts-cell-number" data-label="Numero"><strong>${numero}</strong></td>
           <td class="contracts-cell-type" data-label="Tipo"><span class="contracts-type-badge contracts-type-${typeClass}">${formatContractType(contract.tipo)}</span></td>
           <td class="contracts-cell-date" data-label="Data attivazione">${formatDate(contract.dataAttivazione)}</td>
-          <td class="contracts-cell-value" data-label="Credito / minuti">${formatContractValue(contract)}</td>
+          <td class="contracts-cell-value" data-label="Valore contratto">${formatContractValue(contract)}</td>
           <td class="contracts-cell-sim" data-label="SIM attiva">${renderSimCell(contract)}</td>
           <td class="contracts-cell-calls" data-label="Telefonate">${formatNumber(contract.numeroTelefonate)}</td>
           <td class="contracts-cell-action" data-label="Azione">
@@ -59,7 +59,7 @@ export function renderContractsTable(contracts) {
             <th class="contracts-cell-number">Numero</th>
             <th class="contracts-cell-type">Tipo</th>
             <th class="contracts-cell-date">Data attivazione</th>
-            <th class="contracts-cell-value">Credito / minuti</th>
+            <th class="contracts-cell-value">Valore contratto</th>
             <th class="contracts-cell-sim">SIM attiva</th>
             <th class="contracts-cell-calls">Telefonate</th>
             <th class="contracts-cell-action">Azione</th>

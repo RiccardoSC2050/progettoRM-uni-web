@@ -1,15 +1,27 @@
-import { escapeHtml } from "./simFormatters.js?v=rmk-sim-db-v1";
-import { renderContractOptions, renderTypeOptions } from "./simFormOptions.js?v=rmk-sim-db-v1";
-import { renderStatusField } from "./simFormStatus.js?v=rmk-sim-db-v1";
-import { getContractValue, getFormText, getSubmitLabel, isReadOnlyContract } from "./simFormText.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "./simFormatters.js?v=rmk-sim-db-v5";
+import { renderContractOptions, renderTypeOptions } from "./simFormOptions.js?v=rmk-sim-db-v5";
+import { renderStatusField } from "./simFormStatus.js?v=rmk-sim-db-v5";
+import { getContractValue, getFormText, getSubmitLabel, isReadOnlyContract } from "./simFormText.js?v=rmk-sim-db-v5";
 
 export function renderSimForm(sim = null, mode = "create", options = {}) {
   const isEdit = mode === "edit";
   const intent = options.intent || "";
   const text = getFormText(mode, intent, sim);
-  const contractDisabled = isReadOnlyContract(intent, sim) ? "disabled" : "";
-  const typeDisabled = intent === "deactivate" ? "disabled" : "";
-  const codeReadonly = intent === "deactivate" ? "readonly" : "";
+  const contractLocked = isReadOnlyContract(intent, sim);
+  const contractDisabled = contractLocked ? "disabled" : "";
+  const contractLockedAttrs = contractLocked ? 'data-sim-locked="true" tabindex="-1" aria-disabled="true"' : "";
+  const contractFieldClass = contractLocked ? " sim-field-readonly" : "";
+  const contractHelp = contractLocked
+    ? "Contratto bloccato: per cambiarlo devi prima disattivare la SIM e poi riattivarla su un altro numero."
+    : "Scrivi per filtrare. La lista mostra solo contratti disponibili senza SIM attiva.";
+  const typeLocked = intent === "deactivate";
+  const typeDisabled = typeLocked ? "disabled" : "";
+  const typeLockedAttrs = typeLocked ? 'data-sim-locked="true" tabindex="-1" aria-disabled="true"' : "";
+  const codeLocked = intent === "deactivate";
+  const codeReadonly = codeLocked ? "readonly" : "";
+  const codeLockedAttrs = codeLocked ? 'data-sim-locked="true" tabindex="-1" aria-disabled="true"' : "";
+  const codeFieldClass = codeLocked ? " sim-field-readonly" : "";
+  const typeFieldClass = typeLocked ? " sim-field-readonly" : "";
 
   return `
     <section class="sim-form-card">
@@ -22,15 +34,15 @@ export function renderSimForm(sim = null, mode = "create", options = {}) {
         <input type="hidden" name="codiceOriginale" value="${escapeHtml(sim?.codice || "")}" />
         <input type="hidden" name="statoOriginale" value="${escapeHtml(sim?.stato || "")}" />
         <div class="sim-form-fields">
-          <div class="sim-field">
+          <div class="sim-field${codeFieldClass}">
             <label for="${mode}-codice">Codice SIM</label>
-            <input id="${mode}-codice" name="codice" type="text" placeholder="SIM260001" minlength="3" maxlength="30" value="${escapeHtml(sim?.codice || "")}" ${codeReadonly} required />
+            <input id="${mode}-codice" name="codice" type="text" placeholder="SIM260001" minlength="3" maxlength="30" value="${escapeHtml(sim?.codice || "")}" ${codeReadonly} ${codeLockedAttrs} required />
             <small class="sim-field-help">Lettere, numeri, trattino o underscore. Esempio: SIM260001.</small>
           </div>
 
-          <div class="sim-field">
+          <div class="sim-field${typeFieldClass}">
             <label for="${mode}-tipo">Tipo SIM</label>
-            <select id="${mode}-tipo" name="tipoSIM" ${typeDisabled} required>
+            <select id="${mode}-tipo" name="tipoSIM" ${typeDisabled} ${typeLockedAttrs} required>
               ${renderTypeOptions(sim?.tipoSIM || "standard")}
             </select>
             <small class="sim-field-help">Scegli il formato fisico o digitale della SIM.</small>
@@ -38,12 +50,13 @@ export function renderSimForm(sim = null, mode = "create", options = {}) {
 
           ${renderStatusField(sim, mode, intent)}
 
-          <div class="sim-field" data-sim-contract-field>
-            <label for="${mode}-contratto">Contratto</label>
-            <select id="${mode}-contratto" name="contratto" data-sim-contract-input ${contractDisabled}>
+          <div class="sim-field${contractFieldClass}" data-sim-contract-field data-sim-contract-locked="${contractLocked ? "true" : "false"}">
+            <label for="${mode}-contratto-search">Contratto</label>
+            <input id="${mode}-contratto-search" type="search" data-sim-contract-search placeholder="Scrivi per filtrare i numeri disponibili" ${contractDisabled} ${contractLockedAttrs} />
+            <select id="${mode}-contratto" name="contratto" data-sim-contract-input ${contractDisabled} ${contractLockedAttrs}>
               ${renderContractOptions(options.contractOptions || [], getContractValue(sim))}
             </select>
-            <small class="sim-field-help">Mostra solo contratti disponibili senza SIM attiva.</small>
+            <small class="sim-field-help">${contractHelp}</small>
           </div>
 
         </div>

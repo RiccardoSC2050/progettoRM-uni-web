@@ -5,6 +5,7 @@ function buildContractFilters(array $filters): array
     $q = $filters["q"] ?? "";
     $tipo = $filters["tipo"] ?? "";
     $data = $filters["data"] ?? "";
+    $availableForSim = !empty($filters["availableForSim"]);
     $where = [];
     $params = [];
     $types = "";
@@ -25,6 +26,10 @@ function buildContractFilters(array $filters): array
         $where[] = "ct.dataAttivazione = ?";
         $params[] = $data;
         $types .= "s";
+    }
+
+    if ($availableForSim) {
+        $where[] = "sa.codice IS NULL";
     }
 
     return [
@@ -69,7 +74,9 @@ function fetchContracts(mysqli $conn, array $filters): array
 
     $countRow = dbFetchOne(
         $conn,
-        "SELECT COUNT(*) AS totale FROM contrattotelefonico ct $whereSql",
+        empty($filters["availableForSim"])
+            ? "SELECT COUNT(*) AS totale FROM contrattotelefonico ct $whereSql"
+            : "SELECT COUNT(*) AS totale FROM contrattotelefonico ct LEFT JOIN simattiva sa ON sa.associataA = ct.numero $whereSql",
         $types,
         $params
     );

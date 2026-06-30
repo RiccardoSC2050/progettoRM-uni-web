@@ -1,9 +1,9 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
-import { getSim } from "../../api/simApi.js?v=rmk-sim-db-v1";
-import { getContractOptions } from "./simOptions.js?v=rmk-sim-db-v1";
-import { getSimPageSize, getSimRouteState } from "./simListState.js?v=rmk-sim-db-v1";
-import { renderSimListError, renderSimListLoading, renderSimListPage } from "./simListView.js?v=rmk-sim-db-v1";
-import { bindSimListEvents } from "./simListEvents.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v5";
+import { getSim } from "../../api/simApi.js?v=rmk-sim-db-v5";
+import { getContractOptions } from "./simOptions.js?v=rmk-sim-db-v5";
+import { getSimPageSize, getSimRouteState } from "./simListState.js?v=rmk-sim-db-v5";
+import { renderSimListError, renderSimListLoading, renderSimListPage } from "./simListView.js?v=rmk-sim-db-v5";
+import { bindSimListEvents } from "./simListEvents.js?v=rmk-sim-db-v5";
 
 export async function renderSimList(container, params = new URLSearchParams()) {
   const { currentPage, filters } = getSimRouteState(params);

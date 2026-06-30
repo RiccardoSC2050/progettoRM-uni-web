@@ -35,7 +35,7 @@ Il progetto è stato sviluppato con una separazione chiara tra front-end, back-e
 ## Avvio locale
 
 1. Importare lo schema del database da `database/schema.sql`.
-2. Configurare la connessione in `back-end/config/database.php` oppure creare `back-end/config/database.local.php` partendo da `database.local.example.php`.
+2. Configurare la connessione direttamente in `back-end/config/database.php`.
 3. Eseguire il progetto in un ambiente PHP/MySQL, ad esempio XAMPP o hosting compatibile.
 4. Aprire `index.html` dal server locale o dallo spazio web configurato.
 
@@ -47,7 +47,6 @@ File principali:
 
 - `docs/RELAZIONE_PROGETTO.md`
 - `docs/ARCHITETTURA.md`
-- `docs/METODO_DI_LAVORO.md`
 - `docs/UI_UX_E_RESPONSIVE.md`
 - `docs/TEST_E_REVISIONE.md`
 - `docs/REQUISITI.md`

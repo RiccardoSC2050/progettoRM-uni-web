@@ -1,4 +1,4 @@
-import { getContracts } from "../../api/contractsApi.js?v=rmk-sim-db-v1";
+import { getContracts } from "../../api/contractsApi.js?v=rmk-sim-db-v5";
 
 function isAvailableContract(contract, currentContract = "") {
   if (!contract?.numero) {
@@ -25,6 +25,7 @@ export async function getAvailableContractOptions(query = "", currentContract = 
   try {
     const result = await getContracts({
       q: query,
+      availableForSim: "1",
       limit: 30,
       offset: 0,
       sort: "numero",

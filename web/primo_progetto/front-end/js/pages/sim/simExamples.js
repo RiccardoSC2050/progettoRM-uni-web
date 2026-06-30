@@ -1,5 +1,5 @@
-import { escapeHtml } from "./simFormatters.js?v=rmk-sim-db-v1";
-import { field } from "./simFormDom.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "./simFormatters.js?v=rmk-sim-db-v5";
+import { field } from "./simFormDom.js?v=rmk-sim-db-v5";
 
 function buildExample(index) {
   const seed = String(Date.now() + index).slice(-8);

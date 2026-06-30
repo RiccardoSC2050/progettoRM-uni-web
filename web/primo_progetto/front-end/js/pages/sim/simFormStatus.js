@@ -1,4 +1,4 @@
-import { escapeHtml } from "./simFormatters.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "./simFormatters.js?v=rmk-sim-db-v5";
 
 function getFinalStatus(sim, mode, intent) {
   if (mode === "create") {

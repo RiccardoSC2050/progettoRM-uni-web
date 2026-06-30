@@ -61,6 +61,32 @@
   color: var(--input-placeholder);
 }
 
+.sim-field-readonly input,
+.sim-field-readonly select,
+.sim-field input[readonly],
+.sim-field input:disabled,
+.sim-field select:disabled {
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  border-color: var(--input-border);
+  cursor: not-allowed;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.sim-field-readonly input:focus,
+.sim-field-readonly select:focus,
+.sim-field input[readonly]:focus,
+.sim-field input:disabled:focus,
+.sim-field select:disabled:focus {
+  outline: none;
+  border-color: var(--input-border);
+}
+
+.sim-field-readonly .sim-field-help {
+  color: var(--color-text-muted);
+}
+
 .sim-field input:focus,
 .sim-field select:focus {
   outline: var(--focus-outline);

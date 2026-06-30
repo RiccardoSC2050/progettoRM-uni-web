@@ -1,6 +1,6 @@
-import { escapeHtml } from "../../../utils/escapeHtml.js?v=rmk-sim-db-v1";
-import { renderContractCards } from "./render/contractDetailCards.js?v=rmk-sim-db-v1";
-import { renderCallsFilter, renderCallsList, renderCallsTable } from "./render/contractDetailCallsRender.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "../../../utils/escapeHtml.js?v=rmk-sim-db-v5";
+import { renderContractCards } from "./render/contractDetailCards.js?v=rmk-sim-db-v5";
+import { renderCallsFilter, renderCallsList, renderCallsTable } from "./render/contractDetailCallsRender.js?v=rmk-sim-db-v5";
 
 export { renderCallsFilter, renderCallsList, renderCallsTable, renderContractCards };
 

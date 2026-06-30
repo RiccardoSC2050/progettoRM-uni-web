@@ -1,4 +1,4 @@
-export { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
+export { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v5";
 
 export function formatNumber(value) {
   return Number(value || 0).toLocaleString("it-IT");

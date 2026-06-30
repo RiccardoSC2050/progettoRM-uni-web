@@ -1,8 +1,8 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
-import { bindSimContractSuggestions } from "./simContractSuggestions.js?v=rmk-sim-db-v1";
-import { bindCreateExamples } from "./simExamples.js?v=rmk-sim-db-v1";
-import { field, messageBox, setFieldVisibility, setInvalid, valueOf } from "./simFormDom.js?v=rmk-sim-db-v1";
-import { getSimFormStatus, validateSimFields } from "./simValidationRules.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v5";
+import { bindSimContractSuggestions } from "./simContractSuggestions.js?v=rmk-sim-db-v5";
+import { bindCreateExamples } from "./simExamples.js?v=rmk-sim-db-v5";
+import { field, messageBox, setFieldVisibility, setInvalid, valueOf } from "./simFormDom.js?v=rmk-sim-db-v5";
+import { getSimFormStatus, validateSimFields } from "./simValidationRules.js?v=rmk-sim-db-v5";
 
 function getOriginalStatus(form) {
   return valueOf(form, "statoOriginale");

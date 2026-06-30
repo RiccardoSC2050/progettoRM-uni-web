@@ -1,5 +1,5 @@
-import { API_ENDPOINTS } from "./endpoints.js?v=rmk-sim-db-v1";
-import { getJson, postJson } from "./httpClient.js?v=rmk-sim-db-v1";
+import { API_ENDPOINTS } from "./endpoints.js?v=rmk-sim-db-v5";
+import { getJson, postJson } from "./httpClient.js?v=rmk-sim-db-v5";
 
 export function getSim(filters = {}) {
   return getJson(API_ENDPOINTS.sim.list, filters);

@@ -1,4 +1,4 @@
-import { escapeHtml, formatDate, formatSimStatus } from "./simFormatters.js?v=rmk-sim-db-v1";
+import { escapeHtml, formatDate, formatSimStatus } from "./simFormatters.js?v=rmk-sim-db-v5";
 
 function simPayload(sim) {
   return escapeHtml(JSON.stringify(sim));

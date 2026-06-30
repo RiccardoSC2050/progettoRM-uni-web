@@ -27,6 +27,16 @@ export function setFieldVisibility(wrapper, visible) {
 
   wrapper.hidden = !visible;
   wrapper.querySelectorAll("input, select").forEach((element) => {
-    element.disabled = !visible;
+    if (!visible) {
+      element.disabled = true;
+      return;
+    }
+
+    if (element.dataset.simLocked === "true") {
+      element.disabled = true;
+      return;
+    }
+
+    element.disabled = false;
   });
 }

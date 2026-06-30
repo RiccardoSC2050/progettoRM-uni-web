@@ -1,0 +1,30 @@
+.sim-row-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.sim-table-btn {
+  min-width: var(--sim-table-action-min-width);
+  min-height: clamp(34px, 4vw, 38px);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.sim-table-btn-primary {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+
+.sim-table-btn-edit {
+  background: var(--sim-edit-bg);
+  color: var(--sim-edit-text);
+}
+
+.sim-table-btn-danger,
+.sim-table-btn-delete {
+  background: var(--sim-delete-bg);
+  color: var(--sim-delete-text);
+}

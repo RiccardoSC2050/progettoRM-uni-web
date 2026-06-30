@@ -3,7 +3,7 @@ import {
   formatCurrency,
   formatDuration,
   formatNumber
-} from "./callsFormatters.js?v=rmk-sim-db-v1";
+} from "./callsFormatters.js?v=rmk-sim-db-v5";
 
 export function renderCallsSummary(summary = {}) {
   const cards = [

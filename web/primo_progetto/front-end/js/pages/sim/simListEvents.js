@@ -1,17 +1,17 @@
-import { createSim } from "../../api/simApi.js?v=rmk-sim-db-v1";
-import { getSimFiltersFromForm } from "./simFilter.js?v=rmk-sim-db-v1";
-import { getSimFormData } from "./simForm.js?v=rmk-sim-db-v1";
-import { bindSimGuide } from "./simGuide.js?v=rmk-sim-db-v1";
-import { renderDeleteModal, renderEditModal } from "./simModal.js?v=rmk-sim-db-v1";
-import { openSimModal } from "./simModalController.js?v=rmk-sim-db-v1";
-import { showSimPostCreateActions } from "./simPostCreate.js?v=rmk-sim-db-v1";
-import { setSimPage } from "./simListState.js?v=rmk-sim-db-v1";
+import { createSim } from "../../api/simApi.js?v=rmk-sim-db-v5";
+import { getSimFiltersFromForm } from "./simFilter.js?v=rmk-sim-db-v5";
+import { getSimFormData } from "./simForm.js?v=rmk-sim-db-v5";
+import { bindSimGuide } from "./simGuide.js?v=rmk-sim-db-v5";
+import { renderDeleteModal, renderEditModal } from "./simModal.js?v=rmk-sim-db-v5";
+import { openSimModal } from "./simModalController.js?v=rmk-sim-db-v5";
+import { showSimPostCreateActions } from "./simPostCreate.js?v=rmk-sim-db-v5";
+import { setSimPage } from "./simListState.js?v=rmk-sim-db-v5";
 import {
   bindSimFormAssistance,
   getUserFriendlySimError,
   showSimFormMessage,
   validateSimFormBeforeSubmit
-} from "./simValidation.js?v=rmk-sim-db-v1";
+} from "./simValidation.js?v=rmk-sim-db-v5";
 
 function bindCreateForm(container, filters, contractOptions) {
   const createForm = container.querySelector(".sim-form[data-mode='create']");

@@ -1,4 +1,4 @@
-import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-sim-db-v1";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-sim-db-v5";
 
 const DESKTOP_PAGE_SIZE = 15;
 const MOBILE_PAGE_SIZE = 3;

@@ -1,5 +1,5 @@
-@import url(table/contracts-table-desktop.css?v=rmk-sim-db-v1);
-@import url(table/contracts-table-mobile.css?v=rmk-sim-db-v1);
+@import url(table/contracts-table-desktop.css?v=rmk-sim-db-v2);
+@import url(table/contracts-table-mobile.css?v=rmk-sim-db-v2);
 
 .contracts-calls-cell-content {
   display: inline-flex;

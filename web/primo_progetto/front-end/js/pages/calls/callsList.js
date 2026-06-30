@@ -1,9 +1,9 @@
-import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v1";
-import { getCalls } from "../../api/callsApi.js?v=rmk-sim-db-v1";
-import { formatCurrency, formatNumber } from "./callsFormatters.js?v=rmk-sim-db-v1";
-import { getCallsFiltersFromForm, renderCallsFilter } from "./callsFilter.js?v=rmk-sim-db-v1";
-import { renderCallsTable } from "./callsTable.js?v=rmk-sim-db-v1";
-import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "../../utils/escapeHtml.js?v=rmk-sim-db-v5";
+import { getCalls } from "../../api/callsApi.js?v=rmk-sim-db-v5";
+import { formatCurrency, formatNumber } from "./callsFormatters.js?v=rmk-sim-db-v5";
+import { getCallsFiltersFromForm, renderCallsFilter } from "./callsFilter.js?v=rmk-sim-db-v5";
+import { renderCallsTable } from "./callsTable.js?v=rmk-sim-db-v5";
+import { getResponsivePageSize } from "../../utils/responsivePageSize.js?v=rmk-sim-db-v5";
 
 const DESKTOP_PAGE_SIZE = 15;
 const MOBILE_PAGE_SIZE = 3;

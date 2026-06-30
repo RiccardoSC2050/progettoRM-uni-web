@@ -1,4 +1,4 @@
-import { escapeHtml } from "../../../../utils/escapeHtml.js?v=rmk-sim-db-v1";
+import { escapeHtml } from "../../../../utils/escapeHtml.js?v=rmk-sim-db-v5";
 import {
   formatContractType,
   formatContractValue,
@@ -6,10 +6,13 @@ import {
   formatDate,
   formatNumber,
   formatCallMinutes
-} from "../../contractsFormatters.js?v=rmk-sim-db-v1";
+} from "../../contractsFormatters.js?v=rmk-sim-db-v5";
 
 export function renderContractCards(contract) {
   const simLabel = contract.tipoSIM ? escapeHtml(contract.tipoSIM) : "Nessuna SIM attiva";
+  const isRicarica = contract.tipo === "ricarica";
+  const valueLabel = isRicarica ? "Credito residuo utente" : "Minuti consumati";
+  const costLabel = isRicarica ? "Costo totale utente" : "Costo totale azienda";
 
   return `
     <section class="contract-detail-summary">
@@ -24,7 +27,7 @@ export function renderContractCards(contract) {
       </article>
 
       <article>
-        <span>Credito / minuti</span>
+        <span>${valueLabel}</span>
         <strong>${formatContractValue(contract)}</strong>
       </article>
 
@@ -44,7 +47,7 @@ export function renderContractCards(contract) {
       </article>
 
       <article>
-        <span>Costo totale</span>
+        <span>${costLabel}</span>
         <strong>${formatCurrency(contract.costoTotale)}</strong>
       </article>
     </section>
