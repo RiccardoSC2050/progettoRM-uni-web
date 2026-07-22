@@ -1,0 +1,107 @@
+:root {
+    --color-primary: #9b6f91;
+    --color-primary-lighter: #eadce7;
+    --color-primary-dark: #6f4a68;
+    --color-body-bg: #f5f5f6;
+    --color-surface: #ffffff;
+    --color-surface-alt: #fafafa;
+    --color-border: #e6e6e9;
+    --color-border-dark: #d1d1d6;
+    --color-text: #18181c;
+    --color-text-muted: #5f5f69;
+    --color-null: #7c3aed;
+
+    --space-xs: 0.5rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --padding-page: clamp(1rem, 0.6rem + 2vw, 2rem);
+    --padding-card: clamp(1rem, 0.7rem + 1.4vw, 1.5rem);
+    --padding-table-cell: 0.5rem 0.625rem;
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --shadow-card: 0 8px 24px rgba(29, 29, 34, 0.06);
+
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--color-text);
+    background: var(--color-body-bg);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+main {
+    width: min(1200px, calc(100% - (2 * var(--padding-page))));
+    margin: var(--space-xl) auto;
+}
+h1 { margin-bottom: var(--space-xs); }
+.toolbar,
+.panel {
+    margin-top: var(--space-lg);
+    padding: var(--padding-card);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+}
+.db-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+.db-link {
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--color-border-dark);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    background: var(--color-surface-alt);
+    text-decoration: none;
+}
+.db-link.selected {
+    border-color: var(--color-primary);
+    background: var(--color-primary-lighter);
+    font-weight: 700;
+}
+.home {
+    display: inline-block;
+    margin-top: var(--space-sm);
+    color: var(--color-primary-dark);
+}
+.count {
+    color: var(--color-text-muted);
+    font-size: 0.65em;
+    font-weight: 400;
+}
+.table-wrap {
+    max-height: 520px;
+    overflow: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+th,
+td {
+    padding: var(--padding-table-cell);
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    white-space: nowrap;
+}
+th {
+    position: sticky;
+    top: 0;
+    background: var(--color-primary-dark);
+    color: #ffffff;
+}
+.null {
+    color: var(--color-null);
+    font-style: italic;
+}
+.note,
+.empty { color: var(--color-text-muted); }
+code {
+    padding: 0.125rem 0.3125rem;
+    border-radius: 0.25rem;
+    background: var(--color-primary-lighter);
+}

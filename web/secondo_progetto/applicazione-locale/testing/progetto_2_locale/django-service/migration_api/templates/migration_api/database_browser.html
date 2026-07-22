@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PostgreSQL locale</title>
+    <link rel="stylesheet" href="{% url 'migration-browser-style' %}">
+</head>
+<body>
+<main>
+    <h1>PostgreSQL locale</h1>
+    <p>
+        Database selezionato:
+        <strong>{{ selected_database|default:"nessuno" }}</strong>
+    </p>
+    <p>
+        Connessione: <code>127.0.0.1:55432</code> ·
+        utente <code>postgres</code> · password vuota.
+    </p>
+    <a class="home" href="http://127.0.0.1:8080/migration-servlet/">← Torna alla migrazione</a>
+
+    <section class="toolbar">
+        <h2>Database disponibili</h2>
+        <div class="db-list">
+            {% for database in available_databases %}
+                <a
+                    class="db-link{% if database == selected_database %} selected{% endif %}"
+                    href="?database={{ database|urlencode }}"
+                >{{ database }}</a>
+            {% empty %}
+                <p class="empty">
+                    Nessun database importato. Tornare alla pagina di migrazione e avviare l’importazione.
+                </p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% for table in tables %}
+        <section class="panel">
+            <h2>
+                {{ table.name }}
+                <span class="count">{{ table.count }} righe</span>
+            </h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        {% for column in table.columns %}<th>{{ column }}</th>{% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in table.rows %}
+                        <tr>
+                            {% for value in row %}
+                                <td>{% if value is None %}<span class="null">NULL</span>{% else %}{{ value }}{% endif %}</td>
+                            {% endfor %}
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="{{ table.columns|length|default:1 }}">Tabella vuota</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="note">Sono mostrate al massimo {{ max_visible_rows }} righe.</p>
+        </section>
+    {% endfor %}
+</main>
+</body>
+</html>

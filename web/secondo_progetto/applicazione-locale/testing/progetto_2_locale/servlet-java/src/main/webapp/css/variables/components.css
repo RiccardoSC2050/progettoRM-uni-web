@@ -1,0 +1,24 @@
+:root {
+    --font-family-base: Arial, Helvetica, sans-serif;
+    --line-height-base: 1.5;
+
+    --panel-bg: var(--color-surface);
+    --panel-border: 1px solid var(--color-border-dark);
+    --panel-radius: var(--radius-md);
+    --panel-padding: var(--padding-card);
+    --panel-shadow: var(--shadow-card);
+
+    --control-bg: var(--color-white);
+    --control-border: 1px solid var(--color-border-dark);
+    --control-radius: var(--radius-sm);
+
+    --button-bg: var(--color-primary);
+    --button-text: var(--color-white);
+    --button-hover-bg: var(--color-primary-dark);
+    --button-danger-bg: var(--color-error);
+    --button-danger-hover-bg: #842828;
+
+    --code-bg: #eef1f5;
+    --progress-bg: var(--color-gray-200);
+    --progress-fill: var(--color-info);
+}
