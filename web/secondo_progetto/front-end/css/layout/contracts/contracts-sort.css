@@ -1,0 +1,46 @@
+.contracts-sort-form {
+  padding: var(--space-md);
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  background: var(--color-surface-alt);
+  border: var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.contracts-sort-field {
+  min-width: 190px;
+  display: grid;
+  gap: var(--space-xxs);
+}
+
+.contracts-sort-field label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.contracts-sort-field select {
+  min-height: var(--input-height);
+  padding: var(--padding-input);
+  border: var(--input-border);
+  border-radius: var(--input-radius);
+  background: var(--input-bg);
+  color: var(--input-text);
+  font-family: var(--font-family-base);
+  font-size: var(--input-font-size);
+}
+
+@media (max-width: 620px) {
+  .contracts-sort-form {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .contracts-sort-field {
+    min-width: 0;
+  }
+}

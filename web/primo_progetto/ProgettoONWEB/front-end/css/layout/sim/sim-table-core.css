@@ -1,0 +1,75 @@
+.sim-table-wrapper {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.sim-table {
+  width: 100%;
+  min-width: var(--sim-table-min-width);
+  border-collapse: separate;
+  border-spacing: 0 var(--space-sm);
+  font-size: var(--table-font-size);
+}
+
+.sim-table th,
+.sim-table td {
+  padding: var(--padding-table-cell);
+  vertical-align: middle;
+}
+
+.sim-table th {
+  color: var(--color-text-muted);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.sim-table td {
+  background: var(--table-row-alt-bg);
+  border-block: var(--border-default);
+}
+
+.sim-table td:first-child {
+  border-left: var(--border-default);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.sim-table td:last-child {
+  border-right: var(--border-default);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.sim-cell-code {
+  width: 18%;
+  text-align: left;
+}
+
+.sim-cell-type {
+  width: 14%;
+  text-align: center;
+}
+
+.sim-cell-status {
+  width: 13%;
+  text-align: center;
+}
+
+.sim-cell-contract {
+  width: 17%;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.sim-cell-date {
+  width: 16%;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.sim-cell-actions {
+  width: 16%;
+  text-align: right;
+}

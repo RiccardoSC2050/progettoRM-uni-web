@@ -1,0 +1,112 @@
+.dashboard-filter-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dashboard-filter-header {
+  margin-bottom: var(--space-md);
+  background: transparent;
+  color: var(--color-text);
+}
+
+.dashboard-filter-header h2 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-heading);
+}
+
+.dashboard-filter-form {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-lg);
+  align-items: end;
+}
+
+.dashboard-filter-fields {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: var(--space-lg);
+}
+
+.dashboard-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.dashboard-field label {
+  font-size: var(--label-font-size);
+  font-weight: var(--label-font-weight);
+  color: var(--label-color);
+}
+
+.dashboard-field input,
+.dashboard-field select {
+  width: 100%;
+  height: var(--input-height);
+  padding: var(--padding-input);
+  border: 1px solid var(--input-border);
+  border-radius: var(--input-radius);
+  background: var(--input-bg);
+  color: var(--input-text);
+  font-size: var(--input-font-size);
+  font-family: var(--font-family-base);
+  box-sizing: border-box;
+}
+
+.dashboard-field input::placeholder {
+  color: var(--input-placeholder);
+}
+
+.dashboard-field input:focus,
+.dashboard-field select:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-outline-offset);
+  border-color: var(--input-border-focus);
+}
+
+.dashboard-filter-actions {
+  display: grid;
+  grid-template-columns: 180px 150px;
+  gap: var(--space-sm);
+}
+
+.dashboard-btn {
+  width: 100%;
+  height: var(--input-height);
+  padding: var(--padding-button);
+  border: 0;
+  border-radius: var(--button-radius);
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
+  cursor: var(--cursor-clickable);
+  box-shadow: var(--shadow-button);
+  white-space: nowrap;
+  box-sizing: border-box;
+  transition: var(--transition-color), var(--transition-transform);
+}
+
+.dashboard-btn:hover {
+  transform: translateY(-2px);
+}
+
+.dashboard-btn-primary {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+
+.dashboard-btn-primary:hover {
+  background: var(--button-primary-hover-bg);
+}
+
+.dashboard-btn-secondary {
+  background: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+}
+
+.dashboard-btn-secondary:hover {
+  background: var(--button-secondary-hover-bg);
+}

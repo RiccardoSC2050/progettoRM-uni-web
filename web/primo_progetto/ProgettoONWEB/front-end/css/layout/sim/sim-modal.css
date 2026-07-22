@@ -1,0 +1,69 @@
+.sim-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  padding: var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sim-modal-backdrop-bg);
+}
+
+.sim-modal {
+  width: var(--sim-modal-width);
+  max-height: calc(100vh - (var(--space-lg) * 2));
+  overflow-y: auto;
+  position: relative;
+  border-radius: var(--card-radius);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-modal);
+}
+
+.sim-modal .sim-form-card {
+  border: 0;
+  box-shadow: none;
+}
+
+.sim-modal-close {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  z-index: var(--z-sticky);
+  width: clamp(36px, 6vw, 40px);
+  height: clamp(36px, 6vw, 40px);
+  border: 0;
+  border-radius: var(--radius-circle);
+  background: var(--sim-highlight-bg);
+  color: var(--sim-highlight-text);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  cursor: var(--cursor-clickable);
+}
+
+.sim-modal-confirm {
+  max-width: var(--sim-modal-confirm-width);
+  padding: var(--card-padding);
+}
+
+.sim-modal-confirm h3 {
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
+}
+
+.sim-modal-confirm p {
+  margin: var(--space-sm) 0 var(--space-lg);
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 760px) {
+  .sim-modal-backdrop {
+    align-items: flex-start;
+    padding: var(--space-sm);
+  }
+
+  .sim-modal {
+    max-height: calc(100vh - (var(--space-sm) * 2));
+  }
+}

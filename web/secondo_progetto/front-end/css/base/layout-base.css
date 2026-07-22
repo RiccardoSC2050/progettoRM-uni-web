@@ -1,0 +1,4 @@
+body > header {
+  background-color: var(--color-header-bg);
+  color: var(--color-header-text);
+}

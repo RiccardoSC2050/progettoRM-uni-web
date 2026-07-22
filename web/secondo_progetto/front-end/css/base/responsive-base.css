@@ -1,0 +1,96 @@
+html {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-body-bg);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+}
+
+body > header,
+body > main,
+body > footer {
+  width: 100%;
+  min-width: 0;
+}
+
+body > main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+body > footer {
+  flex-shrink: 0;
+}
+
+main,
+section,
+article,
+aside,
+div,
+header,
+footer,
+nav,
+form,
+fieldset,
+ul,
+ol,
+li,
+table {
+  min-width: 0;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  max-width: 100%;
+  font: inherit;
+}
+
+a,
+strong,
+span,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+th,
+td,
+label {
+  overflow-wrap: break-word;
+}

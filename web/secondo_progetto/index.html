@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="front-end/css/import-css.css?v=rmk-sim-db-v2" />
+
+    <link rel="icon" type="image/png" href="/front-end/image/logo.png?v=2" />
+    <link rel="shortcut icon" type="image/png" href="/front-end/image/logo.png?v=2" />
+
+    <title>RK/MK</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="header-content">
+          <div class="brand-section">
+            <img src="/front-end/image/logo.png" width="200px" alt="Logo RK/MK" />
+            <div class="brand-text">
+              <h1>RK/MK</h1>
+              <h3>connecting people</h3>
+            </div>
+          </div>
+          <div class="project-title">
+            <h1>ProgettoRKMK</h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="dashboard-section">
+        <div class="dashboard-container">
+          <div class="dashboard-top">
+            <aside class="dashboard-nav-card">
+              <h2>Navigazione</h2>
+
+              <nav class="dashboard-nav">
+                <ul>
+                  <li><a href="#/dashboard">Dashboard</a></li>
+                  <li><a href="#/contratti">Contratti</a></li>
+                  <li><a href="#/sim">Gestione SIM</a></li>
+                  <li><a href="#/telefonate">Telefonate</a></li>
+                </ul>
+              </nav>
+            </aside>
+
+            <section id="app-content" class="dashboard-details-card"></section>
+          </div>
+
+          <section class="dashboard-filter-card" hidden>
+            <header class="dashboard-filter-header">
+              <h2>Filtro rapido</h2>
+            </header>
+
+            <form class="dashboard-filter-form">
+              <div class="dashboard-filter-fields">
+                <div class="dashboard-field">
+                  <label for="filtro-testo">Ricerca</label>
+                  <input id="filtro-testo" type="text" placeholder="Cerca..." />
+                </div>
+
+                <div class="dashboard-field">
+                  <label for="filtro-tipo">Tipo</label>
+                  <select id="filtro-tipo">
+                    <option value="">Tutti</option>
+                    <option value="ricarica">Ricarica</option>
+                    <option value="consumo">Consumo</option>
+                  </select>
+                </div>
+
+                <div class="dashboard-field">
+                  <label for="filtro-data">Data</label>
+                  <input id="filtro-data" type="date" />
+                </div>
+              </div>
+
+              <div class="dashboard-filter-actions">
+                <button class="dashboard-btn dashboard-btn-primary" type="submit">
+                  Ricerca/Applica
+                </button>
+
+                <button class="dashboard-btn dashboard-btn-secondary" type="reset">
+                  Reset
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-container">
+        <p class="footer-title">RK/MK · Progetto universitario</p>
+
+        <p class="footer-text">
+          Applicazione didattica per la gestione di contratti telefonici, SIM e
+          telefonate. I dati utilizzati sono sintetici e hanno esclusivamente
+          finalità formative.
+        </p>
+
+        <p class="footer-meta">
+          Corso di Programmazione Web · Ambiente di sviluppo: HTML, CSS, PHP e
+          MySQL
+        </p>
+      </div>
+    </footer>
+
+    <script type="module" src="front-end/js/main.js?v=rmk-sim-db-v2"></script>
+  </body>
+</html>

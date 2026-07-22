@@ -1,0 +1,65 @@
+.contract-calls-section {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.contract-calls-filter-card {
+  padding: var(--space-md);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.contract-calls-filter-card header h3,
+.contract-calls-header h3 {
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+}
+
+.contract-calls-filter-form {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.contract-calls-filter-fields {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.contract-calls-field {
+  display: grid;
+  gap: var(--space-xxs);
+}
+
+.contract-calls-field label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.contract-calls-field input {
+  min-height: var(--input-height);
+  padding: var(--padding-input);
+  border: var(--input-border);
+  border-radius: var(--input-radius);
+  background: var(--input-bg);
+  color: var(--input-text);
+  font-family: var(--font-family-base);
+  font-size: var(--input-font-size);
+}
+
+.contract-calls-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}

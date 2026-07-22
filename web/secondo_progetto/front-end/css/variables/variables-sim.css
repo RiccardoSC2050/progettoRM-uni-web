@@ -1,0 +1,21 @@
+:root {
+  --sim-page-gap: var(--space-xl);
+  --sim-card-padding: var(--card-padding);
+  --sim-card-bg: var(--card-bg);
+  --sim-card-border: var(--card-border);
+  --sim-card-radius: var(--card-radius);
+  --sim-card-shadow: var(--card-shadow);
+  --sim-summary-min-width: clamp(130px, 18vw, 180px);
+  --sim-table-min-width: 940px;
+  --sim-table-mobile-label-width: 8.5rem;
+  --sim-table-action-min-width: clamp(82px, 14vw, 96px);
+  --sim-modal-width: min(1120px, 100%);
+  --sim-modal-confirm-width: min(520px, 100%);
+  --sim-modal-backdrop-bg: rgba(24, 24, 28, var(--opacity-overlay));
+  --sim-highlight-bg: var(--color-primary-lighter);
+  --sim-highlight-text: var(--color-primary-dark);
+  --sim-edit-bg: var(--edit-bg);
+  --sim-edit-text: var(--edit-color);
+  --sim-delete-bg: var(--delete-bg);
+  --sim-delete-text: var(--delete-color);
+}

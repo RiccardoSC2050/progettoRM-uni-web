@@ -1,0 +1,36 @@
+.contract-detail-summary {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.contract-detail-summary article,
+.contract-calls-filter-card,
+.contract-calls-content {
+  background: var(--color-surface-alt);
+  border: var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.contract-detail-summary article {
+  padding: var(--space-md);
+  display: grid;
+  gap: var(--space-xxs);
+}
+
+.contract-detail-summary span {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.contract-detail-summary strong {
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}

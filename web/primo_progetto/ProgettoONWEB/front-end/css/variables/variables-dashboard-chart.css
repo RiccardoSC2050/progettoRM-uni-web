@@ -1,0 +1,14 @@
+:root {
+  --dashboard-chart-size: clamp(210px, 17vw, 250px);
+  --dashboard-chart-stroke: 11.5;
+  --dashboard-chart-card-width: min(100%, 350px);
+  --dashboard-chart-card-padding: clamp(1rem, 1.2vw, 1.25rem);
+  --dashboard-chart-track: var(--color-gray-200);
+  --dashboard-chart-center-bg: var(--card-bg);
+  --dashboard-chart-active: var(--color-success);
+  --dashboard-chart-disabled: var(--color-error);
+  --dashboard-chart-inactive: var(--color-warning);
+  --dashboard-chart-dot-size: 0.8rem;
+  --dashboard-chart-label-color: var(--color-text-muted);
+  --dashboard-chart-value-color: var(--color-text);
+}
