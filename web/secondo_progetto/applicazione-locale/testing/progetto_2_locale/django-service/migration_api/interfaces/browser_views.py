@@ -3,16 +3,11 @@
 from pathlib import Path
 
 from django.http import HttpResponse
-from django.utils.html import escape
 from django.shortcuts import render
+from django.utils.html import escape
 from django.views.decorators.http import require_GET
 
-from migration_api.application.database_service import available_databases
-from migration_api.infrastructure.database import validate_name
-from migration_api.infrastructure.database_browser import (
-    MAX_VISIBLE_ROWS,
-    load_database_snapshot,
-)
+from migration_api.application.browser_service import build_browser_context
 
 _STYLE_PATH = (
     Path(__file__).resolve().parents[1]
@@ -25,25 +20,14 @@ _STYLE_PATH = (
 @require_GET
 def database_browser(request):
     try:
-        available = available_databases()
-        requested = (request.GET.get("database") or "").strip()
-        selected = validate_name(requested) if requested else (available[0] if available else "")
-        if selected and selected not in available:
-            selected = ""
-        tables = load_database_snapshot(selected) if selected else []
         return render(
             request,
             "migration_api/database_browser.html",
-            {
-                "available_databases": available,
-                "selected_database": selected,
-                "tables": tables,
-                "max_visible_rows": MAX_VISIBLE_ROWS,
-            },
+            build_browser_context(request.GET),
         )
     except ValueError as exception:
         return HttpResponse(
-            f"<h1>Nome database non valido</h1><p>{escape(str(exception))}</p>",
+            f"<h1>Richiesta non valida</h1><p>{escape(str(exception))}</p>",
             status=400,
             content_type="text/html; charset=utf-8",
         )

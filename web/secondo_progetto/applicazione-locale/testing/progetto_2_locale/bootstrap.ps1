@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [ValidateSet('start', 'stop', 'diagnostics')]
     [string]$Action = 'start'
@@ -67,23 +67,72 @@ function Find-Python {
     return $null
 }
 
-function Install-PrivatePython {
+function Get-PythonInstallerInfo {
     $version = '3.12.10'
-    $architecture = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64' } else { 'amd64' }
-    $url = "https://www.python.org/ftp/python/$version/python-$version-$architecture.exe"
-    $installer = Join-Path $Downloads "python-$version-$architecture.exe"
+
+    if (-not [Environment]::Is64BitOperatingSystem) {
+        return [pscustomobject]@{
+            Version = $version
+            Architecture = 'x86'
+            FileName = "python-$version.exe"
+        }
+    }
+
+    $isArm64 = ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') -or
+               ($env:PROCESSOR_IDENTIFIER -match 'ARM64')
+    if ($isArm64) {
+        return [pscustomobject]@{
+            Version = $version
+            Architecture = 'arm64'
+            FileName = "python-$version-arm64.exe"
+        }
+    }
+
+    return [pscustomobject]@{
+        Version = $version
+        Architecture = 'amd64'
+        FileName = "python-$version-amd64.exe"
+    }
+}
+
+function Install-PrivatePython {
+    $info = Get-PythonInstallerInfo
+    $url = "https://www.python.org/ftp/python/$($info.Version)/$($info.FileName)"
+    $installer = Join-Path $Downloads $info.FileName
+    $installerLog = Join-Path $Runtime 'logs\python-installer.log'
     $target = Join-Path $Tools 'python-3.12'
 
     Write-Step "Python 3.12 non trovato: download e installazione privata nella cartella del progetto..."
+    Add-Content -Path $BootstrapLog -Value "Sistema: Windows $([Environment]::OSVersion.Version); architettura: $($info.Architecture); destinazione: $target"
+
+    # Un file parziale può rimanere dopo un download interrotto.
+    if (Test-Path $installer) {
+        $size = (Get-Item $installer).Length
+        if ($size -lt 10MB) {
+            Remove-Item -Force $installer
+        }
+    }
+
     if (-not (Test-Path $installer)) {
         Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $installer
     }
 
+    # Rimuove il blocco "file scaricato da Internet" quando presente.
+    Unblock-File -Path $installer -ErrorAction SilentlyContinue
+
+    # Elimina un'eventuale installazione locale incompleta.
+    if (Test-Path $target) {
+        Remove-Item -Recurse -Force $target
+    }
     New-Item -ItemType Directory -Force -Path $target | Out-Null
-    $arguments = @(
+
+    # Start-Process unisce gli array di ArgumentList in una stringa e può perdere
+    # le virgolette esterne. Usiamo quindi una singola stringa con virgolette
+    # esplicite: è indispensabile quando il progetto è in una cartella con spazi.
+    $argumentString = @(
         '/quiet',
         'InstallAllUsers=0',
-        "TargetDir=`"$target`"",
+        ('TargetDir="{0}"' -f $target),
         'PrependPath=0',
         'Include_launcher=0',
         'Include_pip=1',
@@ -92,16 +141,26 @@ function Install-PrivatePython {
         'Include_doc=0',
         'Include_tcltk=0',
         'Shortcuts=0',
-        'Include_dev=1'
-    )
-    $process = Start-Process -FilePath $installer -ArgumentList $arguments -Wait -PassThru
+        'Include_dev=1',
+        ('/log "{0}"' -f $installerLog)
+    ) -join ' '
+
+    $process = Start-Process -FilePath $installer -ArgumentList $argumentString -Wait -PassThru
     if ($process.ExitCode -ne 0) {
-        throw "Installazione privata di Python non riuscita. Codice: $($process.ExitCode)."
+        throw "Installazione privata di Python non riuscita. Codice: $($process.ExitCode). Log: $installerLog"
     }
 
-    $python = Find-Python
+    Start-Sleep -Milliseconds 500
+
+    $localPython = Join-Path $target 'python.exe'
+    $python = Test-PythonExecutable -Executable $localPython
     if (-not $python) {
-        throw 'Python è stato scaricato ma non risulta eseguibile.'
+        # Secondo controllo sulle posizioni standard, nel caso l'installer abbia
+        # scelto una cartella utente nonostante TargetDir.
+        $python = Find-Python
+    }
+    if (-not $python) {
+        throw "Python è stato scaricato ma non risulta eseguibile. Consultare: $installerLog"
     }
     return $python
 }

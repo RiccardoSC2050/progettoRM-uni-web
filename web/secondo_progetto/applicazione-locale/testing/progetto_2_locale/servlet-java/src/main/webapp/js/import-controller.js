@@ -7,6 +7,7 @@ import {
     renderDatabases,
     updateDatabaseSelection
 } from "./database-view.js";
+import { DatabaseSyncView } from "./database-sync.js";
 import { ProgressView, summarizeCompleted } from "./progress-view.js";
 
 const elements = collectElements();
@@ -20,6 +21,10 @@ const progressView = new ProgressView({
     label: elements.progressLabel,
     percentageLabel: elements.progressPercentage,
     detail: elements.progressDetail
+});
+const databaseSyncView = new DatabaseSyncView({
+    button: elements.refreshDatabasesButton,
+    status: elements.databaseSyncStatus
 });
 
 async function execute(button, output, task) {
@@ -46,8 +51,11 @@ async function loadDatabases() {
         updateDatabaseSelection(elements, nextDefaultDatabase(currentDatabases));
         firstDatabaseLoad = false;
     }
-
     return result;
+}
+
+async function synchronizeDatabases(options = {}) {
+    return databaseSyncView.synchronize(loadDatabases, options);
 }
 
 async function deleteDatabase(database, button) {
@@ -59,54 +67,31 @@ async function deleteDatabase(database, button) {
         return;
     }
 
+    const item = button.closest(".database-item");
     button.disabled = true;
+    item?.setAttribute("aria-busy", "true");
     elements.statusOutput.textContent = `Eliminazione di ${database} in corso...`;
 
     try {
-        const result = await requestJson(endpoints.deleteDatabase(database), {
-            method: "DELETE"
-        });
-
-        // Aggiornamento immediato della pagina: non dipende da un refresh manuale.
-        currentDatabases = currentDatabases.filter(item => item !== database);
+        const result = await requestJson(endpoints.deleteDatabase(database), { method: "DELETE" });
+        const deletedKey = String(database).toUpperCase();
+        currentDatabases = currentDatabases.filter(
+            itemName => String(itemName).toUpperCase() !== deletedKey
+        );
         renderDatabases(elements, currentDatabases, deleteDatabase);
 
-        if (normalizeDatabaseName(elements.databaseName.value) === database) {
+        if (normalizeDatabaseName(elements.databaseName.value).toUpperCase() === deletedKey) {
             updateDatabaseSelection(elements, nextDefaultDatabase(currentDatabases));
         }
 
+        await synchronizeDatabases({ announce: false });
         elements.statusOutput.textContent =
-            `Database locale eliminato: ${result.database || database}`;
-
-        // Verifica in differita lo stato reale di PostgreSQL. Se l'API impiega
-        // qualche istante ad aggiornarsi, la riga eliminata non viene reinserita.
-        window.setTimeout(() => {
-            verifyDatabaseDeletion(database).catch(error => {
-                elements.statusOutput.textContent +=
-                    `\nAvviso: elenco non verificato automaticamente (${error.message}).`;
-            });
-        }, 300);
+            `Database locale eliminato: ${result.database || database}. Elenco sincronizzato.`;
     } catch (error) {
         elements.statusOutput.textContent = error.message;
         button.disabled = false;
+        item?.removeAttribute("aria-busy");
     }
-}
-
-async function verifyDatabaseDeletion(database, attempts = 6) {
-    for (let attempt = 0; attempt < attempts; attempt += 1) {
-        const result = await requestJson(endpoints.databases);
-        const databases = [...new Set(result.databases || [])];
-
-        if (!databases.includes(database)) {
-            currentDatabases = databases;
-            renderDatabases(elements, currentDatabases, deleteDatabase);
-            return;
-        }
-
-        await delay(250);
-    }
-
-    throw new Error("PostgreSQL non ha ancora aggiornato l'elenco dei database.");
 }
 
 async function waitForJob(jobId) {
@@ -142,12 +127,12 @@ async function startImport() {
     }
 
     setImportControlsDisabled(true);
-    elements.importOutput.textContent = "Avvio dell'importazione...";
+    elements.importOutput.textContent = "Avvio dell'importazione relazionale...";
     progressView.update({
         status: "queued",
         percentage: 0,
         phase: "Preparazione",
-        message: "Creazione del processo di importazione."
+        message: "Selezione dei contratti e creazione del processo di importazione."
     });
 
     try {
@@ -157,7 +142,7 @@ async function startImport() {
         );
         const completed = await waitForJob(started.jobId);
         elements.importOutput.textContent = summarizeCompleted(completed);
-        await loadDatabases().catch(() => {});
+        await synchronizeDatabases({ announce: false });
     } catch (error) {
         progressView.update({
             status: "failed",
@@ -187,11 +172,13 @@ function registerEvents() {
         () => requestJson(endpoints.status)
     ));
 
-    elements.refreshDatabasesButton.addEventListener("click", () => execute(
-        elements.refreshDatabasesButton,
-        elements.statusOutput,
-        loadDatabases
-    ));
+    elements.refreshDatabasesButton.addEventListener("click", async () => {
+        try {
+            await synchronizeDatabases();
+        } catch (error) {
+            elements.statusOutput.textContent = error.message;
+        }
+    });
 
     elements.importButton.addEventListener("click", startImport);
 }
@@ -201,6 +188,7 @@ function collectElements() {
         statusButton: document.getElementById("statusButton"),
         importButton: document.getElementById("importButton"),
         refreshDatabasesButton: document.getElementById("refreshDatabasesButton"),
+        databaseSyncStatus: document.getElementById("databaseSyncStatus"),
         databaseName: document.getElementById("databaseName"),
         recordLimit: document.getElementById("recordLimit"),
         databaseSuggestions: document.getElementById("databaseSuggestions"),
@@ -223,4 +211,4 @@ function delay(milliseconds) {
 
 registerEvents();
 updateDatabaseSelection(elements, elements.databaseName.value);
-loadDatabases().catch(() => {});
+synchronizeDatabases({ announce: false });

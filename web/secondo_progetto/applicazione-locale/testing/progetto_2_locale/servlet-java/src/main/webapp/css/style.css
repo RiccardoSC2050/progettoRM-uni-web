@@ -203,3 +203,19 @@ pre {
         text-align: left;
     }
 }
+
+.database-sync-help {
+    margin-bottom: var(--space-sm);
+}
+
+.database-sync-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.database-sync-status {
+    color: var(--color-text-muted);
+    font-size: 0.925rem;
+}

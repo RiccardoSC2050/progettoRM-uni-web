@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Migrazione database</title>
-    <link rel="stylesheet" href="css/style.css?v=7">
+    <link rel="stylesheet" href="css/style.css?v=9">
 </head>
 <body>
 <main class="container">
@@ -39,12 +39,19 @@
         </p>
         <p class="helper">Seleziona un database per riutilizzarne il nome oppure eliminalo definitivamente.</p>
         <div id="existingDatabases" class="database-list" aria-live="polite"></div>
-        <button id="refreshDatabasesButton" type="button">Aggiorna elenco database</button>
+        <p class="helper database-sync-help">
+            L’elenco si aggiorna automaticamente dopo importazioni ed eliminazioni.
+            Usare la sincronizzazione solo se un database è stato creato o rimosso da un altro programma.
+        </p>
+        <div class="database-sync-row">
+            <button id="refreshDatabasesButton" type="button">Sincronizza elenco con PostgreSQL</button>
+            <span id="databaseSyncStatus" class="database-sync-status" aria-live="polite">Sincronizzazione iniziale in corso...</span>
+        </div>
     </section>
 
     <section class="panel">
-        <h2>Importazione ridotta</h2>
-        <label for="recordLimit">Righe massime per ogni tabella</label>
+        <h2>Importazione relazionale</h2>
+        <label for="recordLimit">Numero massimo di contratti</label>
         <select id="recordLimit" name="recordLimit">
             <option value="25">25 — test veloce</option>
             <option value="50">50 — rapido</option>
@@ -54,10 +61,8 @@
             <option value="1000">1000 — ampio</option>
         </select>
         <p class="helper">
-            Il limite viene applicato separatamente a contratti, SIM attive, SIM disattive,
-            SIM non attive e telefonate. Con il valore consigliato vengono scaricate al massimo
-            500 righe. Le SIM attive e le telefonate senza il relativo contratto nel campione
-            vengono ignorate, così PostgreSQL resta coerente.
+            Il sistema seleziona prima i contratti e importa tutte le SIM attive, le SIM disattivate
+            e le telefonate collegate a quei numeri.
         </p>
 
         <button id="importButton" type="button">Avvia importazione</button>
@@ -106,6 +111,6 @@ Database iniziale: postgres</pre>
     </section>
 </main>
 
-<script type="module" src="js/import-controller.js?v=7"></script>
+<script type="module" src="js/import-controller.js?v=9"></script>
 </body>
 </html>

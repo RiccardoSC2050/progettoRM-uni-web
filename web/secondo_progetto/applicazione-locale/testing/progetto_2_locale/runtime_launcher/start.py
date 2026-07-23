@@ -50,32 +50,32 @@ def _run() -> int:
     LOGS.mkdir(parents=True, exist_ok=True)
     settings = load_settings()
 
-    print("[1/8] Controllo dei prerequisiti...")
+    print("[1/10] Controllo di Python e Java...")
     runtime = verify_prerequisites()
     print(f"      {runtime.python}")
     print(f"      {runtime.java}")
 
-    print("[2/8] Preparazione di PostgreSQL locale...")
+    print("[2/10] Controllo di PostgreSQL (download locale automatico se mancante)...")
     ensure_postgres(settings.postgres.port)
     write_service_configuration(settings)
 
-    print("[3/8] Preparazione dell'ambiente Python...")
+    print("[3/10] Controllo dei pacchetti Python (installazione locale se mancanti)...")
     python = prepare_python()
     check_project(python)
 
-    print("[4/8] Compilazione della servlet Java...")
+    print("[4/10] Controllo di Maven e compilazione Java (download locale se mancante)...")
     war = build_war()
 
-    print("[5/8] Preparazione di Tomcat locale...")
+    print("[5/10] Controllo di Tomcat (download locale automatico se mancante)...")
     tomcat = prepare_tomcat(settings.local.tomcat_port)
     deploy(war, tomcat)
 
-    print("[6/8] Avvio del servizio Django...")
+    print("[6/10] Avvio del servizio Django...")
     start_django(python, settings.local)
     django_url = f"http://127.0.0.1:{settings.local.django_port}/api/migration/health/"
     wait_for(django_url, 45)
 
-    print("[7/8] Avvio della servlet Java su Tomcat...")
+    print("[7/10] Avvio della servlet Java su Tomcat...")
     start_tomcat(tomcat, settings.local.tomcat_port)
     app_url = f"http://127.0.0.1:{settings.local.tomcat_port}/migration-servlet/"
     browser_url = (
@@ -84,7 +84,9 @@ def _run() -> int:
     )
     wait_for(app_url, 90)
 
-    print("[8/8] Servizi pronti. Apertura dell'applicazione...")
+    print("[8/10] Verifica del servizio locale...")
+    print("[9/10] Tutti i componenti necessari sono disponibili.")
+    print("[10/10] Servizi pronti. Apertura dell'applicazione...")
     print("")
     print("============================================================")
     print(" LINK UTILI")

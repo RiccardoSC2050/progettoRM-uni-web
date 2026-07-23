@@ -4,31 +4,32 @@
 
 ChatGPT è stato utilizzato soprattutto nella fase iniziale per studiare e configurare la procedura automatica di installazione e avvio locale.
 
-ChatGPT è stato utilizzato anche per una revisione complessiva dell'architettura e per comprendere l'integrazione tra Java, Django, PostgreSQL, Tomcat e le API PHP remote.
+ChatGPT è stato utilizzato anche per una revisione dell'architettura e per comprendere l'integrazione tra Java, Django, PostgreSQL, Tomcat e le API PHP remote.
 
 Lo sviluppo restante è stato gestito dal gruppo. L'intelligenza artificiale è stata usata in parallelo come supporto per chiarire alcuni passaggi e scrivere porzioni selezionate di codice. Ogni parte è stata controllata, adattata e integrata nel progetto.
 
 ## Differenze rispetto al Progetto 1
 
-Il Progetto 1 rimane la sorgente remota dei dati. Nel Progetto 2 sono stati aggiunti:
+Il Progetto 1 rimane la sorgente remota. Nel Progetto 2 sono stati aggiunti:
 
-- API PHP dedicate all'esportazione dei dati;
+- API PHP dedicate all'esportazione;
 - servlet Java per coordinare il trasferimento;
-- servizio Django locale per ricevere e validare i dati;
-- modelli e procedure di creazione delle tabelle PostgreSQL;
-- file e logica di migrazione dei dati;
-- importazione limitata e progressiva;
+- servizio Django per ricevere e validare i dati;
+- procedure di creazione delle tabelle PostgreSQL;
+- file e logica di migrazione;
+- selezione dei contratti e importazione dei relativi dati collegati;
 - barra di avanzamento con percentuale;
-- launcher automatico per avvio e arresto dei servizi;
-- visualizzatore locale delle sole tabelle funzionali.
+- launcher automatico;
+- visualizzatore relazionale e paginato delle tabelle funzionali.
 
 ## Organizzazione del codice
 
 Il progetto separa:
 
-- dominio e regole applicative;
-- casi d'uso di importazione;
-- accesso ai servizi esterni e al database;
+- metadati e regole di dominio;
+- coordinamento della migrazione;
+- importazione delle singole risorse;
+- accesso ai servizi HTTP e a PostgreSQL;
 - controller HTTP;
-- interfaccia utente;
+- visualizzatore e interfaccia utente;
 - configurazione e gestione del runtime locale.

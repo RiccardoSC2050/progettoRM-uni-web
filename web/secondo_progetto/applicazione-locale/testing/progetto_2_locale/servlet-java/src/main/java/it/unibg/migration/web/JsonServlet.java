@@ -18,6 +18,9 @@ public abstract class JsonServlet extends HttpServlet {
         response.setStatus(status);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
         mapper.writeValue(response.getWriter(), body);
     }
 }

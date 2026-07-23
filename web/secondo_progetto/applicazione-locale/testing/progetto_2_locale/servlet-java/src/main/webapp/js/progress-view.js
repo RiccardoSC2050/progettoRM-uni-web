@@ -1,3 +1,10 @@
+const RESOURCE_LABELS = Object.freeze({
+    contratti: "Contratti telefonici",
+    simAttive: "SIM attive collegate",
+    simDisattive: "SIM disattivate collegate",
+    telefonate: "Telefonate collegate"
+});
+
 export class ProgressView {
     constructor(elements) {
         this.elements = elements;
@@ -23,31 +30,20 @@ export class ProgressView {
 }
 
 export function summarizeCompleted(snapshot) {
-    const downloaded = snapshot.downloaded || {};
     const imported = snapshot.imported || {};
-    const skipped = snapshot.skipped || {};
-    const resources = [...new Set([
-        ...Object.keys(downloaded),
-        ...Object.keys(imported)
-    ])];
-
-    const rows = resources.map(resource => {
-        const received = Number(downloaded[resource] || 0);
-        const saved = Number(imported[resource] || 0);
-        const ignored = Number(skipped[resource] || 0);
-        return `${resource}: ${saved} salvate su ${received} scaricate${
-            ignored > 0 ? ` (${ignored} ignorate)` : ""
-        }`;
-    });
+    const rows = Object.entries(imported).map(([resource, saved]) =>
+        `${RESOURCE_LABELS[resource] || resource}: ${Number(saved || 0)} righe importate`
+    );
 
     return [
-        "Importazione completata.",
+        "Importazione relazionale completata.",
         `Database: ${snapshot.database}`,
-        `Limite: ${snapshot.limitPerResource} righe per tabella`,
+        `Contratti richiesti: massimo ${snapshot.limitPerResource}`,
         "",
         ...(rows.length ? rows : ["Nessuna riga importata."]),
         "",
-        "Usare 'Visualizza PostgreSQL locale' per controllare tabelle e dati."
+        "Le SIM attive, le SIM disattivate e le telefonate appartengono ai contratti selezionati.",
+        "Aprire 'Visualizza PostgreSQL locale' per navigare tutte le righe e i collegamenti."
     ].join("\n");
 }
 
@@ -55,23 +51,16 @@ function buildProgressDetail(snapshot) {
     const details = [];
 
     if (snapshot.resource) {
-        details.push(`Tabella: ${snapshot.resource}`);
+        details.push(`Risorsa: ${RESOURCE_LABELS[snapshot.resource] || snapshot.resource}`);
     }
     if (Number(snapshot.targetCurrent) > 0) {
-        const ignored = Math.max(
-            0,
-            Number(snapshot.downloadedCurrent || 0) - Number(snapshot.importedCurrent || 0)
-        );
         details.push(
-            `scaricate ${snapshot.downloadedCurrent}/${snapshot.targetCurrent}`,
-            `salvate ${snapshot.importedCurrent}`
+            `analizzate ${snapshot.downloadedCurrent}/${snapshot.targetCurrent}`,
+            `importate ${snapshot.importedCurrent}`
         );
-        if (ignored > 0) {
-            details.push(`ignorate ${ignored} senza relazione valida`);
-        }
     }
     if (Number(snapshot.targetTotal) > 0) {
-        details.push(`totale ${snapshot.downloadedTotal}/${snapshot.targetTotal}`);
+        details.push(`avanzamento dati ${snapshot.downloadedTotal}/${snapshot.targetTotal}`);
     }
     if (snapshot.message && snapshot.message !== snapshot.phase) {
         details.push(snapshot.message);

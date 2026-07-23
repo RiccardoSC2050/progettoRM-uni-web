@@ -79,12 +79,12 @@ public final class ImportJobServlet extends JsonServlet {
             int limit = Integer.parseInt(value.trim());
             if (limit < 1 || limit > MAX_LIMIT) {
                 throw new IllegalArgumentException(
-                        "Il limite per tabella deve essere compreso tra 1 e " + MAX_LIMIT + "."
+                        "Il numero di contratti deve essere compreso tra 1 e " + MAX_LIMIT + "."
                 );
             }
             return limit;
         } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("Il limite per tabella non è un numero valido.");
+            throw new IllegalArgumentException("Il numero di contratti non è valido.");
         }
     }
 }

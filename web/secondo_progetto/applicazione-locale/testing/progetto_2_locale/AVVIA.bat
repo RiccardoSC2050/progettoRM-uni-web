@@ -8,7 +8,8 @@ echo  PROGETTO 2 - INSTALLAZIONE E AVVIO AUTOMATICO
 echo ============================================================
 echo.
 echo Non chiudere questa finestra.
-echo Al primo avvio vengono preparati automaticamente i componenti mancanti.
+echo Al primo avvio vengono controllati Python, Java, PostgreSQL, Maven e Tomcat.
+echo Ogni componente mancante viene scaricato automaticamente nella cartella .runtime.
 echo Serve una connessione Internet.
 echo.
 

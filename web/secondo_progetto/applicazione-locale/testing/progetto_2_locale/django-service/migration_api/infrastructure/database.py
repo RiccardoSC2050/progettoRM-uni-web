@@ -6,15 +6,10 @@ from django.db import connections
 from psycopg import connect
 from psycopg import sql
 
+from migration_api.domain.schema import PROJECT_TABLE_NAMES
+
 VALID_NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]{0,62}$")
 SYSTEM_DATABASES = {"postgres", "template0", "template1"}
-PROJECT_TABLES = {
-    "contratto_telefonico",
-    "sim_attiva",
-    "sim_disattiva",
-    "sim_non_attiva",
-    "telefonata",
-}
 
 
 def validate_name(value: str) -> str:
@@ -84,24 +79,11 @@ def _create_destination_schema(alias: str) -> None:
     usa quindi lo schema editor direttamente, invece di eseguire tutte le
     migrazioni installate nel progetto Django.
     """
-    from migration_api.models import (
-        ContrattoTelefonico,
-        SimAttiva,
-        SimDisattiva,
-        SimNonAttiva,
-        Telefonata,
-    )
+    from migration_api.models import DESTINATION_MODELS
 
     connection = connections[alias]
-    models = (
-        ContrattoTelefonico,
-        SimDisattiva,
-        SimNonAttiva,
-        SimAttiva,
-        Telefonata,
-    )
     with connection.schema_editor() as schema_editor:
-        for model in models:
+        for model in DESTINATION_MODELS:
             schema_editor.create_model(model)
 
 
@@ -126,7 +108,7 @@ def _is_project_database(name: str) -> bool:
                     "SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
                 )
                 tables = {row[0] for row in cursor.fetchall()}
-                return PROJECT_TABLES.issubset(tables)
+                return PROJECT_TABLE_NAMES.issubset(tables)
     except Exception:
         return False
 
@@ -140,6 +122,7 @@ def _database_connection(name: str):
         host=configuration["HOST"],
         port=configuration["PORT"],
     )
+
 
 def _admin_connection(autocommit=False):
     configuration = settings.DATABASES["default"]

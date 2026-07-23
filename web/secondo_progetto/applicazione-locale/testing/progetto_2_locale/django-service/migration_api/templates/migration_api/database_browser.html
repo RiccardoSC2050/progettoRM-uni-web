@@ -4,20 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PostgreSQL locale</title>
-    <link rel="stylesheet" href="{% url 'migration-browser-style' %}">
+    <link rel="stylesheet" href="{% url 'migration-browser-style' %}?v=2">
 </head>
 <body>
 <main>
-    <h1>PostgreSQL locale</h1>
-    <p>
-        Database selezionato:
-        <strong>{{ selected_database|default:"nessuno" }}</strong>
-    </p>
-    <p>
-        Connessione: <code>127.0.0.1:55432</code> ·
-        utente <code>postgres</code> · password vuota.
-    </p>
-    <a class="home" href="http://127.0.0.1:8080/migration-servlet/">← Torna alla migrazione</a>
+    <header class="page-header">
+        <div>
+            <h1>PostgreSQL locale</h1>
+            <p>
+                Database selezionato:
+                <strong>{{ selected_database|default:"nessuno" }}</strong>
+            </p>
+            <p class="connection">
+                <code>127.0.0.1:55432</code> · utente <code>postgres</code> · password vuota
+            </p>
+        </div>
+        <a class="button-link" href="http://127.0.0.1:8080/migration-servlet/">Torna alla migrazione</a>
+    </header>
 
     <section class="toolbar">
         <h2>Database disponibili</h2>
@@ -28,42 +31,255 @@
                     href="?database={{ database|urlencode }}"
                 >{{ database }}</a>
             {% empty %}
-                <p class="empty">
-                    Nessun database importato. Tornare alla pagina di migrazione e avviare l’importazione.
-                </p>
+                <p class="empty">Nessun database importato. Avviare prima una migrazione.</p>
             {% endfor %}
         </div>
     </section>
 
-    {% for table in tables %}
+    {% if selected_database %}
+        <section class="summary-grid" aria-label="Conteggi tabelle">
+            {% for item in table_counts %}
+                <a
+                    class="summary-card"
+                    href="?database={{ selected_database|urlencode }}&amp;table={{ item.spec.name|urlencode }}"
+                >
+                    <span>{{ item.spec.label }}</span>
+                    <strong>{{ item.count }}</strong>
+                </a>
+            {% endfor %}
+        </section>
+
         <section class="panel">
-            <h2>
-                {{ table.name }}
-                <span class="count">{{ table.count }} righe</span>
-            </h2>
+            <div class="section-heading">
+                <div>
+                    <h2>Relazioni per contratto</h2>
+                    <p class="note">
+                        Le SIM disattivate rappresentano lo storico complessivo di più contratti:
+                        ogni contratto può avere una o più SIM disattivate. La tabella mostra inoltre
+                        la SIM attiva e tutte le telefonate collegate a ciascun contratto.
+                    </p>
+                </div>
+            </div>
+
             <div class="table-wrap">
                 <table>
                     <thead>
                     <tr>
-                        {% for column in table.columns %}<th>{{ column }}</th>{% endfor %}
+                        <th>Numero</th>
+                        <th>Tipo</th>
+                        <th>Attivazione</th>
+                        <th>SIM attiva</th>
+                        <th>SIM disattivate</th>
+                        <th>Telefonate</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for row in table.rows %}
+                    {% for contract in contracts %}
+                        <tr>
+                            <td><strong>{{ contract.numero }}</strong></td>
+                            <td>{{ contract.tipo|default:"—" }}</td>
+                            <td>{{ contract.data_attivazione|default:"—" }}</td>
+                            <td>
+                                {% if contract.sim_attiva %}
+                                    {{ contract.sim_attiva.codice }}
+                                {% else %}
+                                    <span class="muted">Nessuna</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ contract.inactive_sim_count }}</td>
+                            <td>{{ contract.call_count }}</td>
+                            <td>
+                                <a
+                                    class="detail-link"
+                                    href="?database={{ selected_database|urlencode }}&amp;contract={{ contract.numero|urlencode }}&amp;table=contratto_telefonico"
+                                >Apri collegamenti</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="7">Nessun contratto importato.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if contracts.paginator.num_pages > 1 %}
+                <nav class="pagination" aria-label="Pagine contratti">
+                    {% if contracts.has_previous %}
+                        <a href="?database={{ selected_database|urlencode }}&amp;contracts_page={{ contracts.previous_page_number }}&amp;table={{ selected_table.name|urlencode }}">← Precedenti</a>
+                    {% endif %}
+                    <span>Pagina {{ contracts.number }} di {{ contracts.paginator.num_pages }}</span>
+                    {% if contracts.has_next %}
+                        <a href="?database={{ selected_database|urlencode }}&amp;contracts_page={{ contracts.next_page_number }}&amp;table={{ selected_table.name|urlencode }}">Successivi →</a>
+                    {% endif %}
+                </nav>
+            {% endif %}
+        </section>
+
+        {% if selected_contract %}
+            <section class="panel contract-detail" id="contract-detail">
+                {% if contract_detail %}
+                    <div class="section-heading">
+                        <div>
+                            <h2>Contratto {{ contract_detail.contract.numero }}</h2>
+                            <p class="note">Vista completa dei dati collegati al contratto selezionato.</p>
+                        </div>
+                        <a href="?database={{ selected_database|urlencode }}">Chiudi dettaglio</a>
+                    </div>
+
+                    <dl class="contract-data">
+                        <div><dt>Tipo</dt><dd>{{ contract_detail.contract.tipo|default:"—" }}</dd></div>
+                        <div><dt>Data attivazione</dt><dd>{{ contract_detail.contract.data_attivazione|default:"—" }}</dd></div>
+                        <div><dt>Minuti residui</dt><dd>{{ contract_detail.contract.minuti_residui|default:"—" }}</dd></div>
+                        <div><dt>Credito residuo</dt><dd>{{ contract_detail.contract.credito_residuo|default:"—" }}</dd></div>
+                    </dl>
+
+                    <h3>SIM attiva</h3>
+                    {% if contract_detail.contract.sim_attiva %}
+                        <div class="related-record">
+                            <strong>{{ contract_detail.contract.sim_attiva.codice }}</strong>
+                            <span>Tipo: {{ contract_detail.contract.sim_attiva.tipo_sim|default:"—" }}</span>
+                            <span>Attivata: {{ contract_detail.contract.sim_attiva.data_attivazione|default:"—" }}</span>
+                        </div>
+                    {% else %}
+                        <p class="empty">Il contratto non ha una SIM attiva.</p>
+                    {% endif %}
+
+                    <div class="subsection-heading">
+                        <h3>SIM disattivate</h3>
+                        <a href="?database={{ selected_database|urlencode }}&amp;table=sim_disattiva&amp;contract={{ selected_contract|urlencode }}">Apri tabella filtrata</a>
+                    </div>
+                    <div class="table-wrap compact">
+                        <table>
+                            <thead><tr><th>Codice</th><th>Tipo</th><th>Attivazione</th><th>Disattivazione</th></tr></thead>
+                            <tbody>
+                            {% for sim in contract_detail.inactive_sims %}
+                                <tr>
+                                    <td>{{ sim.codice }}</td>
+                                    <td>{{ sim.tipo_sim|default:"—" }}</td>
+                                    <td>{{ sim.data_attivazione|default:"—" }}</td>
+                                    <td>{{ sim.data_disattivazione|default:"—" }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="4">Nessuna SIM disattivata collegata.</td></tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if contract_detail.inactive_sims.paginator.num_pages > 1 %}
+                        <nav class="pagination">
+                            {% if contract_detail.inactive_sims.has_previous %}
+                                <a href="?database={{ selected_database|urlencode }}&amp;contract={{ selected_contract|urlencode }}&amp;inactive_page={{ contract_detail.inactive_sims.previous_page_number }}#contract-detail">← Precedenti</a>
+                            {% endif %}
+                            <span>Pagina {{ contract_detail.inactive_sims.number }} di {{ contract_detail.inactive_sims.paginator.num_pages }}</span>
+                            {% if contract_detail.inactive_sims.has_next %}
+                                <a href="?database={{ selected_database|urlencode }}&amp;contract={{ selected_contract|urlencode }}&amp;inactive_page={{ contract_detail.inactive_sims.next_page_number }}#contract-detail">Successive →</a>
+                            {% endif %}
+                        </nav>
+                    {% endif %}
+
+                    <div class="subsection-heading">
+                        <h3>Telefonate</h3>
+                        <a href="?database={{ selected_database|urlencode }}&amp;table=telefonata&amp;contract={{ selected_contract|urlencode }}">Apri tabella filtrata</a>
+                    </div>
+                    <div class="table-wrap compact">
+                        <table>
+                            <thead><tr><th>ID</th><th>Data</th><th>Ora</th><th>Durata</th><th>Costo</th></tr></thead>
+                            <tbody>
+                            {% for call in contract_detail.calls %}
+                                <tr>
+                                    <td>{{ call.id }}</td>
+                                    <td>{{ call.data|default:"—" }}</td>
+                                    <td>{{ call.ora|default:"—" }}</td>
+                                    <td>{{ call.durata|default:"—" }}</td>
+                                    <td>{{ call.costo|default:"—" }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="5">Nessuna telefonata collegata.</td></tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if contract_detail.calls.paginator.num_pages > 1 %}
+                        <nav class="pagination">
+                            {% if contract_detail.calls.has_previous %}
+                                <a href="?database={{ selected_database|urlencode }}&amp;contract={{ selected_contract|urlencode }}&amp;calls_page={{ contract_detail.calls.previous_page_number }}#contract-detail">← Precedenti</a>
+                            {% endif %}
+                            <span>Pagina {{ contract_detail.calls.number }} di {{ contract_detail.calls.paginator.num_pages }}</span>
+                            {% if contract_detail.calls.has_next %}
+                                <a href="?database={{ selected_database|urlencode }}&amp;contract={{ selected_contract|urlencode }}&amp;calls_page={{ contract_detail.calls.next_page_number }}#contract-detail">Successive →</a>
+                            {% endif %}
+                        </nav>
+                    {% endif %}
+                {% else %}
+                    <h2>Contratto non trovato</h2>
+                    <p class="empty">Il contratto richiesto non appartiene al database selezionato.</p>
+                {% endif %}
+            </section>
+        {% endif %}
+
+        <section class="panel" id="complete-tables">
+            <div class="section-heading">
+                <div>
+                    <h2>Tabelle complete</h2>
+                    <p class="note">
+                        Le righe sono mostrate a gruppi di 50. Usare i controlli di pagina per consultare
+                        l’intero contenuto senza caricare tutto contemporaneamente.
+                    </p>
+                </div>
+            </div>
+
+            <nav class="table-tabs" aria-label="Tabelle disponibili">
+                {% for spec in table_specs %}
+                    <a
+                        class="table-tab{% if spec.name == selected_table.name %} selected{% endif %}"
+                        href="?database={{ selected_database|urlencode }}&amp;table={{ spec.name|urlencode }}#complete-tables"
+                    >{{ spec.label }}</a>
+                {% endfor %}
+            </nav>
+
+            <div class="table-title-row">
+                <h3>{{ table_page.spec.label }}</h3>
+                <span class="count">
+                    {{ table_page.page.total_items }} righe
+                    {% if table_page.contract_filter %}per {{ table_page.contract_filter }}{% endif %}
+                </span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>{% for column in table_page.columns %}<th>{{ column }}</th>{% endfor %}</tr>
+                    </thead>
+                    <tbody>
+                    {% for row in table_page.rows %}
                         <tr>
                             {% for value in row %}
                                 <td>{% if value is None %}<span class="null">NULL</span>{% else %}{{ value }}{% endif %}</td>
                             {% endfor %}
                         </tr>
                     {% empty %}
-                        <tr><td colspan="{{ table.columns|length|default:1 }}">Tabella vuota</td></tr>
+                        <tr><td colspan="{{ table_page.columns|length|default:1 }}">Nessuna riga disponibile.</td></tr>
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
-            <p class="note">Sono mostrate al massimo {{ max_visible_rows }} righe.</p>
+
+            <nav class="pagination" aria-label="Pagine tabella">
+                {% if table_page.page.has_previous %}
+                    <a href="?database={{ selected_database|urlencode }}&amp;table={{ selected_table.name|urlencode }}&amp;table_page={{ table_page.page.number|add:'-1' }}{% if table_page.contract_filter %}&amp;contract={{ table_page.contract_filter|urlencode }}{% endif %}#complete-tables">← Precedenti</a>
+                {% endif %}
+                <span>
+                    {% if table_page.page.total_items %}
+                        Righe {{ table_page.page.start }}–{{ table_page.page.end }} di {{ table_page.page.total_items }} ·
+                    {% endif %}
+                    pagina {{ table_page.page.number }} di {{ table_page.page.total_pages }}
+                </span>
+                {% if table_page.page.has_next %}
+                    <a href="?database={{ selected_database|urlencode }}&amp;table={{ selected_table.name|urlencode }}&amp;table_page={{ table_page.page.number|add:'1' }}{% if table_page.contract_filter %}&amp;contract={{ table_page.contract_filter|urlencode }}{% endif %}#complete-tables">Successive →</a>
+                {% endif %}
+            </nav>
         </section>
-    {% endfor %}
+    {% endif %}
 </main>
 </body>
 </html>

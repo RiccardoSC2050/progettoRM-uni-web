@@ -5,6 +5,8 @@ import shutil
 import subprocess
 import time
 import urllib.request
+import xml.etree.ElementTree as ET
+import zipfile
 from pathlib import Path
 
 from .errors import StartupError
@@ -12,12 +14,15 @@ from .network import port_open
 from .paths import DOWNLOADS, LOGS, POSTGRES_DATA, TOOLS
 from .process import run
 
+POSTGRES_MAJOR = "17"
 POSTGRES_VERSION = "17.10"
 POSTGRES_BUILD = "1"
+POSTGRES_PACKAGE_FALLBACK = f"{POSTGRES_VERSION}-{POSTGRES_BUILD}"
 POSTGRES_HOME = TOOLS / f"postgresql-{POSTGRES_VERSION}"
+POSTGRES_METADATA_URL = "https://www.postgresql.org/applications-v2.xml"
 POSTGRES_INSTALLER_URL = (
     "https://get.enterprisedb.com/postgresql/"
-    f"postgresql-{POSTGRES_VERSION}-{POSTGRES_BUILD}-windows-x64.exe"
+    f"postgresql-{POSTGRES_PACKAGE_FALLBACK}-windows-x64.exe"
 )
 POSTGRES_INSTALLER_SHA256 = (
     "c0728faccc95ced5a280efdc32413fe35764b2302670eec72569b0fd41ac3513"
@@ -27,6 +32,35 @@ POSTGRES_INSTALLER_SHA256 = (
 def _version_key(path: Path) -> tuple[int, ...]:
     numbers = re.findall(r"\d+", str(path.parent.parent))
     return tuple(int(value) for value in numbers[-3:]) if numbers else (0,)
+
+
+def _binary_names() -> tuple[str, str]:
+    return (
+        "initdb.exe" if os.name == "nt" else "initdb",
+        "pg_ctl.exe" if os.name == "nt" else "pg_ctl",
+    )
+
+
+def _binary_works(path: Path) -> bool:
+    init_name, ctl_name = _binary_names()
+    initdb = path / init_name
+    pg_ctl = path / ctl_name
+    if not initdb.is_file() or not pg_ctl.is_file():
+        return False
+    try:
+        for executable in (initdb, pg_ctl):
+            result = subprocess.run(
+                [str(executable), "--version"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+                timeout=15,
+            )
+            if result.returncode != 0:
+                return False
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return True
 
 
 def _candidate_bins() -> list[Path]:
@@ -42,7 +76,7 @@ def _candidate_bins() -> list[Path]:
 
     if POSTGRES_HOME.exists():
         values.append(POSTGRES_HOME / "bin")
-        init_name = "initdb.exe" if os.name == "nt" else "initdb"
+        init_name, _ = _binary_names()
         values.extend(path.parent for path in POSTGRES_HOME.rglob(init_name))
 
     if os.name == "nt":
@@ -73,12 +107,10 @@ def _candidate_bins() -> list[Path]:
 
 
 def find_postgres_bin() -> Path:
-    init_name = "initdb.exe" if os.name == "nt" else "initdb"
-    ctl_name = "pg_ctl.exe" if os.name == "nt" else "pg_ctl"
     for candidate in _candidate_bins():
-        if (candidate / init_name).is_file() and (candidate / ctl_name).is_file():
+        if _binary_works(candidate):
             return candidate
-    raise StartupError("PostgreSQL non trovato.")
+    raise StartupError("PostgreSQL non trovato oppure non eseguibile.")
 
 
 def _sha256(path: Path) -> str:
@@ -89,123 +121,174 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _download(url: str, destination: Path) -> None:
+def _download(url: str, destination: Path, timeout: int = 300) -> None:
+    """Scarica un file senza lasciare archivi parziali riutilizzabili."""
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    partial = destination.with_suffix(destination.suffix + ".part")
+    partial.unlink(missing_ok=True)
     request = urllib.request.Request(url, headers={"User-Agent": "Progetto2-Launcher/1.0"})
-    with urllib.request.urlopen(request, timeout=300) as response, destination.open("wb") as output:
-        shutil.copyfileobj(response, output)
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response, partial.open("wb") as output:
+            shutil.copyfileobj(response, output)
+        partial.replace(destination)
+    finally:
+        partial.unlink(missing_ok=True)
 
 
+def _edb_package_version() -> str:
+    """Legge la versione Windows x64 pubblicata dal catalogo ufficiale PostgreSQL."""
+    try:
+        request = urllib.request.Request(
+            POSTGRES_METADATA_URL,
+            headers={"User-Agent": "Progetto2-Launcher/1.0"},
+        )
+        with urllib.request.urlopen(request, timeout=45) as response:
+            root = ET.fromstring(response.read())
 
-def _winget_fallback() -> Path | None:
-    winget = shutil.which("winget")
-    if not winget:
-        return None
-    print("Estrazione portabile non riuscita: tentativo di installazione automatica con WinGet...")
-    LOGS.mkdir(parents=True, exist_ok=True)
+        for application in root.iter():
+            if application.tag.rsplit("}", 1)[-1] != "application":
+                continue
+            values = {
+                child.tag.rsplit("}", 1)[-1]: (child.text or "").strip()
+                for child in application
+            }
+            if (
+                values.get("id") == f"postgresql_{POSTGRES_MAJOR}"
+                and values.get("platform") == "windows-x64"
+                and values.get("version")
+            ):
+                return values["version"]
+    except Exception:
+        pass
+    return POSTGRES_PACKAGE_FALLBACK
+
+
+def _find_extracted_home(root: Path) -> Path | None:
+    init_name, _ = _binary_names()
+    for initdb in root.rglob(init_name):
+        binary = initdb.parent
+        if _binary_works(binary):
+            return binary.parent
+    return None
+
+
+def _install_from_binary_archive() -> Path:
+    package_version = _edb_package_version()
+    archive = DOWNLOADS / f"postgresql-{package_version}-windows-x64-binaries.zip"
+    url = (
+        "https://get.enterprisedb.com/postgresql/"
+        f"postgresql-{package_version}-windows-x64-binaries.zip"
+    )
+    temporary = TOOLS / ".postgresql-portable-extract"
+
+    print("PostgreSQL non trovato: download della versione portabile nella cartella del progetto...")
+    try:
+        if not archive.exists() or not zipfile.is_zipfile(archive):
+            archive.unlink(missing_ok=True)
+            _download(url, archive)
+        if not zipfile.is_zipfile(archive):
+            raise StartupError("L'archivio PostgreSQL scaricato non è valido.")
+
+        shutil.rmtree(temporary, ignore_errors=True)
+        temporary.mkdir(parents=True, exist_ok=True)
+        with zipfile.ZipFile(archive) as package:
+            package.extractall(temporary)
+
+        extracted_home = _find_extracted_home(temporary)
+        if extracted_home is None:
+            raise StartupError("I binari PostgreSQL non sono presenti nell'archivio portabile.")
+
+        shutil.rmtree(POSTGRES_HOME, ignore_errors=True)
+        shutil.copytree(extracted_home, POSTGRES_HOME)
+        shutil.rmtree(temporary, ignore_errors=True)
+
+        binary = POSTGRES_HOME / "bin"
+        if not _binary_works(binary):
+            raise StartupError("La versione portabile di PostgreSQL non è eseguibile.")
+        return binary
+    except Exception:
+        shutil.rmtree(temporary, ignore_errors=True)
+        raise
+
+
+def _install_from_private_extraction() -> Path:
+    installer = DOWNLOADS / f"postgresql-{POSTGRES_PACKAGE_FALLBACK}-windows-x64.exe"
+    extraction_log = LOGS / "postgres-extraction.log"
+
+    print("Tentativo alternativo: estrazione locale del pacchetto PostgreSQL ufficiale...")
+    if not installer.exists() or _sha256(installer) != POSTGRES_INSTALLER_SHA256:
+        installer.unlink(missing_ok=True)
+        _download(POSTGRES_INSTALLER_URL, installer)
+    if _sha256(installer) != POSTGRES_INSTALLER_SHA256:
+        raise StartupError("Controllo di integrità del download PostgreSQL non riuscito.")
+
+    shutil.rmtree(POSTGRES_HOME, ignore_errors=True)
+    POSTGRES_HOME.mkdir(parents=True, exist_ok=True)
     process = subprocess.run(
         [
-            winget,
-            "install",
-            "--id",
-            "PostgreSQL.PostgreSQL.17",
-            "-e",
-            "--silent",
-            "--accept-package-agreements",
-            "--accept-source-agreements",
+            str(installer),
+            "--mode",
+            "unattended",
+            "--unattendedmodeui",
+            "none",
+            "--extract-only",
+            "1",
+            "--prefix",
+            str(POSTGRES_HOME),
+            "--create_shortcuts",
+            "0",
         ],
         capture_output=True,
         text=True,
         check=False,
     )
-    (LOGS / "postgres-winget.log").write_text(
+    extraction_log.write_text(
         (process.stdout or "") + "\n" + (process.stderr or ""),
         encoding="utf-8",
     )
     if process.returncode != 0:
-        return None
-    try:
-        return find_postgres_bin()
-    except StartupError:
-        return None
+        raise StartupError(
+            "Estrazione locale di PostgreSQL non riuscita. "
+            "Consultare .runtime/logs/postgres-extraction.log."
+        )
+
+    binary = find_postgres_bin()
+    if not _binary_works(binary):
+        raise StartupError("PostgreSQL è stato estratto ma non risulta eseguibile.")
+    return binary
+
 
 def _prepare_private_postgres() -> Path:
     if os.name != "nt":
         raise StartupError(
-            "PostgreSQL non trovato. Installare PostgreSQL oppure configurare POSTGRES_HOME."
+            "PostgreSQL non trovato. Su questo sistema installare PostgreSQL oppure configurare POSTGRES_HOME."
         )
 
     TOOLS.mkdir(parents=True, exist_ok=True)
     DOWNLOADS.mkdir(parents=True, exist_ok=True)
     LOGS.mkdir(parents=True, exist_ok=True)
-    installer = DOWNLOADS / f"postgresql-{POSTGRES_VERSION}-windows-x64.exe"
-    extraction_log = LOGS / "postgres-extraction.log"
 
-    print(
-        "PostgreSQL non trovato: download automatico dei binari nella cartella del progetto..."
-    )
+    portable_error: Exception | None = None
     try:
-        if not installer.exists() or _sha256(installer) != POSTGRES_INSTALLER_SHA256:
-            installer.unlink(missing_ok=True)
-            _download(POSTGRES_INSTALLER_URL, installer)
-        if _sha256(installer) != POSTGRES_INSTALLER_SHA256:
-            raise StartupError("Controllo di integrità del download PostgreSQL non riuscito.")
+        return _install_from_binary_archive()
+    except Exception as exc:
+        portable_error = exc
+        (LOGS / "postgres-portable.log").write_text(str(exc), encoding="utf-8")
 
-        if POSTGRES_HOME.exists():
-            shutil.rmtree(POSTGRES_HOME)
-        POSTGRES_HOME.mkdir(parents=True, exist_ok=True)
-
-        process = subprocess.run(
-            [
-                str(installer),
-                "--mode",
-                "unattended",
-                "--unattendedmodeui",
-                "none",
-                "--extract-only",
-                "1",
-                "--prefix",
-                str(POSTGRES_HOME),
-                "--create_shortcuts",
-                "0",
-            ],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        extraction_log.write_text(
-            (process.stdout or "") + "\n" + (process.stderr or ""),
-            encoding="utf-8",
-        )
-        if process.returncode != 0:
-            fallback = _winget_fallback()
-            if fallback:
-                return fallback
-            raise StartupError(
-                "Estrazione automatica di PostgreSQL non riuscita. "
-                "Consultare .runtime/logs/postgres-extraction.log e postgres-winget.log."
-            )
-    except StartupError:
-        raise
+    try:
+        return _install_from_private_extraction()
     except Exception as exc:
         raise StartupError(
-            "Impossibile preparare PostgreSQL automaticamente. "
-            "Controllare la connessione Internet e riprovare."
-        ) from exc
-
-    try:
-        return find_postgres_bin()
-    except StartupError as exc:
-        fallback = _winget_fallback()
-        if fallback:
-            return fallback
-        raise StartupError(
-            "PostgreSQL è stato scaricato ma initdb.exe e pg_ctl.exe non sono stati trovati."
+            "Impossibile preparare PostgreSQL automaticamente nella cartella del progetto. "
+            "Controllare Internet e i log postgres-portable.log / postgres-extraction.log. "
+            f"Primo tentativo: {portable_error}. Secondo tentativo: {exc}."
         ) from exc
 
 
 def ensure_postgres(port: int) -> Path:
     try:
         binary = find_postgres_bin()
+        print(f"      PostgreSQL disponibile: {binary}")
     except StartupError:
         binary = _prepare_private_postgres()
 

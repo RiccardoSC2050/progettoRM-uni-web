@@ -7,8 +7,9 @@ import zipfile
 from pathlib import Path
 
 from .errors import StartupError
+from .java_runtime import ensure_java, java_environment
 from .network import port_open
-from .paths import LOGS, PIDS, TOOLS
+from .paths import DOWNLOADS, LOGS, PIDS, TOOLS
 
 TOMCAT_VERSION = "9.0.102"
 TOMCAT_URL = (
@@ -22,10 +23,23 @@ def prepare_tomcat(port: int) -> Path:
     startup = _script(home, "startup")
     if not startup.exists():
         TOOLS.mkdir(parents=True, exist_ok=True)
-        archive = TOOLS / f"apache-tomcat-{TOMCAT_VERSION}.zip"
+        DOWNLOADS.mkdir(parents=True, exist_ok=True)
+        archive = DOWNLOADS / f"apache-tomcat-{TOMCAT_VERSION}.zip"
         print("Installazione locale automatica di Tomcat nella cartella del progetto...")
         try:
-            urllib.request.urlretrieve(TOMCAT_URL, archive)
+            partial = archive.with_suffix(archive.suffix + ".part")
+            partial.unlink(missing_ok=True)
+            if not archive.exists() or not zipfile.is_zipfile(archive):
+                archive.unlink(missing_ok=True)
+                request = urllib.request.Request(
+                    TOMCAT_URL,
+                    headers={"User-Agent": "Progetto2-Launcher/1.0"},
+                )
+                with urllib.request.urlopen(request, timeout=300) as response, partial.open("wb") as output:
+                    shutil.copyfileobj(response, output)
+                partial.replace(archive)
+            if not zipfile.is_zipfile(archive):
+                raise StartupError("L'archivio Tomcat scaricato non è valido.")
             with zipfile.ZipFile(archive) as package:
                 package.extractall(TOOLS)
         except Exception as exc:
@@ -33,7 +47,7 @@ def prepare_tomcat(port: int) -> Path:
                 "Impossibile scaricare Tomcat. Controllare la connessione Internet e riprovare."
             ) from exc
         finally:
-            archive.unlink(missing_ok=True)
+            archive.with_suffix(archive.suffix + ".part").unlink(missing_ok=True)
 
     if not startup.exists():
         raise StartupError("Installazione locale di Tomcat non riuscita.")
@@ -65,7 +79,8 @@ def start(tomcat: Path, port: int) -> None:
 
     LOGS.mkdir(parents=True, exist_ok=True)
     PIDS.mkdir(parents=True, exist_ok=True)
-    env = os.environ.copy()
+    java, _ = ensure_java()
+    env = java_environment(java)
     env["CATALINA_HOME"] = str(tomcat)
     env["CATALINA_BASE"] = str(tomcat)
     catalina = _script(tomcat, "catalina")
@@ -102,7 +117,8 @@ def stop(tomcat: Path) -> None:
     script = _script(tomcat, "shutdown")
     if not script.exists():
         return
-    env = os.environ.copy()
+    java, _ = ensure_java()
+    env = java_environment(java)
     env["CATALINA_HOME"] = str(tomcat)
     env["CATALINA_BASE"] = str(tomcat)
     subprocess.run(

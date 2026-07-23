@@ -6,7 +6,8 @@ import zipfile
 from pathlib import Path
 
 from .errors import StartupError
-from .paths import JAVA, LOGS, RUNTIME
+from .java_runtime import ensure_java, java_environment
+from .paths import DOWNLOADS, JAVA, LOGS, RUNTIME
 
 MAVEN_VERSION = "3.9.9"
 MAVEN_URL = (
@@ -28,15 +29,23 @@ def prepare_maven() -> Path:
         return executable
 
     tools.mkdir(parents=True, exist_ok=True)
-    archive = tools / f"apache-maven-{MAVEN_VERSION}-bin.zip"
+    DOWNLOADS.mkdir(parents=True, exist_ok=True)
+    archive = DOWNLOADS / f"apache-maven-{MAVEN_VERSION}-bin.zip"
     print("Maven non trovato: installazione locale automatica nel progetto...")
     try:
         request = urllib.request.Request(
             MAVEN_URL,
             headers={"User-Agent": "Progetto2-Launcher/1.0"},
         )
-        with urllib.request.urlopen(request, timeout=180) as response, archive.open("wb") as output:
-            shutil.copyfileobj(response, output)
+        partial = archive.with_suffix(archive.suffix + ".part")
+        partial.unlink(missing_ok=True)
+        if not archive.exists() or not zipfile.is_zipfile(archive):
+            archive.unlink(missing_ok=True)
+            with urllib.request.urlopen(request, timeout=300) as response, partial.open("wb") as output:
+                shutil.copyfileobj(response, output)
+            partial.replace(archive)
+        if not zipfile.is_zipfile(archive):
+            raise StartupError("L'archivio Maven scaricato non è valido.")
         with zipfile.ZipFile(archive) as package:
             package.extractall(tools)
     except Exception as exc:
@@ -45,7 +54,7 @@ def prepare_maven() -> Path:
             "Controllare la connessione Internet e riprovare."
         ) from exc
     finally:
-        archive.unlink(missing_ok=True)
+        archive.with_suffix(archive.suffix + ".part").unlink(missing_ok=True)
 
     if not executable.exists():
         raise StartupError("Installazione locale di Maven non riuscita.")
@@ -67,6 +76,7 @@ def build_war() -> Path:
     if not pom.is_file():
         raise StartupError("File servlet-java/pom.xml non trovato.")
 
+    java, _ = ensure_java()
     maven = prepare_maven()
     LOGS.mkdir(parents=True, exist_ok=True)
     repository = RUNTIME / "maven-repository"
@@ -82,7 +92,7 @@ def build_war() -> Path:
         "package",
     ]
     command = _maven_command(maven, arguments)
-    environment = os.environ.copy()
+    environment = java_environment(java)
     environment["MAVEN_USER_HOME"] = str(RUNTIME / "maven-home")
 
     print("Compilazione Maven della servlet...")

@@ -7,31 +7,29 @@ from migration_api.models import (
     ContrattoTelefonico,
     SimAttiva,
     SimDisattiva,
-    SimNonAttiva,
     Telefonata,
 )
 
 
+Handler = Callable[[list[dict], str], int]
+
+_HANDLERS: dict[Resource, Handler] = {
+    Resource.CONTRATTI: lambda records, database: _contracts(records, database),
+    Resource.SIM_ATTIVE: lambda records, database: _active_sims(records, database),
+    Resource.SIM_DISATTIVE: lambda records, database: _inactive_sims(records, database),
+    Resource.TELEFONATE: lambda records, database: _calls(records, database),
+}
+
+
 def import_records(resource: Resource, records: list[dict], database: str) -> int:
-    return _handlers()[resource](records, database)
-
-
-def _handlers() -> dict[Resource, Callable[[list[dict], str], int]]:
-    return {
-        Resource.CONTRATTI: _contracts,
-        Resource.SIM_ATTIVE: _active_sims,
-        Resource.SIM_DISATTIVE: _inactive_sims,
-        Resource.SIM_NON_ATTIVE: _unactivated_sims,
-        Resource.TELEFONATE: _calls,
-    }
+    return _HANDLERS[resource](records, database)
 
 
 def _contracts(records: list[dict], database: str) -> int:
     manager = ContrattoTelefonico.objects.using(database)
     for record in records:
-        number = required(record, "numero")
         manager.update_or_create(
-            numero=number,
+            numero=required(record, "numero"),
             defaults={
                 "data_attivazione": pick(record, "dataAttivazione", "data_attivazione"),
                 "tipo": pick(record, "tipo"),
@@ -43,25 +41,19 @@ def _contracts(records: list[dict], database: str) -> int:
 
 
 def _active_sims(records: list[dict], database: str) -> int:
+    available = _existing_contracts(records, database, "associataA", "associata_a")
     manager = SimAttiva.objects.using(database)
-    available_contracts = _available_contracts(
-        records,
-        database,
-        "associataA",
-        "associata_a",
-    )
     imported = 0
+
     for record in records:
         contract_number = required(record, "associataA", "associata_a")
-        if contract_number not in available_contracts:
-            # Nel campione ridotto il contratto padre potrebbe non essere stato selezionato.
-            # La riga viene ignorata invece di creare una relazione non valida.
+        if contract_number not in available:
             continue
         manager.update_or_create(
-            codice=required(record, "codice"),
+            contratto_id=contract_number,
             defaults={
+                "codice": required(record, "codice"),
                 "tipo_sim": pick(record, "tipoSIM", "tipo_sim"),
-                "contratto_id": contract_number,
                 "data_attivazione": pick(record, "dataAttivazione", "data_attivazione"),
             },
         )
@@ -70,49 +62,41 @@ def _active_sims(records: list[dict], database: str) -> int:
 
 
 def _inactive_sims(records: list[dict], database: str) -> int:
+    available = _existing_contracts(records, database, "eraAssociataA", "era_associata_a")
     manager = SimDisattiva.objects.using(database)
+    imported = 0
+
     for record in records:
+        contract_number = required(record, "eraAssociataA", "era_associata_a")
+        if contract_number not in available:
+            continue
         manager.update_or_create(
             codice=required(record, "codice"),
             defaults={
                 "tipo_sim": pick(record, "tipoSIM", "tipo_sim"),
-                "numero_contratto": pick(record, "eraAssociataA", "era_associata_a"),
+                "contratto_id": contract_number,
                 "data_attivazione": pick(record, "dataAttivazione", "data_attivazione"),
                 "data_disattivazione": pick(record, "dataDisattivazione", "data_disattivazione"),
             },
         )
-    return len(records)
-
-
-def _unactivated_sims(records: list[dict], database: str) -> int:
-    manager = SimNonAttiva.objects.using(database)
-    for record in records:
-        manager.update_or_create(
-            codice=required(record, "codice"),
-            defaults={"tipo_sim": pick(record, "tipoSIM", "tipo_sim")},
-        )
-    return len(records)
+        imported += 1
+    return imported
 
 
 def _calls(records: list[dict], database: str) -> int:
+    available = _existing_contracts(records, database, "effettuataDa", "effettuata_da")
     manager = Telefonata.objects.using(database)
-    available_contracts = _available_contracts(
-        records,
-        database,
-        "effettuataDa",
-        "effettuata_da",
-    )
     imported = 0
+
     for record in records:
         contract_number = required(record, "effettuataDa", "effettuata_da")
-        if contract_number not in available_contracts:
-            # Evita una foreign key orfana quando si importa solo un campione.
+        if contract_number not in available:
             continue
         cost = pick(record, "costo")
         manager.update_or_create(
+            contratto_id=contract_number,
             id=required(record, "id"),
             defaults={
-                "contratto_id": contract_number,
                 "data": pick(record, "data"),
                 "ora": pick(record, "ora"),
                 "durata": pick(record, "durata"),
@@ -123,11 +107,7 @@ def _calls(records: list[dict], database: str) -> int:
     return imported
 
 
-def _available_contracts(
-    records: list[dict],
-    database: str,
-    *field_names: str,
-) -> set[str]:
+def _existing_contracts(records: list[dict], database: str, *field_names: str) -> set[str]:
     contract_numbers = {required(record, *field_names) for record in records}
     return set(
         ContrattoTelefonico.objects.using(database)
