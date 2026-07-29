@@ -1,2 +1,0 @@
-class StartupError(RuntimeError):
-    pass
